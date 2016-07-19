@@ -34,8 +34,7 @@ AUDIO_FEATURE_LOW_LATENCY_PRIMARY := true
 BOARD_USES_ALSA_AUDIO := true
 
 # Asserts
-#TARGET_OTA_ASSERT_DEVICE := gprimeltecan,gprimeltevl,fortunave3g
-TARGET_OTA_ASSERT_DEVICE := grandprimelte,gprimeltevl,gprimeltecan,gprimeltevlve3g,samsung_sm_g530h
+TARGET_OTA_ASSERT_DEVICE := gprimeltevl,gprimeltecan,samsung_sm_g530w
 
 # Bluetooth
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
@@ -172,6 +171,8 @@ BOARD_USES_QC_TIME_SERVICES := true
 
 # TWRP
 #RECOVERY_VARIANT := twrp
+TW_BRIGHTNESS_PATH := "/sys/devices/soc.0/1a00000.qcom\x2cmdss_mdp/qcom\x2cmdss_fb_primary.132/leds/lcd-backlight/brightness"
+TW_MAX_BRIGHTNESS := 255
 BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_SUPPRESS_SECURE_ERASE := true
@@ -191,8 +192,7 @@ TW_INCLUDE_CRYPTO := true
 TW_INPUT_BLACKLIST := "accelerometer"
 TW_INTERNAL_STORAGE_PATH := "/data/media/0"
 #TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
-# TW_MAX_BRIGHTNESS := 255
-# TW_MTP_DEVICE := /dev/usb_mtp_gadget
+TW_MTP_DEVICE := /dev/usb_mtp_gadget
 TW_NEW_ION_HEAP := true
 TW_NO_REBOOT_BOOTLOADER := true
 TW_NO_SCREEN_TIMEOUT := true
@@ -203,7 +203,7 @@ ifeq ($(TW),)
 	TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery.fstab
 else
 	TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery/twrp.fstab
-	TARGET_CPU_VARIANT := cortex-a7
+#	TARGET_CPU_VARIANT := cortex-a7
 endif
 
 # Vold
