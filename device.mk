@@ -106,7 +106,8 @@ PRODUCT_PACKAGES += \
     init.qcom.rc \
     init.qcom.sh \
     init.target.rc \
-    ueventd.qcom.rc
+    ueventd.qcom.rc \
+    twrp.fstab
 
 # Keylayout
 PRODUCT_COPY_FILES += \
