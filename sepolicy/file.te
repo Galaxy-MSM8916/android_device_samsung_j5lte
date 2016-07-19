@@ -1,0 +1,4 @@
+#Defines the files (configs, dumps, etc) used by display processes
+type display_misc_file, file_type, data_file_type;
+
+type touchpanel_sysfs, fs_type, sysfs_type;
