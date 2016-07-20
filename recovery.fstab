@@ -1,0 +1,15 @@
+#<src>									<mnt_point>		<type>	<mnt_flags and options>	<fs_mgr_flags>
+/dev/block/bootdevice/by-name/boot		/boot			emmc	default		recoveryonly
+/dev/block/bootdevice/by-name/recovery	/recovery		emmc	default		recoveryonly
+/dev/block/bootdevice/by-name/system	/system			ext4	ro,barrier=1															wait
+/dev/block/bootdevice/by-name/userdata	/data			ext4	rw,discard,nosuid,nodev,noatime,nodiratime,inline_xattr,inline_data		wait,check
+/dev/block/bootdevice/by-name/cache		/cache			ext4	rw,noatime,nosuid,nodev,barrier=1,data=ordered							wait,check
+/dev/block/mmcblk1p1					/external_sd	vfat	nosuid,nodev 		wait,voldmanaged=external_sd:auto,noemulatedsd
+/dev/block/bootdevice/by-name/apnhlos	/modem			ext4	ro,nosuid,nodev,barrier=0		wait,check
+/dev/block/bootdevice/by-name/modem		/mdm			ext4	ro,nosuid,nodev,barrier=0		wait,check
+#/dev/block/bootdevice/by-name/persist	/persist		ext4
+#/dev/block/bootdevice/by-name/hidden	/hidden			ext4
+#/dev/block/bootdevice/by-name/persdata	/persdata		ext4
+
+/devices/platform/msm_hsusb                      /storage/usbdisk    vfat    nosuid,nodev         wait,voldmanaged=usbdisk:auto
+/devices/soc.0/7824900.sdhci/mmc_host            /storage/sdcard1   vfat    nosuid,nodev         wait,voldmanaged=sdcard1:auto
