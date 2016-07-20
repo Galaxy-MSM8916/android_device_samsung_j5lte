@@ -1,6 +1,6 @@
-# android_device_samsung_fortuna
+# android_device_samsung_gprimeltecan
 
-## Device tree for Samsung Galaxy Grand Prime [Fortuna]
+## Device tree for Samsung Galaxy Grand Prime [gprimeltecan]
 
 Basic   | Spec Sheet
 -------:|:-------------------------
