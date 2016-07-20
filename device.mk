@@ -1,9 +1,21 @@
-LOCAL_PATH := device/samsung/fortuna
-$(call inherit-product-if-exists, vendor/samsung/fortuna/fortuna-vendor.mk)
+LOCAL_PATH := device/samsung/gprimeltecan
+$(call inherit-product-if-exists, vendor/samsung/gprimeltecan/gprimeltecan-vendor.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
 # Inherit from common
 $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)
+
+# Common overlay
+DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimeltecan/overlay
+
+ifeq ($(TARGET_PREBUILT_KERNEL),)
+	LOCAL_KERNEL := device/samsung/gprimeltecan/kernel
+else
+	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
+endif
+
+PRODUCT_COPY_FILES += \
+$(LOCAL_KERNEL):kernel
 
 #Android EGL implementation
 PRODUCT_PACKAGES += libGLES_android

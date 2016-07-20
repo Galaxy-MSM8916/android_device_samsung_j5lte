@@ -1,8 +1,8 @@
 FORCE_32_BIT := true
 
--include vendor/samsung/fortuna/BoardConfigVendor.mk
+-include vendor/samsung/gprimeltecan/BoardConfigVendor.mk
 
-LOCAL_PATH := device/samsung/fortuna
+LOCAL_PATH := device/samsung/gprimeltecan
 
 # Inherit from common
 -include device/samsung/qcom-common/BoardConfigCommon.mk
@@ -23,7 +23,7 @@ AUDIO_FEATURE_LOW_LATENCY_PRIMARY := true
 BOARD_USES_ALSA_AUDIO := true
 
 # Asserts
-TARGET_OTA_ASSERT_DEVICE := grandprimelte,fortuna,fortunave3g
+TARGET_OTA_ASSERT_DEVICE := grandprimelte,gprimeltecan,fortunave3g
 
 # Bluetooth
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
@@ -76,7 +76,7 @@ TARGET_NO_RPC := true
 
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_msm
-TARGET_LIBINIT_DEFINES_FILE := $(LOCAL_PATH)/init/init_fortuna.c
+TARGET_LIBINIT_DEFINES_FILE := $(LOCAL_PATH)/init/init_gprimeltecan.cpp
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
 TARGET_UNIFIED_DEVICE := true
 TARGET_PROVIDES_INIT_RC := true
@@ -89,10 +89,11 @@ BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
 BOARD_RAMDISK_OFFSET     := 0x02000000
-TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
-TARGET_KERNEL_VARIANT_CONFIG := msm8916_sec_fortuna_eur_defconfig
-TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/fortuna
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
+#TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
+#TARGET_KERNEL_VARIANT_CONFIG := msm8916_sec_fortuna_eur_defconfig
+#TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
+#TARGET_KERNEL_SOURCE := kernel/samsung/fortuna
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
@@ -100,13 +101,19 @@ TARGET_PROVIDES_LIBLIGHT := true
 # malloc implementation
 MALLOC_IMPL := dlmalloc
 
-# Partitions
-BOARD_BOOTIMAGE_PARTITION_SIZE := 13631488 #13312 * 1024 mmcblk0p16 
+# Partition sizes
+#TARGET_USERIMAGES_USE_EXT4          := true
+BOARD_BOOTIMAGE_PARTITION_SIZE      := 13631488
+BOARD_RECOVERYIMAGE_PARTITION_SIZE  := 15728640
+BOARD_SYSTEMIMAGE_PARTITION_SIZE    := 2359296000
+BOARD_SYSTEMIMAGE_PARTITION_TPE    := ext4
+BOARD_CACHEIMAGE_PARTITION_SIZE     := 314572800
+BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE   := ext4
+BOARD_PERSISTIMAGE_PARTITION_SIZE   := 8388608
+BOARD_PERSISTIMAGE_FILE_SYSTEM_TYPE := ext4
+# (5731495936 - 16384)
+BOARD_USERDATAIMAGE_PARTITION_SIZE  := 4942966784
 BOARD_FLASH_BLOCK_SIZE := 131072
-BOARD_PERSISTIMAGE_PARTITION_SIZE := 8388608 # 8192 * 1024 mmcblk0p22
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 15728640 #15360 * 1024 mmcblk0p17
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1568669696 #1531904 * 1024 mmcblk0p24 
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 5637124096 # 5505004 * 1024 mmcblk0p27
 
 # Platform
 TARGET_BOARD_PLATFORM := msm8916
@@ -134,7 +141,7 @@ TARGET_RIL_VARIANT := caf
 include device/qcom/sepolicy/sepolicy.mk
 
 BOARD_SEPOLICY_DIRS += \
-    device/samsung/fortuna/sepolicy
+    device/samsung/gprimeltecan/sepolicy
 
 BOARD_SEPOLICY_UNION += \
     bluetooth_loader.te \
@@ -207,4 +214,4 @@ WIFI_DRIVER_FW_PATH_STA := "sta"
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # inherit from the proprietary version
--include vendor/samsung/fortuna/BoardConfigVendor.mk
+-include vendor/samsung/gprimeltecan/BoardConfigVendor.mk

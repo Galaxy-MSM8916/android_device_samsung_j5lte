@@ -16,6 +16,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(TARGET_DEVICE),fortuna)
+ifeq ($(TARGET_DEVICE),gprimeltecan)
 include $(call all-subdir-makefiles,$(LOCAL_PATH))
 endif

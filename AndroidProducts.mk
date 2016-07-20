@@ -1,2 +1,2 @@
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/full_fortuna.mk
+    $(LOCAL_DIR)/full_gprimeltecan.mk
