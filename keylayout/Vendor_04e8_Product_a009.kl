@@ -104,16 +104,16 @@ key 81    NUMPAD_3
 key 82    NUMPAD_0
 key 83    NUMPAD_DOT
 # key 84 (undefined)
-key 85    ZENKAKU_HANKAKU
+# key 85 "KEY_ZENKAKUHANKAKU"
 key 86    BACKSLASH
 key 87    F11
 key 88    F12
 key 89    RO
 # key 90 "KEY_KATAKANA"
 # key 91 "KEY_HIRAGANA"
-key 92    HENKAN
-key 93    KATAKANA_HIRAGANA
-key 94    MUHENKAN
+# key 92 "KEY_HENKAN"
+# key 93 "KEY_KATAKANAHIRAGANA"
+# key 94 "KEY_MUHENKAN"
 key 95    NUMPAD_COMMA
 key 96    NUMPAD_ENTER
 key 97    CTRL_RIGHT
@@ -126,7 +126,6 @@ key 103   DPAD_UP
 key 104   PAGE_UP
 key 105   DPAD_LEFT
 key 106   DPAD_RIGHT
-#key 107 (CHN FOLDER MODEL)
 key 107   MOVE_END
 key 108   DPAD_DOWN
 key 109   PAGE_DOWN
@@ -134,20 +133,21 @@ key 110   INSERT
 key 111   FORWARD_DEL
 # key 112 "KEY_MACRO"
 key 113   VOLUME_MUTE
+
 key 114   VOLUME_DOWN
 key 115   VOLUME_UP
-key 116   POWER
+key 116   POWER            
 key 117   NUMPAD_EQUALS
 # key 118 "KEY_KPPLUSMINUS"
 key 119   BREAK
 # key 120 (undefined)
 key 121   NUMPAD_COMMA
 key 122   LANG
-key 123   EISU
-key 124   YEN
+# key 123 "KEY_HANJA"
+# key 124 "KEY_YEN"
 key 125   META_LEFT
 key 126   META_RIGHT
-key 127   MENU
+key 127   MENU              
 key 128   MEDIA_STOP
 # key 129 "KEY_AGAIN"
 # key 130 "KEY_PROPS"
@@ -159,11 +159,11 @@ key 128   MEDIA_STOP
 # key 136 "KEY_FIND"
 # key 137 "KEY_CUT"
 # key 138 "KEY_HELP"
-key 139   MENU
-key 140   CALCULATOR
+key 139   MENU             
+# key 140 "KEY_CALC"
 # key 141 "KEY_SETUP"
-key 142   SLEEP
-key 143   WAKEUP
+# key 142 "KEY_SLEEP"
+# key 143 "KEY_WAKEUP"
 # key 144 "KEY_FILE"
 # key 145 "KEY_SENDFILE"
 # key 146 "KEY_DELETEFILE"
@@ -172,13 +172,14 @@ key 143   WAKEUP
 # key 149 "KEY_PROG2"
 key 150   EXPLORER
 # key 151 "KEY_MSDOS"
-key 152   POWER
+# key 152 "KEY_COFFEE"
+key 152 POWER               
 # key 153 "KEY_DIRECTION"
 # key 154 "KEY_CYCLEWINDOWS"
-key 155   ENVELOPE
+key 155   EMAIL
 key 156   BOOKMARK
 # key 157 "KEY_COMPUTER"
-key 158   BACK
+key 158   BACK              
 key 159   FORWARD
 key 160   MEDIA_CLOSE
 key 161   MEDIA_EJECT
@@ -191,8 +192,7 @@ key 167   MEDIA_RECORD
 key 168   MEDIA_REWIND
 key 169   CALL
 # key 170 "KEY_ISO"
-key 171   MUSIC
-#input_fw added wake attribute for home
+# key 171 "KEY_CONFIG"
 key 172   HOME
 # key 173 "KEY_REFRESH"
 # key 174 "KEY_EXIT"
@@ -215,15 +215,12 @@ key 180   NUMPAD_RIGHT_PAREN
 # key 191   F21
 # key 192   F22
 # key 193   F23
-# key 194   F24
+key 194   F24
 # key 195 (undefined)
 # key 196 (undefined)
 # key 197 (undefined)
 # key 198 (undefined)
 # key 199 (undefined)
-# input_fw for voice wakeup
-key 198   VOICE_WAKEUP_LPSD
-key 199   VOICE_WAKEUP
 key 200   MEDIA_PLAY
 key 201   MEDIA_PAUSE
 # key 202 "KEY_PROG3"
@@ -237,7 +234,7 @@ key 208   MEDIA_FAST_FORWARD
 # key 210 "KEY_PRINT"
 # key 211 "KEY_HP"
 key 212   CAMERA
-key 213   MUSIC
+# key 213 "KEY_SOUND"
 # key 214 "KEY_QUESTION"
 key 215   ENVELOPE
 # key 216 "KEY_CHAT"
@@ -251,49 +248,20 @@ key 217   SEARCH
 key 224   BRIGHTNESS_DOWN
 key 225   BRIGHTNESS_UP
 key 226   HEADSETHOOK
-
-# samsung 
-key 231   CALL #(CHN FOLDER MODEL)
-
-# samsung 
-key 252   USER
-
-# samsung
-key 254   APP_SWITCH
-
-key 256   BUTTON_1
-key 257   BUTTON_2
-key 258   BUTTON_3
-key 259   BUTTON_4
-key 260   BUTTON_5
-key 261   BUTTON_6
-key 262   BUTTON_7
-key 263   BUTTON_8
-key 264   BUTTON_9
-key 265   BUTTON_10
-key 266   BUTTON_11
-key 267   BUTTON_12
-key 268   BUTTON_13
-key 269   BUTTON_14
-key 270   BUTTON_15
-key 271   BUTTON_16
-
-key 288   BUTTON_1
-key 289   BUTTON_2
-key 290   BUTTON_3
-key 291   BUTTON_4
-key 292   BUTTON_5
-key 293   BUTTON_6
-key 294   BUTTON_7
-key 295   BUTTON_8
-key 296   BUTTON_9
-key 297   BUTTON_10
-key 298   BUTTON_11
-key 299   BUTTON_12
-key 300   BUTTON_13
-key 301   BUTTON_14
-key 302   BUTTON_15
-key 303   BUTTON_16
+key 227   STAR
+key 228   POUND
+key 229   SOFT_LEFT
+key 230   SOFT_RIGHT
+key 231   CALL
+key 232   DPAD_CENTER
+key 233   HEADSETHOOK
+# key 234 "KEY_0_5" or "KEY_SAVE"
+# key 235 "KEY_2_5" or "KEY_DOCUMENTS"
+# key 236 "KEY_SWITCHVIDEOMODE" or "KEY_BATTERY"
+# key 237 "KEY_KBDILLUMTOGGLE"
+# key 238 "KEY_KBDILLUMDOWN"
+# key 239 "KEY_KBDILLUMUP"
+# key 240 "KEY_UNKNOWN"
 
 
 key 304   BUTTON_A
@@ -314,7 +282,7 @@ key 318   BUTTON_THUMBR
 
 
 # key 352 "KEY_OK"
-key 353   DPAD_CENTER
+# key 353 "KEY_SELECT"
 # key 354 "KEY_GOTO"
 # key 355 "KEY_CLEAR"
 # key 356 "KEY_POWER2"
@@ -330,6 +298,7 @@ key 362   GUIDE
 key 366   DVR
 # key 367 "KEY_MHP"
 # key 368 "KEY_LANGUAGE"
+key 368 LANG
 # key 369 "KEY_TITLE"
 # key 370 "KEY_SUBTITLE"
 # key 371 "KEY_ANGLE"
@@ -358,7 +327,7 @@ key 377   TV
 # key 394 "KEY_DIRECTORY"
 # key 395 "KEY_LIST"
 # key 396 "KEY_MEMO"
-key 397   CALENDAR
+# key 397 "KEY_CALENDAR"
 # key 398 "KEY_RED"
 # key 399 "KEY_GREEN"
 # key 400 "KEY_YELLOW"
@@ -378,25 +347,12 @@ key 403   CHANNEL_DOWN
 # key 414 "KEY_TEEN"
 # key 415 "KEY_TWEN"
 
-key 429   CONTACTS
-key 430   MESSAGE
 
 # key 448 "KEY_DEL_EOL"
 # key 449 "KEY_DEL_EOS"
 # key 450 "KEY_INS_LINE"
 # key 451 "KEY_DEL_LINE"
 
-key 452   CAM_QUICK_REAR
-key 453   CAM_QUICK_FRONT
-key 454   2ND_SCREEN_WAKEUP
-
-# key 455 used for blackscreenUI
-# key 456 KEY_BLACK_UI_QUICKAPP_ACCESS
-# key 457 KEY_BLACK_UI_DIRECT_INDICATOR
-
-# input_fw for swipe gestures from sides, used for wakeup
-key 458 SIDE_GESTURE_RIGHT
-key 459 SIDE_GESTURE_LEFT
 
 key 464   FUNCTION
 key 465   ESCAPE            FUNCTION
@@ -430,48 +386,17 @@ key 484   B                 FUNCTION
 # key 503 KEY_BRL_DOT7
 # key 504 KEY_BRL_DOT8
 
-key 522	STAR
-key 523	POUND
+key 531   TOUCHPAD_ON
+key 532   TOUCHPAD_OFF
 
-# samsung camera
-key 528   FOCUS
+key 704 RECENTAPPS
+key 705 APPLICATION
+key 706 SIP_ON_OFF
+key 707 VOICESEARCH
+key 708 QPANEL_ON_OFF
+key 710 SFINDER
+key 712 MULTI_WINDOW
 
-#key 531   TOUCHPAD_ON
-#key 532   TOUCHPAD_OFF
-
-# samsung DMB
-key 539   DMB_ANT_OPEN
-key 540   DMB_ANT_CLOSE
-
-key 548 NETWORK_SEL #(CHN FOLDER MODEL)
-key 549 3G          #(CHN FOLDER MODEL)
-key 550 WATCH       #(CHN FOLDER MODEL)
-key 551 ENDCALL     #(CHN FOLDER MODEL)
-
-#key 576 don't use (specific value used by camera project) - refer to InputReader.cpp
-
-key 580   APPSELECT
-key 582   VOICE_ASSIST
-
-# Keys defined by HID usages
-key usage 0x0c006F BRIGHTNESS_UP
-key usage 0x0c0070 BRIGHTNESS_DOWN
-
-# Joystick and game controller axes.
-# Axes that are not mapped will be assigned generic axis numbers by the input subsystem.
-axis 0x00 X
-axis 0x01 Y
-axis 0x02 Z
-axis 0x03 RX
-axis 0x04 RY
-axis 0x05 RZ
-axis 0x06 THROTTLE
-axis 0x07 RUDDER
-axis 0x08 WHEEL
-axis 0x09 GAS
-axis 0x0a BRAKE
-axis 0x10 HAT_X
-axis 0x11 HAT_Y
 
 # LEDs
 led 0x00 NUM_LOCK
