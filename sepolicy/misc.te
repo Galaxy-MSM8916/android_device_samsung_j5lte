@@ -3,9 +3,11 @@ allow init_shell bluetooth_loader_exec:file execute_no_trans;
 
 #============= keystore ==============
 allow keystore vfat:dir search;
+allow keystore vfat:file read;
 
 #============= mediaserver ==============
-allow mediaserver sysfs_wake_lock:file { read write };
+allow mediaserver sysfs_wake_lock:file { open read write };
+allow mediaserver system_data_file:sock_file write;
 
 #============= mm-qcamerad ==============
 allow mm-qcamerad sysfs:file { read write };
@@ -22,7 +24,12 @@ allow shell block_device:dir search;
 allow system_server efs_file:dir search;
 
 #============= ueventd ==============
+allow ueventd vfat:file read;
 allow ueventd vfat:dir search;
 
 #============= wcnss_service ==============
 allow wcnss_service system_data_file:dir { read write };
+
+#============= time_daemon ==============
+allow time_daemon time_data_file:dir remove_name;
+allow time_daemon time_data_file:file getattr;
