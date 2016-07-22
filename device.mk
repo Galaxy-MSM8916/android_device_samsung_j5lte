@@ -147,7 +147,15 @@ PRODUCT_PACKAGES += \
 # GPS
 PRODUCT_PACKAGES += \
     gps.msm8916 \
-    gps.default
+    gps.default \
+    libloc_core \
+    libgps.utils \
+    libloc_eng \
+    libloc_api_v02
+
+#Sensors
+PRODUCT_PACKAGES += \
+    sensors.default
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/flp.conf:system/etc/flp.conf \
@@ -196,9 +204,6 @@ PRODUCT_PACKAGES += \
     libOmxVdpp \
     libstagefrighthw \
     qcmediaplayer
-
-# Overlay
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
 # Permissions
 PRODUCT_COPY_FILES += \
