@@ -82,7 +82,7 @@ TARGET_QCOM_NO_FM_FIRMWARE := true
 EXTENDED_FONT_FOOTPRINT := true
 
 # GPS
-#TARGET_GPS_HAL_PATH := $(LOCAL_PATH)/gps
+TARGET_GPS_HAL_PATH := $(LOCAL_PATH)/gps
 TARGET_NO_RPC := true
 
 # Init
@@ -151,8 +151,8 @@ TARGET_RIL_VARIANT := caf
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
-#include vendor/cm/sepolicy/sepolicy.mk
-#include vendor/cm/sepolicy/qcom/sepolicy.mk
+include vendor/cm/sepolicy/sepolicy.mk
+include vendor/cm/sepolicy/qcom/sepolicy.mk
 
 BOARD_SEPOLICY_DIRS += \
     device/samsung/gprimeltecan/sepolicy
