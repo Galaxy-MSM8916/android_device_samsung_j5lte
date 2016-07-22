@@ -32,6 +32,15 @@ PRODUCT_PACKAGES += \
     com.dsi.ant.antradio_library \
     libantradio
 
+#NFC
+PRODUCT_PACKAGES += \
+    libnfc-nci \
+    libnfc_nci_jni \
+    nfc_nci.msm8916 \
+    NfcNci \
+    Tag \
+    com.android.nfc_extras
+
 # Audio
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
@@ -134,7 +143,8 @@ PRODUCT_PACKAGES += \
 
 # GPS
 PRODUCT_PACKAGES += \
-    gps.msm8916
+    gps.msm8916 \
+    gps.default
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/flp.conf:system/etc/flp.conf \
