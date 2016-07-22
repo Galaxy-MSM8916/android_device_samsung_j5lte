@@ -57,6 +57,23 @@ $(FIRMWARE_MODEM_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(FIRMWARE_MODEM_SYMLINKS)
 
+# Create links for audcal data files
+$(shell mkdir -p $(TARGET_OUT)/vendor/firmware/keymaster; \
+    ln -sf /firmware/image/keymaste.b00 \
+    $(TARGET_OUT)/vendor/firmware/keymaster/keymaster.b00; \
+    ln -sf /firmware/image/keymaste.b01 \
+    $(TARGET_OUT)/vendor/firmware/keymaster/keymaster.b01; \
+    ln -sf /firmware/image/keymaste.b02 \
+    $(TARGET_OUT)/vendor/firmware/keymaster/keymaster.b02; \
+    ln -sf /firmware/image/keymaste.b03 \
+    $(TARGET_OUT)/vendor/firmware/keymaster/keymaster.b03; \
+    ln -sf /firmware/image/keymaste.mdt \
+    $(TARGET_OUT)/vendor/firmware/keymaster/keymaster.mdt)
+    
+$(shell mkdir -p $(TARGET_OUT)/lib/modules/pronto; \
+    ln -sf /system/lib/modules/pronto/pronto_wlan.ko \
+    $(TARGET_OUT)/lib/modules/wlan.ko)
+    
 include $(CLEAR_VARS)
 
 endif
