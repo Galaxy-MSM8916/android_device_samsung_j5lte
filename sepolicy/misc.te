@@ -18,7 +18,7 @@ allow rild proc_net:file write;
 
 #============= shell ==============
 allow shell block_device:dir search;
-allow shell labeledfs:filesystem remount;
+#allow shell labeledfs:filesystem remount;
 
 #============= system_server ==============
 allow system_server efs_file:dir search;
