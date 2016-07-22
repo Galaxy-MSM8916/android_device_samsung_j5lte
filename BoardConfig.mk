@@ -162,6 +162,7 @@ BOARD_SEPOLICY_UNION += \
     file.te \
     healthd.te \
     qseecomd.te \
+    misc.te \
     surfaceflinger.te \
     system_server.te \
     wcnss_service.te \
