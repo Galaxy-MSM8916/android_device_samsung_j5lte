@@ -117,7 +117,24 @@ service audiod /system/bin/audiod
 
 on boot
     start rmt_storage
+    #load modules at boot
     insmod /system/lib/modules/adsprpc.ko
+    insmod /system/lib/modules/ansi_cprng.ko
+    insmod /system/lib/modules/core_ctl.ko
+    insmod /system/lib/modules/evbug.ko
+    insmod /system/lib/modules/gator.ko
+    insmod /system/lib/modules/msm-buspm-dev.ko
+    insmod /system/lib/modules/radio-iris-transport.ko
+    insmod /system/lib/modules/spidev.ko
+    insmod /system/lib/modules/tcp_htcp.ko
+    insmod /system/lib/modules/tcp_westwood.ko
+    insmod /system/lib/modules/wlan.ko
+#    insmod /system/lib/modules/oprofile.ko
+#    insmod /system/lib/modules/test-iosched.ko
+#    insmod /system/lib/modules/mmc_block_test.ko
+#    insmod /system/lib/modules/mmc_test.ko
+#    insmod /system/lib/modules/dma_test.ko
+    
 # access permission for secure touch
     chmod 0660 /sys/devices/soc.0/78b9000.i2c/i2c-5/5-0020/secure_touch_enable
     chmod 0440 /sys/devices/soc.0/78b9000.i2c/i2c-5/5-0020/secure_touch
