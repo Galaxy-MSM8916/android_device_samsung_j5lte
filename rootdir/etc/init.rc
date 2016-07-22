@@ -219,21 +219,6 @@ on late-init
     # issued fs triggers have completed.
     trigger load_all_props_action
 
-	modprobe ansi_cprng
-	modprobe core_ctl
-	modprobe dma_test
-	modprobe evbug
-	modprobe gator
-	modprobe mmc_block_test
-	modprobe mmc_test
-	modprobe msm-buspm-dev
-	modprobe oprofile
-	modprobe radio-iris-transport
-	modprobe spidev
-	modprobe tcp_htcp
-	modprobe tcp_westwood
-	modprobe test-iosched
-
     # Remove a file to wake up anything waiting for firmware.
     trigger firmware_mounts_complete
 
