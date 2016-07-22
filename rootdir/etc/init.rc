@@ -74,6 +74,7 @@ on init
     write /sys/fs/cgroup/memory/sw/memory.move_charge_at_immigrate 1
     chown root system /sys/fs/cgroup/memory/sw/tasks
     chmod 0660 /sys/fs/cgroup/memory/sw/tasks
+    chmod 0220 /sys/fs/cgroup/memory/cgroup.event_control
 
     mkdir /system
     mkdir /data 0771 system system
@@ -138,7 +139,7 @@ on init
     chmod 0660 /dev/cpuctl/tasks
     write /dev/cpuctl/cpu.shares 1024
     write /dev/cpuctl/cpu.rt_runtime_us 950000
-    write /dev/cpuctl/cpu.rt_period_us 1000000
+    write /dev/cpuctl/cpu.rt_period_us 1000000  
 
     mkdir /dev/cpuctl/apps
     chown system system /dev/cpuctl/apps/tasks
@@ -154,6 +155,24 @@ on init
     write /dev/cpuctl/apps/bg_non_interactive/cpu.shares 52
     write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_runtime_us 700000
     write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_period_us 1000000
+    
+    # Create cgroup mount points for process groups
+    mkdir /dev/cpuctl
+    mount cgroup none /dev/cpuctl cpu
+    chown system system /dev/cpuctl
+    chown system system /dev/cpuctl/tasks
+    chmod 0666 /dev/cpuctl/tasks
+    write /dev/cpuctl/cpu.shares 1024
+    write /dev/cpuctl/cpu.rt_runtime_us 800000
+    write /dev/cpuctl/cpu.rt_period_us 1000000
+
+    mkdir /dev/cpuctl/bg_non_interactive
+    chown system system /dev/cpuctl/bg_non_interactive/tasks
+    chmod 0666 /dev/cpuctl/bg_non_interactive/tasks
+    # 5.0 %
+    write /dev/cpuctl/bg_non_interactive/cpu.shares 52
+    write /dev/cpuctl/bg_non_interactive/cpu.rt_runtime_us 700000
+    write /dev/cpuctl/bg_non_interactive/cpu.rt_period_us 1000000
 
     # qtaguid will limit access to specific data based on group memberships.
     #   net_bw_acct grants impersonation of socket owners.
@@ -199,6 +218,21 @@ on late-init
     # this in another action so that the load will be scheduled after the prior
     # issued fs triggers have completed.
     trigger load_all_props_action
+
+	modprobe ansi_cprng
+	modprobe core_ctl
+	modprobe dma_test
+	modprobe evbug
+	modprobe gator
+	modprobe mmc_block_test
+	modprobe mmc_test
+	modprobe msm-buspm-dev
+	modprobe oprofile
+	modprobe radio-iris-transport
+	modprobe spidev
+	modprobe tcp_htcp
+	modprobe tcp_westwood
+	modprobe test-iosched
 
     # Remove a file to wake up anything waiting for firmware.
     trigger firmware_mounts_complete
