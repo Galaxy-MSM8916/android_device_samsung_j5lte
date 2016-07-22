@@ -39,7 +39,8 @@ PRODUCT_PACKAGES += \
     nfc_nci.msm8916 \
     NfcNci \
     Tag \
-    com.android.nfc_extras
+    com.android.nfc_extras \
+    com.android.nfc.helper
 
 # Audio
 PRODUCT_PACKAGES += \
