@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <mixer>
-    <!-- Fortuna 3G EUR OPEN ================================================ -->
+    <!-- Grand Prime LTE US TMO(without external amp) ================================================ -->
     <!-- These are the initial mixer settings -->
     <!-- reset RX/TX Start -->
     <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" value="0" />
@@ -15,6 +15,16 @@
     <ctl name="PRI_MI2S_RX_Voice Mixer VoWLAN" value="0" />
 
     <ctl name="PRI_MI2S_RX Port Mixer TERT_MI2S_TX" value="0" />
+
+    <ctl name="QUAT_MI2S_RX Audio Mixer MultiMedia1" value="0" />
+    <ctl name="QUAT_MI2S_RX Audio Mixer MultiMedia4" value="0" />
+    <ctl name="QUAT_MI2S_RX Audio Mixer MultiMedia5" value="0" />
+    <ctl name="QUAT_MI2S_RX_Voice Mixer Voice2" value="0" />
+    <ctl name="QUAT_MI2S_RX_Voice Mixer CSVoice" value="0" />
+    <ctl name="QUAT_MI2S_RX_Voice Mixer Voip" value="0" />
+    <ctl name="QUAT_MI2S_RX_Voice Mixer QCHAT" value="0" />
+    <ctl name="QUAT_MI2S_RX Port Mixer INTERNAL_FM_TX" value="0" />
+    <ctl name="QUAT_MI2S_RX_Voice Mixer VoWLAN" value="0" />
 
     <ctl name="AFE_PCM_RX_Voice Mixer Voice2" value="0" />
     <ctl name="AFE_PCM_RX Audio Mixer MultiMedia4" value="0" />
@@ -72,6 +82,7 @@
 
     <!-- reset TX part -->
     <ctl name="MultiMedia1 Mixer TERT_MI2S_TX" value="0" />
+    <ctl name="MultiMedia1 Mixer QUAT_MI2S_TX" value="0" />
     <ctl name="MultiMedia1 Mixer INTERNAL_BT_SCO_TX" value="0" />
     <ctl name="MultiMedia1 Mixer INTERNAL_FM_TX" value="0" />
     <ctl name="MultiMedia1 Mixer VOC_REC_UL" value="0" />
@@ -81,16 +92,22 @@
     <ctl name="Voice_Tx Mixer INTERNAL_BT_SCO_TX_Voice" value="0" />
     <ctl name="Voice_Tx Mixer PRI_MI2S_TX_Voice" value="0" />
 
+<ctl name="Voice_Tx Mixer TERT_MI2S_TX_Voice" value="0" />
+    <ctl name="Voice_Tx Mixer QUAT_MI2S_TX_Voice" value="0" />
+
     <ctl name="Voice2_Tx Mixer PRI_MI2S_TX_Voice2" value="0" />
+    <ctl name="Voice2_Tx Mixer QUAT_MI2S_TX_Voice2" value="0" />
     <ctl name="Voice2_Tx Mixer AFE_PCM_TX_Voice2" value="0" />
     <ctl name="Voice2_Tx Mixer INTERNAL_BT_SCO_TX_Voice2" value="0" />
-    <ctl name="Voice_Tx Mixer TERT_MI2S_TX_Voice" value="0" />
 
     <ctl name="Voip_Tx Mixer PRI_MI2S_TX_Voip" value="0" />
     <ctl name="Voip_Tx Mixer INTERNAL_BT_SCO_TX_Voip" value="0" />
     <ctl name="Voip_Tx Mixer TERT_MI2S_TX_Voip" value="0" />
 
+<ctl name="Voip_Tx Mixer QUAT_MI2S_TX_Voip" value="0" />
+
     <ctl name="VoWLAN_Tx Mixer TERT_MI2S_TX_VoWLAN" value="0" />
+    <ctl name="VoWLAN_Tx Mixer QUAT_MI2S_TX_VoWLAN" value="0" />
     <ctl name="VoWLAN_Tx Mixer INTERNAL_BT_SCO_TX_VoWLAN" value="0" />
     <ctl name="VoWLAN_Tx Mixer AFE_PCM_TX_VoWLAN" value="0" />
 
@@ -119,6 +136,8 @@
 
     <ctl name="MI2S_TX Channels" value="One" />
 
+<ctl name="VOC_EXT_EC MUX" value="NONE" />
+
     <ctl name="Internal BTSCO SampleRate" value="8000" />
 
     <ctl name="Voip Mode Config" value="12" />
@@ -128,7 +147,8 @@
     <ctl name="Voip Dtx Mode" value="0" />
 
     <ctl name="TTY Mode" value="Off" />
-
+    
+<ctl name="AUDIO_REF_EC_UL1 MUX" value="None" />
     <ctl name="MICBIAS CAPLESS Switch" value="0" />
 
     <!-- IIR -->
@@ -176,7 +196,7 @@
     <path name="deep-buffer-playback bt-sco">
         <ctl name="INTERNAL_BT_SCO_RX Audio Mixer MultiMedia1" value="1" />
     </path>
-
+	
     <path name="deep-buffer-playback bt-sco-wb">
         <path name="deep-buffer-playback bt-sco" />
     </path>
@@ -196,6 +216,11 @@
 
     <path name="deep-buffer-playback transmission-fm">
         <ctl name="INTERNAL_FM_RX Audio Mixer MultiMedia1" value="1" />
+    </path>
+
+    <path name="deep-buffer-playback speaker-and-bt-sco">
+        <path name="deep-buffer-playback bt-sco" />
+        <path name="deep-buffer-playback" />
     </path>
 
     <!-- low latency -->
@@ -226,6 +251,11 @@
 
     <path name="low-latency-playback transmission-fm">
         <ctl name="INTERNAL_FM_RX Audio Mixer MultiMedia5" value="1" />
+    </path>
+
+    <path name="low-latency-playback speaker-and-bt-sco">
+        <path name="low-latency-playback bt-sco" />
+        <path name="low-latency-playback" />
     </path>
 
     <!-- tunnel -->
@@ -553,12 +583,13 @@
     <!-- TX part -->
     <path name="main-mic">
         <ctl name="DEC1 MUX" value="ADC1" />
-        <ctl name="MICBIAS CAPLESS Switch" value="1" />
+		<ctl name="MICBIAS CAPLESS Switch" value="1" />
     </path>
 
     <path name="sub-mic">
         <ctl name="DEC1 MUX" value="ADC2" />
         <ctl name="ADC2 MUX" value="INP3" />
+    <ctl name="MICBIAS CAPLESS Switch" value="1" />
     </path>
 
     <path name="3rd-mic">
@@ -571,7 +602,7 @@
         <ctl name="DEC1 MUX" value="ADC2" />
         <ctl name="ADC2 MUX" value="INP2" />
         <ctl name="IIR1 INP1 MUX" value="DEC1" />
-        <ctl name="MICBIAS CAPLESS Switch" value="0" />
+		<ctl name="MICBIAS CAPLESS Switch" value="0" />
     </path>
 
     <path name="main-sub-mic">
@@ -583,6 +614,7 @@
         <ctl name="ADC1 Volume" value="4" />
         <ctl name="DEC2 Volume" value="82" />
         <ctl name="ADC3 Volume" value="4" />
+    <ctl name="MICBIAS CAPLESS Switch" value="1" />
     </path>
 
     <path name="sub-main-mic">
@@ -594,6 +626,7 @@
         <ctl name="ADC1 Volume" value="4" />
         <ctl name="DEC2 Volume" value="82" />
         <ctl name="ADC3 Volume" value="4" />
+    <ctl name="MICBIAS CAPLESS Switch" value="1" />
     </path>
 
     <path name="sub-3rd-mic">
@@ -635,8 +668,8 @@
 
     <path name="headset">
         <path name="ear" />
-        <ctl name="RX1 Digital Volume" value="81" />
-        <ctl name="RX2 Digital Volume" value="81" />
+        <ctl name="RX1 Digital Volume" value="82" />
+        <ctl name="RX2 Digital Volume" value="82" />
     </path>
 
     <path name="dock">
@@ -679,6 +712,11 @@
         <ctl name="EAR PA Gain" value="POS_1P5_DB" />	
     </path>
 
+    <path name="speaker-and-bt-sco">
+        <path name="spk" />
+        <ctl name="RX3 Digital Volume" value="84" />
+    </path>
+
     <path name="fm-speaker">
         <path name="spk" />
         <ctl name="RX3 Digital Volume" value="76" />
@@ -697,7 +735,7 @@
     <!-- Recording Scenario  -->
     <path name="rec-main-mic">
         <path name="main-mic" />
-        <ctl name="DEC1 Volume" value="89" />
+        <ctl name="DEC1 Volume" value="88" />
         <ctl name="ADC1 Volume" value="2" />
     </path>
 
@@ -714,7 +752,11 @@
     </path>
 
     <path name="rec-stereo-mic">
-        <path name="rec-main-mic" />
+       <path name="sub-main-mic" />
+        <ctl name="DEC1 Volume" value="98" />
+        <ctl name="ADC1 Volume" value="14" />
+        <ctl name="DEC2 Volume" value="85" />
+        <ctl name="ADC3 Volume" value="6" />
     </path>
 
     <path name="rec-high-gain-main-mic">
@@ -771,7 +813,7 @@
 
     <path name="vr-headset-mic">
         <path name="ear-mic" />
-        <ctl name="DEC1 Volume" value="88" />
+        <ctl name="DEC1 Volume" value="82" />
         <ctl name="ADC2 Volume" value="4" />
     </path>
 
@@ -869,12 +911,12 @@
 
     <path name="voice-call-speaker">
         <path name="spk" />
-        <ctl name="RX3 Digital Volume" value="82" />
+        <ctl name="RX3 Digital Volume" value="83" />
     </path>
 
     <path name="voice-call-speaker-extra-vol">
         <path name="spk" />
-        <ctl name="RX3 Digital Volume" value="82" />
+        <ctl name="RX3 Digital Volume" value="83" />
     </path>
 
     <path name="voice-call-speaker-emergency">
@@ -930,11 +972,19 @@
     </path>
 
     <path name="voice-call-NS-mic-handset">
-        <path name="voice-call-main-mic" />
+        <path name="main-sub-mic" />
+	<ctl name="DEC1 Volume" value="84" />
+	<ctl name="ADC1 Volume" value="4" />
+	<ctl name="DEC2 Volume" value="84" />
+	<ctl name="ADC3 Volume" value="4" />
     </path>
 
     <path name="voice-call-NS-mic-speaker">
-        <path name="voice-call-main-mic" />
+        <path name="sub-main-mic" />
+	<ctl name="DEC1 Volume" value="84" />
+	<ctl name="ADC1 Volume" value="4" />
+	<ctl name="DEC2 Volume" value="84" />
+	<ctl name="ADC3 Volume" value="4" />
     </path>
     <!-- end of Voice call Scenario  -->
 
@@ -1051,7 +1101,7 @@
     <!-- RX part -->
     <path name="video-call-handset">
         <path name="rcv" />
-        <ctl name="RX1 Digital Volume" value="81" />
+        <ctl name="RX1 Digital Volume" value="79" />
     </path>
 
     <path name="video-call-handset-extra-vol">
@@ -1060,7 +1110,7 @@
 
     <path name="video-call-speaker">
         <path name="spk" />
-        <ctl name="RX3 Digital Volume" value="82" />
+        <ctl name="RX3 Digital Volume" value="83" />
     </path>
 
     <path name="video-call-speaker-extra-vol">
@@ -1096,20 +1146,24 @@
 
     <path name="video-call-headset-mic">
         <path name="ear-mic" />
-        <ctl name="DEC1 Volume" value="84" />
+        <ctl name="DEC1 Volume" value="94" />
         <ctl name="ADC2 Volume" value="4" />
     </path>
 
     <path name="video-call-NS-mic-handset">
-        <path name="main-mic" />
-        <ctl name="DEC1 Volume" value="84" />
-        <ctl name="ADC1 Volume" value="4" />
+        <path name="main-sub-mic" />
+	<ctl name="DEC1 Volume" value="84" />
+	<ctl name="ADC1 Volume" value="4" />
+	<ctl name="DEC2 Volume" value="84" />
+	<ctl name="ADC3 Volume" value="4" />
     </path>
 
     <path name="video-call-NS-mic-speaker">
-        <path name="main-mic" />
-        <ctl name="DEC1 Volume" value="84" />
-        <ctl name="ADC1 Volume" value="4" />
+        <path name="sub-main-mic" />
+	<ctl name="DEC1 Volume" value="84" />
+	<ctl name="ADC1 Volume" value="4" />
+	<ctl name="DEC2 Volume" value="84" />
+	<ctl name="ADC3 Volume" value="4" />
     </path>
     <!-- end of Video call Scenario  -->
 
@@ -1118,12 +1172,12 @@
     <!-- RX part -->
     <path name="VoLTE-voice-handset">
         <path name="rcv" />
-        <ctl name="RX1 Digital Volume" value="81" />
+        <ctl name="RX1 Digital Volume" value="79" />
     </path>
 
     <path name="VoLTE-voice-handset-extra-vol">
         <path name="rcv" />
-        <ctl name="RX1 Digital Volume" value="81" />
+        <ctl name="RX1 Digital Volume" value="79" />
     </path>
 
     <path name="VoLTE-voice-handset-hac">
@@ -1133,12 +1187,12 @@
 
     <path name="VoLTE-voice-speaker">
         <path name="spk" />
-        <ctl name="RX3 Digital Volume" value="80" />
+        <ctl name="RX3 Digital Volume" value="83" />
     </path>
 
     <path name="VoLTE-voice-speaker-extra-vol">
         <path name="spk" />
-        <ctl name="RX3 Digital Volume" value="80" />
+        <ctl name="RX3 Digital Volume" value="83" />
     </path>
 
     <path name="VoLTE-voice-headset">
@@ -1172,20 +1226,24 @@
 
     <path name="VoLTE-voice-headset-mic">
         <path name="ear-mic" />
-        <ctl name="DEC1 Volume" value="84" />
+        <ctl name="DEC1 Volume" value="94" />
         <ctl name="ADC2 Volume" value="4" />
     </path>
 
     <path name="VoLTE-voice-NS-mic-handset">
-        <path name="main-mic" />
-        <ctl name="DEC1 Volume" value="84" />
-        <ctl name="ADC1 Volume" value="4" />
+        <path name="main-sub-mic" />
+	<ctl name="DEC1 Volume" value="84" />
+	<ctl name="ADC1 Volume" value="4" />
+	<ctl name="DEC2 Volume" value="84" />
+	<ctl name="ADC3 Volume" value="4" />
     </path>
 
     <path name="VoLTE-voice-NS-mic-speaker">
-        <path name="main-mic" />
-        <ctl name="DEC1 Volume" value="84" />
-        <ctl name="ADC1 Volume" value="4" />
+        <path name="sub-main-mic" />
+	<ctl name="DEC1 Volume" value="84" />
+	<ctl name="ADC1 Volume" value="4" />
+	<ctl name="DEC2 Volume" value="84" />
+	<ctl name="ADC3 Volume" value="4" />
     </path>
     <!-- end of VoLTE Voice call Scenario  -->
 
@@ -1248,15 +1306,19 @@
     </path>
 
     <path name="VoLTE-video-NS-mic-handset">
-        <path name="main-mic" />
-        <ctl name="DEC1 Volume" value="84" />
-        <ctl name="ADC1 Volume" value="4" />
+        <path name="main-sub-mic" />
+	<ctl name="DEC1 Volume" value="84" />
+	<ctl name="ADC1 Volume" value="4" />
+	<ctl name="DEC2 Volume" value="84" />
+	<ctl name="ADC3 Volume" value="4" />
     </path>
 
     <path name="VoLTE-video-NS-mic-speaker">
-        <path name="main-mic" />
-        <ctl name="DEC1 Volume" value="84" />
-        <ctl name="ADC1 Volume" value="4" />
+        <path name="sub-main-mic" />
+	<ctl name="DEC1 Volume" value="84" />
+	<ctl name="ADC1 Volume" value="4" />
+	<ctl name="DEC2 Volume" value="84" />
+	<ctl name="ADC3 Volume" value="4" />
     </path>
     <!-- end of VoLTE Video call Scenario  -->
 
@@ -1292,18 +1354,21 @@
         <path name="main-mic" />
         <ctl name="DEC1 Volume" value="84" />
         <ctl name="ADC1 Volume" value="4" />
+        <ctl name="TTY Mode" value="VCO" />
     </path>
 
     <path name="TTY-headset-mic">
         <path name="ear-mic" />
         <ctl name="DEC1 Volume" value="84" />
         <ctl name="ADC2 Volume" value="4" />
+        <ctl name="TTY Mode" value="HCO" />
     </path>
 
     <path name="TTY-full-mic">
         <path name="ear-mic" />
         <ctl name="DEC1 Volume" value="84" />
         <ctl name="ADC2 Volume" value="4" />
+        <ctl name="TTY Mode" value="FULL" />
     </path>
     <!-- end of TTY Scenario -->
 
@@ -1317,7 +1382,7 @@
 
     <path name="voip-speaker-comm">
         <path name="spk" />
-        <ctl name="RX3 Digital Volume" value="80" />
+        <ctl name="RX3 Digital Volume" value="82" />
     </path>
 
     <path name="voip-headset-comm">
@@ -1400,7 +1465,17 @@
         <ctl name="RX1 Digital Volume" value="81" />
     </path>
 
+    <path name="voip-handset-carrier-extra-vol">
+        <path name="rcv" />
+        <ctl name="RX1 Digital Volume" value="81" />
+    </path>
+
     <path name="voip-speaker-carrier">
+        <path name="spk" />
+        <ctl name="RX3 Digital Volume" value="80" />
+    </path>
+
+    <path name="voip-speaker-carrier-extra-vol">
         <path name="spk" />
         <ctl name="RX3 Digital Volume" value="80" />
     </path>
@@ -1445,13 +1520,13 @@
     <path name="voip-headphone-mic-comm">
         <path name="main-mic" />
         <ctl name="DEC1 Volume" value="84" />
-        <ctl name="ADC1 Volume" value="4" />
+        <ctl name="ADC1 Volume" value="14" />
     </path>
 
     <path name="voip-headset-mic-comm">
         <path name="ear-mic" />
         <ctl name="DEC1 Volume" value="84" />
-        <ctl name="ADC2 Volume" value="4" />
+        <ctl name="ADC2 Volume" value="14" />
     </path>
 
     <path name="voip-main-mic-others">
@@ -1549,9 +1624,11 @@
     </path>
 
     <path name="voip-main-mic-carrier">
-        <path name="main-mic" />
+        <path name="main-sub-mic" />
         <ctl name="DEC1 Volume" value="84" />
         <ctl name="ADC1 Volume" value="4" />
+        <ctl name="DEC2 Volume" value="84" />
+        <ctl name="ADC3 Volume" value="4" />
     </path>
 
     <path name="voip-sub-mic-carrier">
@@ -1658,7 +1735,9 @@
     </path>
 
     <path name="loopback-sub-mic-DSP">
-        <path name="loopback-main-mic-DSP" />
+        <path name="sub-mic" />
+        <ctl name="ADC3 Volume" value="4" />
+        <ctl name="DEC1 Volume" value="69" />
     </path>
 
     <path name="loopback-3rd-mic-DSP">
@@ -1772,7 +1851,7 @@
     </path>
 
     <path name="loopback-cp2-sub-mic-DSP">
-        <path name="loopback-main-mic-DSP" />
+        <path name="loopback-sub-mic-DSP" />
     </path>
 
     <path name="loopback-cp2-3rd-mic-DSP">
