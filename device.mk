@@ -8,6 +8,8 @@ $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)
 # Also get non-open-source specific aspects if available
 $(call inherit-product-if-exists, vendor/samsung/gprimeltecan/gprimeltecan-common-vendor.mk)
 
+include $(LOCAL_PATH)/keylayout/Layouts.mk
+
 # Common overlay
 DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimeltecan/overlay
 
