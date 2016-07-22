@@ -16,6 +16,3 @@ Dimensions | 144.8 x 72.1 x 8.6 mm
 Display | 540 x 960 (qHD), 5.0" (126.4mm)
 Rear Camera  | 8.0 MP, LED flash
 Front Camera | 5.0 MP
-
-
-Check the [`local_manifests`](./local_manifests) and [`patch`](./patch) directory
