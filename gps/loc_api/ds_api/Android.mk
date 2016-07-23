@@ -1,5 +1,5 @@
-ifneq ($(QCPATH),)
-ifneq ($(BUILD_TINY_ANDROID),true)
+#ifneq ($(QCPATH),)
+#ifneq ($(BUILD_TINY_ANDROID),true)
 
 LOCAL_PATH := $(call my-dir)
 
@@ -47,5 +47,5 @@ LOCAL_PRELINK_MODULE := false
 
 include $(BUILD_SHARED_LIBRARY)
 
-endif # not BUILD_TINY_ANDROID
-endif # QCPATH
+#endif # not BUILD_TINY_ANDROID
+#endif # QCPATH

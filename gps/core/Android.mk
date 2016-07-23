@@ -1,4 +1,4 @@
-ifneq ($(BUILD_TINY_ANDROID),true)
+#ifneq ($(BUILD_TINY_ANDROID),true)
 
 LOCAL_PATH := $(call my-dir)
 
@@ -52,4 +52,4 @@ LOCAL_PRELINK_MODULE := false
 
 include $(BUILD_SHARED_LIBRARY)
 
-endif # not BUILD_TINY_ANDROID
+#endif # not BUILD_TINY_ANDROID
