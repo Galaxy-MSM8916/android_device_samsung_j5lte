@@ -53,6 +53,8 @@ USE_DEVICE_SPECIFIC_CAMERA := true
 # BOARD_CHARGER_ENABLE_SUSPEND := true
 # BOARD_CHARGER_SHOW_PERCENTAGE := true
 
+#sec_s3fwrn5 <- NFC HAL
+
 # CMHW
 BOARD_HARDWARE_CLASS += $(LOCAL_PATH)/cmhw
 
@@ -108,7 +110,7 @@ TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
 #TARGET_KERNEL_SOURCE := kernel/samsung/fortuna
 
 # Lights
-TARGET_PROVIDES_LIBLIGHT := true
+TARGET_PROVIDES_LIBLIGHT := false
 
 # malloc implementation
 MALLOC_IMPL := dlmalloc
