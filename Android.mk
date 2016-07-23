@@ -70,6 +70,13 @@ ALL_DEFAULT_INSTALLED_MODULES += $(FIRMWARE_MODEM_SYMLINKS)
 #    ln -sf /firmware/image/keymaste.mdt \
 #    $(TARGET_OUT)/vendor/firmware/keymaster/keymaster.mdt)
 
+#Create link for nfc configs
+$(shell mkdir -p $(TARGET_OUT)/etc/; \
+    ln -sf /etc/libnfc-sec-hal.conf \
+    $(TARGET_OUT)/etc/libnfc-brcm-hal.conf; \
+    ln -sf /etc/libnfc-sec.conf \
+    $(TARGET_OUT)/etc/libnfc-brcm.conf)
+
 #Create link for wifi config
 $(shell mkdir -p $(TARGET_OUT)/etc/wifi; \
     ln -sf /etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
