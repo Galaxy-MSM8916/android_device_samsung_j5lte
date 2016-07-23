@@ -119,6 +119,7 @@ PRODUCT_PACKAGES += \
     init.qcom.sh \
     init.target.rc \
     ueventd.qcom.rc \
+    init.qcom.zram.sh \
     twrp.fstab
 
 # Keylayout
@@ -143,6 +144,10 @@ PRODUCT_PACKAGES += \
 # Live Wallpapers
 PRODUCT_PACKAGES += \
     librs_jni
+
+# USB
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+persist.sys.usb.config=mtp
 
 # GPS
 PRODUCT_PACKAGES += \
@@ -251,7 +256,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.gps.qc_nlp_in_use=1 \
     persist.loc.nlp_name=com.qualcomm.location \
     ro.gps.agps_provider=1 \
-    ro.pip.gated=0
+    ro.pip.gated=0 \
+    ro.product.device=gprimeltecan \
+    ro.product.model=SM-G530W
 
 # Ril
 PRODUCT_PACKAGES += \
