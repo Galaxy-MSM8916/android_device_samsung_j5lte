@@ -1,1 +1,3 @@
+#============= wcnss_service ==============
 allow wcnss_service persist_file:dir search;
+allow wcnss_service system_data_file:dir { read write };
