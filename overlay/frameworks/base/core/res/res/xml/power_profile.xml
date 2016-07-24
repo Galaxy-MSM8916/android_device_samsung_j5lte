@@ -45,4 +45,20 @@
         <value>231</value>
     </array>
     <item name="battery.capacity">2600</item> /* mAh */
+    
+<!--    <array name="cpu.speeds">
+        <value>1190400</value>
+        <value>1094400</value>
+        <value>998400</value>
+        <value>800000</value>
+    </array>
+    <item name="cpu.idle">2.3</item>
+    <item name="wakeup.power">0.15</item>
+    <array name="cpu.active">
+        <value>169</value>
+        <value>141</value>
+        <value>129</value>
+        <value>94</value> -->
+</array>
+    
 </device>
