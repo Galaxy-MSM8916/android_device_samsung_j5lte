@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+
+  <project path="device/samsung/gprimeltecan" name="vince2678/android_device_samsung_gprimeltecan" groups="device" remote="github" revision="cm-12.1"/>
+  <project path="device/qcom-common" name="vince2678/android_device_qcom-common" remote="github" revision="cm-12.1"/>
+  <project path="vendor/samsung/gprimeltecan" name="vince2678/android_vendor_samsung_gprimeltecan" remote="github" revision="cm-12.1"/>
+  <project path="device/samsung/qcom-common" name="CyanogenMod/android_device_samsung_qcom-common" groups="device" />
+  <project path="hardware/samsung" name="CyanogenMod/android_hardware_samsung" />
+
+</manifest>
