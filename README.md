@@ -16,3 +16,10 @@ Dimensions | 144.8 x 72.1 x 8.6 mm
 Display | 540 x 960 (qHD), 5.0" (126.4mm)
 Rear Camera  | 8.0 MP, LED flash, S.LSI. S5K4H5YB
 Front Camera | 5.0 MP, S.LSI. S5K5E3YX
+
+Check the [`local_manifests`](./local_manifests) directory
+
+
+## Credits:
+- [x] Grand Prime SM-G530FZ (codename:fortuna) contributors (https://github.com/GrandPrime)
+- [x] Grand Prime SM-G530H (codename:fortuna3g) contributors (https://github.com/ZIM555)
