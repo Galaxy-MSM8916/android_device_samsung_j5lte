@@ -17,11 +17,6 @@
         <value>0</value>
     </array>
     <array name="cpu.speeds">
-        <value>1700000</value>
-        <value>1600000</value>
-        <value>1500000</value>
-        <value>1400000</value>
-        <value>1300000</value>
         <value>1200000</value>
         <value>1100000</value>
         <value>1000000</value>
@@ -37,11 +32,6 @@
     <item name="cpu.idle">4</item>
     <item name="cpu.awake">167</item>
     <array name="cpu.active">
-        <value>1003</value>
-        <value>937</value>
-        <value>825</value>
-        <value>710</value>
-        <value>633</value>
         <value>584</value>
         <value>546</value>
         <value>510</value>
@@ -55,4 +45,20 @@
         <value>231</value>
     </array>
     <item name="battery.capacity">2600</item> /* mAh */
+    
+<!--    <array name="cpu.speeds">
+        <value>1190400</value>
+        <value>1094400</value>
+        <value>998400</value>
+        <value>800000</value>
+    </array>
+    <item name="cpu.idle">2.3</item>
+    <item name="wakeup.power">0.15</item>
+    <array name="cpu.active">
+        <value>169</value>
+        <value>141</value>
+        <value>129</value>
+        <value>94</value> 
+</array> -->
+    
 </device>
