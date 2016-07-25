@@ -56,6 +56,10 @@ on init
    chown system radio /sys/class/power_supply/battery/batt_discharging_ntc_adc
    chown system radio /sys/class/power_supply/battery/batt_self_discharging_control
 
+    chown system radio /sys/class/sec/switch/otg_test
+    chown system radio /sys/class/sec/switch/uart_en
+
+
     # Right now vendor lives on the same filesystem as system,
     # but someday that may change.
     symlink /system/vendor /vendor
@@ -92,6 +96,8 @@ on init
 
     # Directory for putting things only root should see.
     mkdir /mnt/secure 0700 root root
+
+    symlink /dev/block/platform/7824900.sdhci/by-name/persistent /dev/block/persistent
 
     # Directory for staging bindmounts
     mkdir /mnt/secure/staging 0700 root root
@@ -316,6 +322,7 @@ on post-fs-data
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
     mkdir /data/misc/wifi_share_profile 0771 wifi system
+    mkdir /data/misc/wifi_sns_patch 0770 wifi system
     mkdir /data/misc/wifi_hostapd 0771 wifi system
     mkdir /data/misc/ethernet 0770 system system
     mkdir /data/misc/dhcp 0770 dhcp dhcp
@@ -325,6 +332,8 @@ on post-fs-data
     chown system wifi /data/misc/wifi/wpa_supplicant.conf
     mkdir /data/local 0751 root root
     mkdir /data/misc/media 0700 media media
+    
+    mkdir /data/misc/radio/hatp 0755 radio system
 
     # icd
     check_icd
@@ -333,6 +342,8 @@ on post-fs-data
     chown system system /dev/icdr
     chmod 0644 /dev/icdr
     chown system system /dev/tzic
+    restorecon /dev/icd
+    restorecon /dev/icdr
 
     mkdir /data/misc/radio/hatp 0755 radio system
     # vpnclient
@@ -369,6 +380,16 @@ on post-fs-data
     restorecon /data/log
     restorecon /data/anr
 
+# Mobicore
+    mkdir /data/app/mcRegistry 0775 system system
+    mkdir /efs/TEE  0770 radio system
+
+    chmod 700 /dev/mobicore
+    chmod 666 /dev/mobicore-user
+    chown system system /dev/mobicore
+    chown radio system /dev/mobicore-user
+    export MC_AUTH_TOKEN_PATH /efs
+
     # create dalvik-cache, so as to enforce our permissions
     mkdir /data/dalvik-cache 0771 root root
     mkdir /data/dalvik-cache/profiles 0711 system system
@@ -389,6 +410,13 @@ on post-fs-data
     # the following directory.
     mkdir /data/mediadrm 0770 mediadrm mediadrm
 
+    mkdir /data/adb 0700 root root
+
+    #create uibc dir
+    mkdir /dev/socket/uibc 0777 media system
+    chown media system /dev/socket/uibc
+    chmod 0775 /dev/socket/uibc
+
 # DRK permission
     mkdir /efs/prov 0770 radio system
     mkdir /efs/prov_data 0770 radio system
@@ -405,8 +433,26 @@ on post-fs-data
     rm /efs/prov/prov.mdt
 # CS socket
     mkdir /dev/socket/cs_socket 0770 system system
-
+    
 # [ SEC_MM_DRM
+    # OMA DB directory creation
+    mkdir /data/system/databases 0775
+    chown system system /data/system/databases
+    chmod 0775 /data/system/databases
+
+    # DRM directory creation
+    mkdir /system/etc/security/.drm 0775
+    chown root root /system/etc/security/.drm
+    chmod 0775 /system/etc/security/.drm
+
+    # Added for Playready DRM Support
+    mkdir /data/data/.drm 0775
+    chown drm system /data/data/.drm
+    chmod 0775 /data/data/.drm
+    mkdir /data/data/.drm/.playready 0775
+    chown drm system /data/data/.drm/.playready
+    chmod 0775 /data/data/.drm/.playready
+
     # Added drm folder to copy drm plugins
     mkdir /system/lib/drm 0775
     chown root root /system/lib/drm
@@ -418,6 +464,11 @@ on post-fs-data
     restorecon_recursive /data/property
     restorecon_recursive /data/security
 # ]
+
+	# MTP device permission
+	chmod 0660 /dev/usb_mtp_gadget
+	chown system mtp /dev/usb_mtp_gadget
+    mkdir /dev/socket/mtp 0770 system mtp
 
     # symlink to bugreport storage location
     symlink /data/data/com.android.shell/files/bugreports /data/bugreports
@@ -450,7 +501,20 @@ on post-fs-data
     # Set indication (checked by vold) that we have finished this action
     #setprop vold.post_fs_data_done 1
 
+# Downloadable Filter
+    mkdir /data/DownFilters       0775 system system
+    mkdir /data/DownFilters/Lib   0775 system system
+    mkdir /data/DownFilters/Lib64 0775 system system
+
+    #SideSync
+    chown system system /dev/android_ssusbcon
+    chmod 0660 /dev/android_ssusbcon
+
 on boot
+
+# Mobicore
+    mkdir /data/app/mcRegistry 0775 system system
+
     # basic network init
     ifup lo
     hostname localhost
@@ -472,6 +536,32 @@ on boot
     # Tweak background writeout
     write /proc/sys/vm/dirty_expire_centisecs 200
     write /proc/sys/vm/dirty_background_ratio  5
+
+    # permission for Input Device(TSP).
+    chown system radio /sys/class/sec/tsp/cmd
+    chmod 0660 /sys/class/sec/tsp/input/enabled
+    chown system system /sys/class/sec/tsp/input/enabled
+
+    # permission for Input Device(TKEY).
+    chmod 0660 /sys/class/sec/sec_touchkey/input/enabled
+    chown system system /sys/class/sec/sec_touchkey/input/enabled
+    chown system system /sys/class/sec/sec_touchkey/brightness
+
+    # Permissions for System Server and daemons.
+    chown radio system /sys/android_power/state
+    chown radio system /sys/android_power/request_state
+    chown radio system /sys/android_power/acquire_full_wake_lock
+    chown radio system /sys/android_power/acquire_partial_wake_lock
+    chown radio system /sys/android_power/release_wake_lock
+    chown system system /sys/power/autosleep
+    chown system system /sys/power/state
+    chown system system /sys/power/wakeup_count
+    chown radio system /sys/power/wake_lock
+    chown radio system /sys/power/wake_unlock
+    chmod 0660 /sys/power/state
+    chmod 0660 /sys/power/wake_lock
+    chmod 0660 /sys/power/wake_unlock
+    chown system system /sys/module/msm_thermal/core_control/enabled
 
 # SEC DVFS sysfs node
     chown radio system /sys/power/cpufreq_max_limit
@@ -522,6 +612,8 @@ on boot
     chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
     chown system system /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
     chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # Assume SMP uses shared cpufreq policy for all CPUs
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
@@ -547,6 +639,12 @@ on boot
     chown system system /sys/kernel/ipv4/tcp_rmem_def
     chown system system /sys/kernel/ipv4/tcp_rmem_max
     chown root radio /proc/cmdline
+
+# Assign TCP buffer thresholds to be ceiling value of technology maximums
+# Increased technology maximums should be reflected here.
+    write /proc/sys/net/core/rmem_max  1048576
+    write /proc/sys/net/core/wmem_max  2097152
+
 
 # Auto Brightness
 	chown system system  /sys/class/backlight/panel/auto_brightness
@@ -577,6 +675,9 @@ on boot
 	chown radio system /sys/class/lcd/panel/temperature
 	chown radio system /sys/class/lcd/panel/tuning
 	chown radio system /sys/class/lcd/panel/lux
+
+    chown radio system /sys/class/lcd/panel/partial_disp
+    chmod 0660 /sys/class/lcd/panel/partial_disp
 
 # Adjust YUV to RGB Conversion(CSC_Conversion)
     chown system media_rw /sys/class/graphics/fb0/csc_cfg
@@ -664,37 +765,43 @@ on boot
     chown system system /sys/kernel/ipv4/tcp_rmem_def
     chown system system /sys/kernel/ipv4/tcp_rmem_max
     chown root radio /proc/cmdline
-# NFC_SLSI
+    
+###############################################################################
+# System LSI
+# Comment : add permission to device driver
+# NFC : Permissions for NFC
     chmod 0660 /dev/sec-nfc
+# NFC : change owner
     chown nfc nfc /dev/sec-nfc
+# NFC : create data/nfc for nv storage
     mkdir /data/nfc 0700 nfc nfc
     mkdir /data/nfc/param 0700 nfc nfc
 
-# Permissions for Camera
-    chown root system /sys/class/camera/rear/rear_camantibanding
-    chown system system /sys/class/camera/rear/rear_camfw
-    chown system system /sys/class/camera/rear/rear_checkfw_user
-    chown system system /sys/class/camera/rear/rear_checkfw_factory
-    chown system system /sys/class/camera/rear/rear_camfw_full
-    chown system system /sys/class/camera/rear/rear_camfw_load
-    chown system system /sys/class/camera/rear/rear_camtype
-    chown system radio /sys/class/camera/rear/rear_corever
-    chown system radio /sys/class/camera/rear/rear_companionfw_full
-    chown system radio /sys/class/camera/rear/rear_calcheck
-    chown system radio /sys/class/camera/rear/rear_fwcheck
+    chmod 0660 /dev/pn547
+# NFC : change owner
+    chown nfc nfc /dev/pn547
+# NFC : create data/nfc for nv storage
+    mkdir /data/nfc 0700 nfc nfc
+    mkdir /data/nfc/param 0700 nfc nfc
+###############################################################################
+
+  # Permissions for Camera
     chown system system /sys/class/camera/rear/isp_core
+    chown system system /sys/class/camera/rear/rear_camfw_full
+    chown system system /sys/class/camera/rear/rear_camfw
+    chown system system /sys/class/camera/rear/rear_camtype
     chown system radio /sys/class/camera/flash/rear_flash
-    chown system radio /sys/class/camera/flash/front_flash
     chown system system /sys/class/camera/front/front_camfw
     chown system system /sys/class/camera/front/front_camtype
     chown system system /sys/class/camera/front/front_camfw_full
     chown system system /sys/class/camera/front/front_camfw_load
+    chown system system /sys/class/camera/rear/rear_checkfw_user
+    chown system system /sys/class/camera/rear/rear_checkfw_factory
 
 #OTG Test
     chown system radio /sys/class/host_notify/usb_otg/booster
     chmod 0660 /sys/class/host_notify/usb_otg/booster
-    chown system radio /sys/class/usb_notify/usb_control/disable
-    chmod 0660 /sys/class/usb_notify/usb_control/disable
+
 # Accelerometer_sensor
     chown system radio /sys/class/sensors/accelerometer_sensor/raw_data
     chown system radio /sys/class/sensors/accelerometer_sensor/calibration
@@ -990,12 +1097,26 @@ service netd /system/bin/netd
 service debuggerd /system/bin/debuggerd
     class main
 
+# icd
+service icd /system/bin/icd
+    class main
+    user system
+    group system log
+    onrestart check_icd
+    oneshot
+
 service ril-daemon /system/bin/rild
     class main
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
     user root
     group radio cache inet misc audio sdcard_rw qcom_diag log
+
+# AT Distributor for factory test
+service at_distributor /system/bin/at_distributor
+    class late_start
+    user root
+    group radio misc log
 
 service surfaceflinger /system/bin/surfaceflinger
     class core
@@ -1109,6 +1230,12 @@ service pre-recovery /system/bin/uncrypt
     class main
     disabled
     oneshot
+
+service SIDESYNC_service /system/bin/ss_conn_daemon
+    class main
+    socket ss_conn_daemon stream 0666 system system
+    user system
+    group inet net_raw
 
 # otp
 service otp /system/bin/otp_server

@@ -11,6 +11,16 @@ LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
 include $(BUILD_PREBUILT)
 
 ######################
+### init.qcom.rilswitch.sh
+include $(CLEAR_VARS)
+LOCAL_MODULE       := init.qcom.rilswitch.sh
+LOCAL_MODULE_TAGS  := optional eng
+LOCAL_MODULE_CLASS := ETC
+LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
+include $(BUILD_PREBUILT)
+
+######################
 ### init.rc
 # Only copy init.rc if the target have its own.
 ifeq ($(TARGET_PROVIDES_INIT_RC),true)
