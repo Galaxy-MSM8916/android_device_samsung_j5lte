@@ -124,6 +124,7 @@ LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
 include $(BUILD_PREBUILT)
 
 ######################
+##init.qcom.zram.sh
 include $(CLEAR_VARS)
 LOCAL_MODULE       := init.qcom.zram.sh
 LOCAL_MODULE_TAGS  := optional eng
@@ -166,6 +167,26 @@ include $(BUILD_PREBUILT)
 ### ueventd.qcom.rc
 include $(CLEAR_VARS)
 LOCAL_MODULE       := ueventd.qcom.rc
+LOCAL_MODULE_TAGS  := optional eng
+LOCAL_MODULE_CLASS := ETC
+LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
+include $(BUILD_PREBUILT)
+
+######################
+### init.rilchip.rc
+include $(CLEAR_VARS)
+LOCAL_MODULE       := init.rilchip.rc
+LOCAL_MODULE_TAGS  := optional eng
+LOCAL_MODULE_CLASS := ETC
+LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
+include $(BUILD_PREBUILT)
+
+######################
+### init.rilcommon.rc
+include $(CLEAR_VARS)
+LOCAL_MODULE       := init.rilcommon.rc
 LOCAL_MODULE_TAGS  := optional eng
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
