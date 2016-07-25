@@ -1,0 +1,2 @@
+#============= rild ==============
+allow rild proc_net:file { open read write };
