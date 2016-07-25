@@ -33,10 +33,6 @@ on early-init
     mkdir /system 0777 root root
     symlink /data/tombstones /tombstones
 
-# import cne init file
-#on post-fs
-#    export LD_PRELOAD /vendor/lib/libNimsWrap.so
-
 on fs
     mount_all fstab.qcom
 
@@ -51,6 +47,8 @@ on fs
     wait /dev/block/bootdevice/by-name/persist
     check_fs /dev/block/bootdevice/by-name/persist ext4
     mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev noatime noauto_da_alloc,discard,journal_async_commit,errors=panic
+    mkdir /persist/data 0700  system system
+    restorecon_recursive   /persist
 
     wait /dev/block/bootdevice/by-name/efs
     check_fs /dev/block/bootdevice/by-name/efs ext4
@@ -59,6 +57,26 @@ on fs
     chmod 0771 /efs
     rm -rf /efs/dmverity
     restorecon -R /efs
+	
+on fs_sec_selinux
+	
+	wait /dev/block/bootdevice/by-name/apnhlos
+    mount vfat /dev/block/bootdevice/by-name/apnhlos /firmware ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware:s0
+
+	wait /dev/block/bootdevice/by-name/modem
+    mount vfat /dev/block/bootdevice/by-name/modem /firmware-modem ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware:s0
+
+	
+on fs_selinux
+
+    wait /dev/block/bootdevice/by-name/apnhlos
+    mount vfat /dev/block/bootdevice/by-name/apnhlos /firmware ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+    
+    wait /dev/block/bootdevice/by-name/modem
+    mount vfat /dev/block/bootdevice/by-name/modem /firmware-modem ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+	
+    #write /sys/kernel/boot_adsp/boot 1
 
 on post-fs-data
     mkdir /data/tombstones 0771 system system
@@ -68,7 +86,7 @@ on post-fs-data
     mkdir /tombstones/dsps 0771 system system
     mkdir /persist/data/sfs 0700 system system
     mkdir /persist/data/tz 0700 system system
-
+    mkdir /data/misc/dts 0770 media audio
 #start camera server as daemon
 service qcamerasvr /system/bin/mm-qcamera-daemon
     class main
@@ -78,7 +96,13 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
 #enable zram
 on property:ro.config.zram=true
     swapon_all fstab.qcom
-    write /proc/sys/vm/swappiness 100
+#    write /proc/sys/vm/swappiness 100
+
+#start gpu_snapshotd for gpu hang issue debugging
+service gpu_snapshotd /system/bin/gpu_snapshotd -s /sys/class/kgsl/kgsl-3d0/snapshot -d /data/log/ -m 0700
+    class late_start
+    user system
+    group system  
 
 # Allow usb charging to be disabled peristently
 on property:persist.usb.chgdisabled=1
@@ -87,10 +111,29 @@ on property:persist.usb.chgdisabled=1
 on property:persist.usb.chgdisabled=0
     write /sys/class/power_supply/battery/charging_enabled 1
 
+service qrngp /system/bin/qrngp -f
+   class main
+   user root
+   group root
+   oneshot
+   disabled
+
+on property:sys.boot_completed=1
+   start qrngp
+
 service qseecomd /system/bin/qseecomd
    class core
    user root
    group root
+
+#service aostlmd /system/bin/aostlmd
+#   class late_start
+#   user system
+#   group system net_raw
+
+#service mpdecision /system/bin/mpdecision --avg_comp
+#   user root
+#   disabled
 
 service perfd /system/bin/perfd
    class main
@@ -128,14 +171,7 @@ on boot
     insmod /system/lib/modules/tcp_htcp.ko
     insmod /system/lib/modules/tcp_westwood.ko
     insmod /system/lib/modules/radio-iris-transport.ko
-    insmod /system/lib/modules/pronto/pronto_wlan.ko
-#    insmod /system/lib/modules/oprofile.ko
-#    insmod /system/lib/modules/test-iosched.ko
-#    insmod /system/lib/modules/mmc_block_test.ko
-#    insmod /system/lib/modules/mmc_test.ko
-#    insmod /system/lib/modules/dma_test.ko
-
-    
+    insmod /system/lib/modules/pronto/pronto_wlan.ko    
 # access permission for secure touch
     chmod 0660 /sys/devices/soc.0/78b9000.i2c/i2c-5/5-0020/secure_touch_enable
     chmod 0440 /sys/devices/soc.0/78b9000.i2c/i2c-5/5-0020/secure_touch
@@ -145,6 +181,19 @@ on boot
     chown system drmrpc /sys/devices/soc.0/78b9000.i2c/i2c-5/5-0020/secure_touch
     chown system drmrpc /sys/devices/soc.0/78b9000.i2c/i2c-5/5-0070/secure_touch_enable
     chown system drmrpc /sys/devices/soc.0/78b9000.i2c/i2c-5/5-0070/secure_touch
+
+#service ppd /system/bin/mm-pp-daemon
+#    class late_start
+#    disabled
+#    user system
+#    socket pps stream 0660 system system
+#    group system graphics
+
+#on property:init.svc.surfaceflinger=stopped
+#    stop ppd
+
+#on property:init.svc.surfaceflinger=running
+#    start ppd
 
 service wcnss-service /system/bin/wcnss_service
     class main
@@ -179,11 +228,6 @@ service imsdatadaemon /system/bin/imsdatadaemon
 on property:sys.ims.QMI_DAEMON_STATUS=1
     start imsdatadaemon
 
-service qmi_sfs_server /system/bin/qmi_sfs_server
-   class core
-   user system
-   group system net_raw
-
 service ims_rtp_daemon /system/bin/ims_rtp_daemon
    class main
    user system
@@ -191,5 +235,21 @@ service ims_rtp_daemon /system/bin/ims_rtp_daemon
    group radio net_raw diag qcom_diag log
    disabled
 
+service imscmservice /system/bin/imscmservice
+   class main
+   user system
+   group radio net_raw diag qcom_diag log
+   disabled
+
 on property:sys.ims.DATA_DAEMON_STATUS=1
     start ims_rtp_daemon
+    start imscmservice
+
+# SecEDS
+service TvoutService_C /system/bin/bintvoutservice
+    class main
+    user system
+    group graphics
+on property:ro.SecEDS.enable=false
+    stop TvoutService_C
+
