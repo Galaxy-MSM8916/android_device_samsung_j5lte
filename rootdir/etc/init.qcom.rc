@@ -136,6 +136,10 @@ on boot
 
     #For bridgemgr daemon to inform the USB driver of the correct transport
     chown radio radio /sys/class/android_usb/f_rmnet_smd_sdio/transport
+    
+ # For setting tcp delayed ack
+    chown system system /sys/kernel/ipv4/tcp_delack_seg
+    chown system system /sys/kernel/ipv4/tcp_use_userconfig
 
 #   Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
@@ -154,6 +158,13 @@ on boot
 #   Increased technology maximums should be reflected here.
     write /proc/sys/net/core/rmem_max  8388608
     write /proc/sys/net/core/wmem_max  8388608
+
+# Define TCP delayed ack settings for WiFi
+    setprop net.tcp.delack.default     1
+    setprop net.tcp.delack.wifi        20
+    setprop net.tcp.usercfg.default    0
+    setprop net.tcp.usercfg.wifi       1
+    setprop persist.tcp.delack.enable  true
 
     #To allow interfaces to get v6 address when tethering is enabled
     write /proc/sys/net/ipv6/conf/rmnet0/accept_ra 2
@@ -191,6 +202,17 @@ on boot
 
     # Allow access for CCID command/response timeout configuration
     chown system system /sys/module/ccid_bridge/parameters/bulk_msg_timeout
+#
+# start qmuxd and qmiproxy for appropriate targets
+#
+on property:ro.baseband=msm
+    start qmuxd
+
+on property:ro.baseband=mdm
+    start qmuxd
+
+on property:ro.baseband=unknown
+    start qmuxd
 
 # msm specific files that need to be created on /data
 on post-fs-data
@@ -219,6 +241,14 @@ on post-fs-data
     chown system wifi /efs/wifi/.mac.info
     chmod 0660 /efs/wifi/.mac.info
     chmod 0660 /efs/wifi/.mac.cob
+
+    # for WIFI TRP/TIS
+    chown system root /data/.psm.info
+    chmod 0664 /data/.psm.info
+
+    # for WIFI Antena Selection
+    chown system root /data/.ant.info
+    chmod 0664 /data/.ant.info
 
     # for WIFI Version
     write /data/.wifiver.info 0
@@ -554,6 +584,11 @@ service wpa_supplicant /system/bin/wpa_supplicant -g@android:wpa_wlan0 \
     disabled
     oneshot
 
+service olsrd /system/bin/olsrd -f /etc/wifi/olsrd.conf
+    class main
+    disabled
+    oneshot
+
 service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
     class late_start
     disabled
@@ -870,3 +905,18 @@ service msm_irqbalance /system/bin/msm_irqbalance -f /system/vendor/etc/msm_irqb
 # Change IO scheduler to CFQ after boot_complete
 on property:sys.boot_completed=1
     write /sys/block/mmcblk0/queue/scheduler cfq
+
+
+# umount service
+service umount_service /system/bin/umount /preload
+     disabled
+     oneshot
+
+# Support Preload install apks
+on property:persist.sys.storage_preload=1
+    mount ext4 /dev/block/bootdevice/by-name/hidden /preload nosuid nodev ro barrier=1
+    setprop storage.preload.complete 1
+
+on property:persist.sys.storage_preload=0
+    start umount_service
+
