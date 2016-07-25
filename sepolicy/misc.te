@@ -1,0 +1,35 @@
+#============= init_shell ==============
+allow init_shell bluetooth_loader_exec:file execute_no_trans;
+
+#============= keystore ==============
+allow keystore vfat:file { open read };
+allow keystore vfat:dir search;
+
+#============= mediaserver ==============
+allow mediaserver sysfs_wake_lock:file { open read write };
+allow mediaserver system_data_file:sock_file write;
+
+#============= mm-qcamerad ==============
+allow mm-qcamerad sysfs:file { read write };
+allow mm-qcamerad system_data_file:sock_file { create unlink };
+
+#============= rild ==============
+allow rild proc_net:file { open read write };
+
+#============= shell ==============
+allow shell block_device:dir search;
+#allow shell labeledfs:filesystem remount;
+
+#============= system_server ==============
+allow system_server efs_file:dir search;
+
+#============= ueventd ==============
+allow ueventd vfat:file { open read };
+allow ueventd vfat:dir search;
+
+#============= wcnss_service ==============
+allow wcnss_service system_data_file:dir { read write };
+
+#============= time_daemon ==============
+allow time_daemon time_data_file:dir remove_name;
+allow time_daemon time_data_file:file getattr;
