@@ -119,9 +119,6 @@ PRODUCT_PACKAGES += \
     init.qcom.sh \
     init.target.rc \
     ueventd.qcom.rc \
-    init.qcom.zram.sh \
-    init.rilchip.rc \
-    init.rilcommon.rc \
     twrp.fstab
 
 # Keylayout
@@ -147,17 +144,14 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     librs_jni
 
-# USB
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-persist.sys.usb.config=mtp
-
-## GPS
-#PRODUCT_PACKAGES += \
-#    gps.msm8916 \
-#    gps.default \
-#    libloc_core \
-#    libgps.utils \
-#    libloc_eng
+# GPS
+PRODUCT_PACKAGES += \
+    gps.msm8916 \
+    gps.default \
+    libloc_core \
+    libgps.utils \
+    libloc_eng \
+    libloc_api_v02
 
 #Sensors
 PRODUCT_PACKAGES += \
@@ -286,7 +280,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv.bin:system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
-    
+
 PRODUCT_PACKAGES += \
     hostapd \
     hostapd_cli \
