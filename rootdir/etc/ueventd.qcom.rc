@@ -230,3 +230,5 @@
 /sys/devices/system/cpu/cpu*	cpufreq/interactive/lpm_disable_freq       0660  system system
 /sys/devices/system/cpu/cpu*	cpufreq/interactive/use_migration_notif    0660  system system
 /sys/devices/system/cpu/cpu*	cpufreq/interactive/use_sched_load         0660  system system
+# Add device block for FRP
+/dev/block/bootdevice/by-name/config    0660   system     system
