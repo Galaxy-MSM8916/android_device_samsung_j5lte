@@ -46,8 +46,7 @@ BLUETOOTH_HCI_USE_MCT := true
 #TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
 
 # Custom RIL class
-BOARD_RIL_CLASS                     := $(LOCAL_PATH)/ril
-BOARD_PROVIDES_LIBRIL := true
+BOARD_RIL_CLASS    := ../../../device/samsung/gprimeltecan/ril
 PROTOBUF_SUPPORTED := true
 
 # Bootloader
@@ -93,8 +92,11 @@ TARGET_QCOM_NO_FM_FIRMWARE := true
 EXTENDED_FONT_FOOTPRINT := true
 
 # GPS
-#TARGET_GPS_HAL_PATH := $(LOCAL_PATH)/gps
-#TARGET_NO_RPC := true
+TARGET_GPS_HAL_PATH := $(LOCAL_PATH)/gps
+TARGET_NO_RPC := true
+
+#MTP OVERRIDE
+TARGET_PROVIDES_MTP := true
 
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_msm
