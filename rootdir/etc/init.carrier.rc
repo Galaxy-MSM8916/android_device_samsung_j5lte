@@ -9,6 +9,19 @@ on early-boot
     chmod 0660 /dev/ttyHS0
 
 on boot
+
+# MSP FactoryApp
+    mkdir /efs/FactoryApp 0775 system system
+
+# Audio NXP
+    chmod 0660 /dev/i2c-1
+    chown system system /dev/i2c-1
+
+# NFC_NXP
+    setprop ro.nfc.port "I2C"
+    chmod 0600 /dev/pn547
+    chown nfc nfc /dev/pn547
+
 # permissions for bluetooth.
     setprop ro.bt.bdaddr_path "/efs/bluetooth/bt_addr"
     chown bluetooth net_bt_stack ro.bt.bdaddr_path
@@ -17,6 +30,17 @@ on boot
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
+
+# IPSec for VOLTE
+    chown root system /dev/socket
+    chmod 0775 /dev/socket
+
+# IPSec for VOLTE
+    service ipsec-daemon /system/bin/IPSecService
+    class main
+    socket ipsec_socket stream 660 system system
+    user system
+    group system net_raw inet net_admin
 
 on fs
 
@@ -58,15 +82,6 @@ on fs
     chown system system /sys/class/sec/switch/uart_sel
     chown system system /sys/class/sec/switch/usb_sel
 
-# RIL for multi rild
-on property:ro.multisim.simslotcount=2
-service ril-daemon2 /system/bin/rild -l /system/lib/libsec-ril-dsds.so -c 2
-    class main
-    socket rild2 stream 660 root radio
-    socket rild-debug2 stream 660 radio system
-    user root
-    group radio cache inet misc audio log qcom_diag sdcard_r shell sdcard_rw system drmrpc
-
 # fm_radio
     chmod 0640 /dev/radio0
     chown system system /dev/radio0
@@ -84,6 +99,12 @@ service umount_service /system/bin/umount /preload
      disabled
      oneshot
 
+# diag app for cp uart
+service diag_uart_log /system/bin/diag_uart_log
+    class main
+    user root
+    group radio
+
 # Support Preload install apks
 on property:persist.sys.storage_preload=1
     mount ext4 /dev/block/bootdevice/by-name/hidden /preload nosuid nodev ro barrier=1
@@ -91,3 +112,4 @@ on property:persist.sys.storage_preload=1
 
 on property:persist.sys.storage_preload=0
     start umount_service
+
