@@ -81,6 +81,10 @@ PRODUCT_BOOT_JARS += \
 PRODUCT_PACKAGES += \
     libcnefeatureconfig
 
+#Camera
+PRODUCT_PACKAGES += \
+	camera.msm8916
+
 # Display
 PRODUCT_PACKAGES += \
     copybit.msm8916 \
