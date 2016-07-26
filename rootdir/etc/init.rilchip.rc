@@ -19,12 +19,12 @@ service diag_uart_log /system/bin/diag_uart_log
     group radio
 
 # QMUX must be in multiple groups to support external process connections
-service qmuxd /system/bin/qmuxd
+service qmuxd /system/bin/logwrapper /system/bin/qmuxd
     class main
     user root
     group radio audio bluetooth gps qcom_diag
 
-service diag_mdlog_start /system/bin/diag_mdlog
+service diag_mdlog_start /system/bin/logwrapper /system/bin/diag_mdlog
     class late_start
     user sdcard_rw
     group system qcom_diag sdcard_rw sdcard_r media_rw

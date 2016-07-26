@@ -13,22 +13,22 @@ import /init.rilepdg.rc
 on boot
 
 # AT Distributor for factory test
-service at_distributor /system/bin/at_distributor
+service at_distributor /system/bin/logwrapper /system/bin/at_distributor
     class late_start
     user root
     group radio misc log
 
-service DR-daemon /system/bin/ddexe
+service DR-daemon /system/bin/logwrapper /system/bin/ddexe
     class main
     user root
     group system radio inet net_raw
 
-service SMD-daemon /system/bin/smdexe
+service SMD-daemon /system/bin/logwrapper /system/bin/smdexe
     class main
     user root
     group system radio inet net_raw
 
-service BCS-daemon /system/bin/connfwexe
+service BCS-daemon /system/bin/logwrapper /system/bin/connfwexe
     class main
     user root
     group system radio inet net_raw
