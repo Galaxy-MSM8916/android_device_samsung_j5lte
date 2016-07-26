@@ -131,7 +131,6 @@ PRODUCT_PACKAGES += \
     ueventd.qcom.rc \
     init.qcom.zram.sh \
     init.rilchip.rc \
-    init.qcom.rilswitch.sh \
     init.rilcommon.rc \
     twrp.fstab
 
@@ -293,6 +292,10 @@ PRODUCT_AAPT_PREF_CONFIG := xhdpi
 # security config
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config
+    
+# ril switch script
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/scripts/rilswitch.sh:system/bin/rilswitch.sh
 
 # Terminal
 PRODUCT_PACKAGES += Terminal
