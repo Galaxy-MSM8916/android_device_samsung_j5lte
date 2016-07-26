@@ -59,7 +59,7 @@ USE_DEVICE_SPECIFIC_CAMERA := true
 
 # Charger
 # BOARD_CHARGER_ENABLE_SUSPEND := true
-# BOARD_CHARGER_SHOW_PERCENTAGE := true
+BOARD_CHARGER_SHOW_PERCENTAGE := true
 
 #sec_s3fwrn5 <- NFC HAL
 
@@ -159,7 +159,7 @@ TARGET_USERIMAGES_USE_F2FS := true
 # RIL
 TARGET_RIL_VARIANT := caf
 #override to enable audio.
-BOARD_PROVIDES_LIBRIL := true
+BOARD_PROVIDES_LIBRIL := false
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
