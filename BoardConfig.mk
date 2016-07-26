@@ -185,6 +185,7 @@ BOARD_SEPOLICY_UNION += \
 	mm-qcamerad.te \
 	file_contexts \
 	init_shell.te \
+	init.te \
 	keystore.te \
 	perfd.te \
 	mediaserver.te \
