@@ -37,10 +37,10 @@ PRODUCT_PACKAGES += \
 #NFC
 PRODUCT_PACKAGES += \
     Tag \
-    NfcNci \
     com.android.nfc_extras \
     com.android.nfc.helper
-  
+
+#    NfcNci \
 #    libnfc-nci \
 #    libnfc_nci_jni \
 #    nfc_nci.msm8916 \
