@@ -445,17 +445,17 @@ on property:vold.decrypt=trigger_restart_framework
 on property:persist.env.fastdorm.enabled=true
     setprop persist.radio.data_no_toggle 1
 
-service irsc_util /system/bin/logwrapper /system/bin/irsc_util "/etc/sec_config"
+service irsc_util /system/bin/irsc_util "/etc/sec_config"
     class main
     user root
     oneshot
 
-service rmt_storage /system/bin/logwrapper /system/bin/rmt_storage
+service rmt_storage /system/bin/rmt_storage
     class core
     user root
     disabled
 
-service rfs_access /system/bin/logwrapper /system/bin/rfs_access
+service rfs_access /system/bin/rfs_access
    class core
    user root
    group system net_raw
@@ -524,14 +524,14 @@ service port-bridge /system/bin/port-bridge /dev/mhi_pipe_32 /dev/ttyGS0
     group radio system inet
     disabled
 
-service qmiproxy /system/bin/logwrapper /system/bin/qmiproxy
+service qmiproxy /system/bin/qmiproxy
     class main
     user radio
     group radio qcom_diag
     disabled
 
 # QMUX must be in multiple groups to support external process connections
-service qmuxd /system/bin/logwrapper /system/bin/qmuxd
+service qmuxd /system/bin/qmuxd
     class main
     user root
     group radio audio bluetooth gps qcom_diag
@@ -584,7 +584,7 @@ service wpa_supplicant /system/bin/wpa_supplicant -g@android:wpa_wlan0 \
     disabled
     oneshot
 
-service olsrd /system/bin/logwrapper /system/bin/olsrd -f /etc/wifi/olsrd.conf
+service olsrd /system/bin/olsrd -f /etc/wifi/olsrd.conf
     class main
     disabled
     oneshot
@@ -664,14 +664,14 @@ service mfgloader /system/bin/mfgloader
     disabled
     oneshot
 
-service wlandutservice /system/bin/logwrapper /system/bin/wlandutservice
+service wlandutservice /system/bin/wlandutservice
     class main
     user system
     group wifi net_raw net_admin system inet
     disabled
     oneshot
 
-service macloader /system/bin/logwrapper /system/bin/macloader
+service macloader /system/bin/macloader
     class main
     oneshot
 
