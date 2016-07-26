@@ -36,13 +36,14 @@ PRODUCT_PACKAGES += \
 
 #NFC
 PRODUCT_PACKAGES += \
-    libnfc-nci \
-    libnfc_nci_jni \
-    nfc_nci.msm8916 \
-    NfcNci \
     Tag \
+    NfcNci \
     com.android.nfc_extras \
     com.android.nfc.helper
+  
+#    libnfc-nci \
+#    libnfc_nci_jni \
+#    nfc_nci.msm8916 \
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -73,9 +74,10 @@ PRODUCT_COPY_FILES += \
 # Boot jars
 PRODUCT_BOOT_JARS += \
     qcom.fmradio \
-#    oem-services \
     tcmiface \
     qcmediaplayer
+    
+#    oem-services \
 
 # Connectivity Engine support
 PRODUCT_PACKAGES += \
@@ -84,7 +86,11 @@ PRODUCT_PACKAGES += \
 #Camera
 PRODUCT_PACKAGES += \
 	camera.msm8916
-
+	
+#SAMSUNG RIL
+PRODUCT_PACKAGES += \
+	libsecril-client
+	
 # Display
 PRODUCT_PACKAGES += \
     copybit.msm8916 \
@@ -125,6 +131,7 @@ PRODUCT_PACKAGES += \
     ueventd.qcom.rc \
     init.qcom.zram.sh \
     init.rilchip.rc \
+    init.qcom.rilswitch.sh \
     init.rilcommon.rc \
     twrp.fstab
 
@@ -153,11 +160,19 @@ PRODUCT_PACKAGES += \
 
 # USB
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-persist.sys.usb.config=mtp
+	persist.sys.usb.config=mtp \
+	telephony.lteOnCdmaDevice=0 \
+	persist.eons.enabled=true \
+	persist.radio.apm_sim_not_pwdn=1 \
+	persist.radio.rilversion=8 \
+	rild.libpath=/system/lib/libsec-ril.so \
+	persist.cne.feature=0 \
+	persist.radio.lte_vrte_ltd=1 \
+	persist.radio.add_power_save=1 \
+	camera2.portability.force_api=1
 
 # GPS
 PRODUCT_PACKAGES += \
-    gps.msm8916 \
     gps.default \
     libloc_core \
     libgps.utils \
@@ -182,9 +197,10 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
-#    frameworks/av/media/libstagefright/data/media_codecs_ffmpeg.xml:system/etc/media_codecs_ffmpeg.xml \
     $(LOCAL_PATH)/media/media_codecs.xml:system/etc/media_codecs.xml \
     $(LOCAL_PATH)/media/media_profiles.xml:system/etc/media_profiles.xml
+
+#    frameworks/av/media/libstagefright/data/media_codecs_ffmpeg.xml:system/etc/media_codecs_ffmpeg.xml \
 
 # MSM IRQ Balancer configuration file
 PRODUCT_COPY_FILES += \
