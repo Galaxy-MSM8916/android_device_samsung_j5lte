@@ -9,25 +9,19 @@ RILD_PATH=bin/rild
 REF_RIL_PATH=lib/libreference-ril.so
 LIBRIL_PATH=lib/libril.so
 LIBRILUTIL_PATH=lib/librilutils.so
-SECRIL_C_PATH=lib/libsecril-client.so
 
 #remount the system
 mount -o remount,rw /system
-
-#make the directories if they don't already exist
-mkdir -p $CAF_PATH
-
 
 if [ -n $MODE ]; then
     #kill rild
     kill `pidof rild`
     mv /system/$RILD_PATH /system/$RILD_PATH.old
-    cp $RS_PATH/$MODE/$ROPT_PATH /system/$ROPT_PATH
+    cp $RS_PATH/$MODE/$ROPT_PATH /system/$ROPT_PATH 2>/dev/null
     cp $RS_PATH/$MODE/$RILD_PATH /system/$RILD_PATH
     cp $RS_PATH/$MODE/$REF_RIL_PATH /system/$REF_RIL_PATH
     cp $RS_PATH/$MODE/$LIBRIL_PATH /system/$LIBRIL_PATH
     cp $RS_PATH/$MODE/$LIBRILUTIL_PATH /system/$LIBRILUTIL_PATH
-    cp $RS_PATH/$MODE/$SECRIL_C_PATH /system/$SECRIL_C_PATH
     rm /system/$RILD_PATH.old
     #check if we copied successfully
     if [ $? != 0 ]; then
