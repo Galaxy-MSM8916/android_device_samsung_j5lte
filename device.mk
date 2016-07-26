@@ -88,8 +88,8 @@ PRODUCT_PACKAGES += \
 	camera.msm8916
 	
 #SAMSUNG RIL
-PRODUCT_PACKAGES += \
-	libsecril-client
+#PRODUCT_PACKAGES += \
+#	libsecril-client
 	
 # Display
 PRODUCT_PACKAGES += \
