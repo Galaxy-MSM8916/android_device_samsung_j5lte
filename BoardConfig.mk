@@ -186,6 +186,10 @@ BOARD_SEPOLICY_UNION += \
 	file_contexts \
 	init_shell.te \
 	init.te \
+	lkmd.te \
+	qmuxd.te \
+	rfs_access.te \
+	rmt_storage.te \
 	keystore.te \
 	perfd.te \
 	mediaserver.te \
