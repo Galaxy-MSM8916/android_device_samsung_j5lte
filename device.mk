@@ -74,9 +74,9 @@ PRODUCT_COPY_FILES += \
 # Boot jars
 PRODUCT_BOOT_JARS += \
     qcom.fmradio \
-    tcmiface \
-    qcmediaplayer
+    tcmiface
     
+#    qcmediaplayer   
 #    oem-services \
 
 # Connectivity Engine support
