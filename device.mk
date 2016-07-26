@@ -172,12 +172,12 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	camera2.portability.force_api=1
 
 # GPS
-PRODUCT_PACKAGES += \
-    gps.default \
-    libloc_core \
-    libgps.utils \
-    libloc_eng \
-    libloc_api_v02
+#PRODUCT_PACKAGES += \
+#    gps.default \
+#    libloc_core \
+#    libgps.utils \
+#    libloc_eng \
+#    libloc_api_v02
 
 #Sensors
 PRODUCT_PACKAGES += \
