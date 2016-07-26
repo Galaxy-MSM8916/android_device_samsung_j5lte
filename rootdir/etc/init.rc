@@ -970,7 +970,8 @@ service healthd /sbin/healthd
     critical
     seclabel u:r:healthd:s0
 
-service lpm /system/bin/lpm
+#Log the output of lpm
+service lpm /system/bin/logwrapper /system/bin/lpm
     class charger
     critical
 #start SEC_PRODUCT_FEATURE_COMMON_SUPPORT_SE_FOR_ANDROID
@@ -989,7 +990,7 @@ service console /system/bin/sh
 
 ## WTL_EDM_START
 ## EDM AuditLog
-service edmaudit /system/bin/edmaudit
+service edmaudit  /system/bin/logwrapper /system/bin/edmaudit
     class main
     user root
 
@@ -1008,14 +1009,6 @@ service prepare_param /system/bin/prepare_param.sh /dev/block/platform/7824900.s
     user root
     group root
     seclabel u:r:prepare_param:s0
-    oneshot
-
-# icd
-service icd /system/bin/icd
-    class main
-    user system
-    group system log
-    onrestart check_icd
     oneshot
 
 on property:ro.debuggable=1
@@ -1046,12 +1039,12 @@ service adbd /sbin/adbd --root_seclabel=u:r:su:s0
 on property:ro.kernel.qemu=1
     start adbd
 
-service lmkd /system/bin/lmkd
+service lmkd  /system/bin/logwrapper /system/bin/lmkd
     class core
     critical
     socket lmkd seqpacket 0660 system system
 
-service scs /system/bin/scs
+service scs  /system/bin/logwrapper /system/bin/scs
     class main
     user system
     group system
@@ -1098,14 +1091,14 @@ service debuggerd /system/bin/debuggerd
     class main
 
 # icd
-service icd /system/bin/icd
+service icd /system/bin/logwrapper /system/bin/icd
     class main
     user system
     group system log
     onrestart check_icd
     oneshot
 
-service ril-daemon /system/bin/rild
+service ril-daemon /system/bin/logwrapper /system/bin/rild
     class main
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
@@ -1113,7 +1106,7 @@ service ril-daemon /system/bin/rild
     group radio cache inet misc audio sdcard_rw qcom_diag log
 
 # AT Distributor for factory test
-service at_distributor /system/bin/at_distributor
+service at_distributor /system/bin/logwrapper /system/bin/at_distributor
     class late_start
     user root
     group radio misc log
@@ -1124,17 +1117,17 @@ service surfaceflinger /system/bin/surfaceflinger
     group graphics drmrpc
     onrestart restart zygote
 
-service DR-daemon /system/bin/ddexe
+service DR-daemon /system/bin/logwrapper /system/bin/ddexe
     class main
     user root
     group system radio inet net_raw
 
-service SMD-daemon /system/bin/smdexe
+service SMD-daemon /system/bin/logwrapper /system/bin/smdexe
     class main
     user root
     group system radio inet net_raw
 
-service BCS-daemon /system/bin/connfwexe
+service BCS-daemon /system/bin/logwrapper /system/bin/connfwexe
     class main
     user root
     group system radio inet net_raw
@@ -1190,7 +1183,7 @@ service flash_recovery /system/bin/install-recovery.sh
 on property:persist.sys.recovery_update=true
     start flash_recovery
 
-service racoon /system/bin/racoon
+service racoon /system/bin/logwrapper /system/bin/racoon
     class main
     socket racoon stream 600 system system
     # IKE uses UDP port 500. Racoon will setuid to vpn after binding the port.
@@ -1198,7 +1191,7 @@ service racoon /system/bin/racoon
     disabled
     oneshot
 
-service mtpd /system/bin/mtpd
+service mtpd /system/bin/logwrapper /system/bin/mtpd
     class main
     socket mtpd stream 600 system system
     user vpn
@@ -1231,14 +1224,14 @@ service pre-recovery /system/bin/uncrypt
     disabled
     oneshot
 
-service SIDESYNC_service /system/bin/ss_conn_daemon
+service SIDESYNC_service /system/bin/logwrapper /system/bin/ss_conn_daemon
     class main
     socket ss_conn_daemon stream 0666 system system
     user system
     group inet net_raw
 
 # otp
-service otp /system/bin/otp_server
+service otp /system/bin/logwrapper /system/bin/otp_server
   user system
   group system 
   disabled
@@ -1248,7 +1241,7 @@ on property:persist.security.tlc.otp=1
   setprop persist.security.tlc.otp 0
 
 # ccm
-  service ccm /system/bin/tlc_server
+  service ccm /system/bin/logwrapper /system/bin/tlc_server
   user system
   group system 
   disabled
@@ -1258,7 +1251,7 @@ on property:persist.security.tlc.ccm=1
   setprop persist.security.tlc.ccm 0
 
 # tui
-  service tui /system/bin/tlc_server TUI
+  service tui /system/bin/logwrapper /system/bin/tlc_server TUI
   user system
   group system
   disabled
@@ -1268,14 +1261,14 @@ on property:persist.security.tlc.tui=1
   setprop persist.security.tlc.tui 0
 
 # CS DAEMON
-service cs_service /system/bin/cs
-    class main
-    user system
-    group system
-    disabled
+#service cs_service /system/bin/cs
+    #class main
+    #user system
+    #group system
+    #disabled
 
 # insthk
-service insthk /system/bin/insthk
+service insthk /system/bin/logwrapper /system/bin/insthk
     class main
     user root
     disabled
@@ -1286,14 +1279,14 @@ on property:sys.qseecomd.enable=true
     start keystore
     start insthk
 
-service mcStarter /system/bin/tbaseLoader tbase
+service mcStarter /system/bin/logwrapper /system/bin/tbaseLoader tbase
     class core
     user root
     group root
     disabled
     oneshot
 
-service run-mobicore /system/bin/mcDriverDaemon
+service run-mobicore /system/bin/logwrapper /system/bin/mcDriverDaemon
     class core
     user system
     group system
