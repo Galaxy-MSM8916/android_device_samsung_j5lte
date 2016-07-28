@@ -17,7 +17,7 @@ Display | 540 x 960 (qHD), 5.0" (126.4mm)
 Rear Camera  | 8.0 MP, LED flash, S.LSI. S5K4H5YB
 Front Camera | 5.0 MP, S.LSI. S5K5E3YX
 
-Check the [`local_manifests`](./local_manifests) directory
+Check the [`local_manifest`](./local_manifest) directory
 
 
 ## Credits:
