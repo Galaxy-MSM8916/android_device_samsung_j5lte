@@ -57,6 +57,12 @@ PRODUCT_PACKAGES += \
     libqcomvisualizer \
     libqcomvoiceprocessing \
     tinymix
+    
+#VoLTE calling support
+PRODUCT_PACKAGES += \
+    com.android.ims \
+    com.android.ims.internal \
+    ims-common
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
