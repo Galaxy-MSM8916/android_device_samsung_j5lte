@@ -174,7 +174,7 @@ public class SamsungRIL extends RIL implements CommandsInterface {
         }
     }
 
-    @Override
+/*    @Override */
     public void setCurrentPreferredNetworkType() {
         if (RILJ_LOGD) riljLog("setCurrentPreferredNetworkType IGNORED");
         /* Google added this as a fix for crespo loosing network type after
@@ -274,11 +274,11 @@ public class SamsungRIL extends RIL implements CommandsInterface {
             Rlog.d(RILJ_LOG_TAG, "Mobile Dataconnection is online setting it down");
             mDesiredNetworkType = networkType;
             mNetworktypeResponse = response;
-            ConnectivityManager cm =
-                (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+       //     ConnectivityManager cm =
+       //         (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
             //start listening for the connectivity change broadcast
             startListening();
-            cm.setMobileDataEnabled(false);
+        //    cm.setMobileDataEnabled(false);
         }
 
         @Override
@@ -286,11 +286,11 @@ public class SamsungRIL extends RIL implements CommandsInterface {
             switch(msg.what) {
             //networktype was set, now we can enable the dataconnection again
             case MESSAGE_SET_PREFERRED_NETWORK_TYPE:
-                ConnectivityManager cm =
-                    (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+       //         ConnectivityManager cm =
+       //             (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
                 Rlog.d(RILJ_LOG_TAG, "preferred NetworkType set upping Mobile Dataconnection");
-                cm.setMobileDataEnabled(true);
+         //       cm.setMobileDataEnabled(true);
                 //everything done now call back that we have set the networktype
                 AsyncResult.forMessage(mNetworktypeResponse, null, null);
                 mNetworktypeResponse.sendToTarget();
@@ -324,54 +324,54 @@ public class SamsungRIL extends RIL implements CommandsInterface {
         }
     }
 
-    @Override
-    protected RILRequest findAndRemoveRequestFromList(int serial) {
-        long removalTime = System.currentTimeMillis();
-        long timeDiff = 0;
-        RILRequest rr = null;
+    //@Override
+    //protected RILRequest findAndRemoveRequestFromList(int serial) {
+        //long removalTime = System.currentTimeMillis();
+        //long timeDiff = 0;
+        //RILRequest rr = null;
 
-        synchronized (mRequestList) {
+        //synchronized (mRequestList) {
 
-        rr = mRequestList.get(serial);
+        //rr = mRequestList.get(serial);
 
-                if (rr != null) {
-                    mRequestList.remove(serial);
-                    return rr;
-                }
-                else
-                {
-                      // We need some special code here for the Samsung RIL,
-                      // which isn't responding to some requests.
-                      // We will print a list of such stale requests which
-                      // haven't yet received a response. If the timeout fires
-                      // first, then the wakelock is released without debugging.
-                    timeDiff = removalTime - rr.creationTime;
-                    if ( timeDiff > mWakeLockTimeout ) {
-                        Rlog.d(RILJ_LOG_TAG, "No response for [" + rr.mSerial + "] " +
-                                requestToString(rr.mRequest) + " after " + timeDiff + " milliseconds.");
+                //if (rr != null) {
+                    //mRequestList.remove(serial);
+                    //return rr;
+                //}
+                //else
+                //{
+                      //// We need some special code here for the Samsung RIL,
+                      //// which isn't responding to some requests.
+                      //// We will print a list of such stale requests which
+                      //// haven't yet received a response. If the timeout fires
+                      //// first, then the wakelock is released without debugging.
+                    //timeDiff = removalTime - rr.creationTime;
+                    //if ( timeDiff > mWakeLockTimeout ) {
+                        //Rlog.d(RILJ_LOG_TAG, "No response for [" + rr.mSerial + "] " +
+                                //requestToString(rr.mRequest) + " after " + timeDiff + " milliseconds.");
 
-                        /* Don't actually remove anything for now. Consider uncommenting this to
-                           purge stale requests */
+                        ///* Don't actually remove anything for now. Consider uncommenting this to
+                           //purge stale requests */
 
-                        /*
-                        itr.remove();
-                        if (mRequestMessagesWaiting > 0) {
-                            mRequestMessagesWaiting--;
-                        }
+                        ///*
+                        //itr.remove();
+                        //if (mRequestMessagesWaiting > 0) {
+                            //mRequestMessagesWaiting--;
+                        //}
 
-                        // We don't handle the callback (ie. rr.mResult) for
-                        // RIL_REQUEST_SET_TTY_MODE, which is
-                        // RIL_REQUEST_QUERY_TTY_MODE. The reason for not doing
-                        // so is because it will also not get a response from the
-                        // Samsung RIL
-                        rr.release();
-                        */
-                    }
-                }
-            }
-        return null;
-    }
-
+                        //// We don't handle the callback (ie. rr.mResult) for
+                        //// RIL_REQUEST_SET_TTY_MODE, which is
+                        //// RIL_REQUEST_QUERY_TTY_MODE. The reason for not doing
+                        //// so is because it will also not get a response from the
+                        //// Samsung RIL
+                        //rr.release();
+                        //*/
+                    //}
+                //}
+            //}
+        //return null;
+    //}
+    
     @Override
     protected RILRequest processSolicited (Parcel p) {
     int serial, error;

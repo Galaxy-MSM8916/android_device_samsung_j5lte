@@ -57,106 +57,28 @@ import com.android.internal.telephony.uicc.IccCardStatus;
  * Handles most GSM and CDMA cases.
  * {@hide}
  */
-public class SamsungQualcommRIL extends RIL implements CommandsInterface {
-
-    //SAMSUNG STATES
-    static final int RIL_REQUEST_GET_CELL_BROADCAST_CONFIG = 10002;
-
-    static final int RIL_REQUEST_SEND_ENCODED_USSD = 10005;
-    static final int RIL_REQUEST_SET_PDA_MEMORY_STATUS = 10006;
-    static final int RIL_REQUEST_GET_PHONEBOOK_STORAGE_INFO = 10007;
-    static final int RIL_REQUEST_GET_PHONEBOOK_ENTRY = 10008;
-    static final int RIL_REQUEST_ACCESS_PHONEBOOK_ENTRY = 10009;
-    static final int RIL_REQUEST_DIAL_VIDEO_CALL = 10010;
-    static final int RIL_REQUEST_CALL_DEFLECTION = 10011;
-    static final int RIL_REQUEST_READ_SMS_FROM_SIM = 10012;
-    static final int RIL_REQUEST_USIM_PB_CAPA = 10013;
-    static final int RIL_REQUEST_LOCK_INFO = 10014;
-
-    static final int RIL_REQUEST_DIAL_EMERGENCY = 10016;
-    static final int RIL_REQUEST_GET_STOREAD_MSG_COUNT = 10017;
-    static final int RIL_REQUEST_STK_SIM_INIT_EVENT = 10018;
-    static final int RIL_REQUEST_GET_LINE_ID = 10019;
-    static final int RIL_REQUEST_SET_LINE_ID = 10020;
-    static final int RIL_REQUEST_GET_SERIAL_NUMBER = 10021;
-    static final int RIL_REQUEST_GET_MANUFACTURE_DATE_NUMBER = 10022;
-    static final int RIL_REQUEST_GET_BARCODE_NUMBER = 10023;
-    static final int RIL_REQUEST_UICC_GBA_AUTHENTICATE_BOOTSTRAP = 10024;
-    static final int RIL_REQUEST_UICC_GBA_AUTHENTICATE_NAF = 10025;
-    static final int RIL_REQUEST_SIM_TRANSMIT_BASIC = 10026;
-    static final int RIL_REQUEST_SIM_OPEN_CHANNEL = 10027;
-    static final int RIL_REQUEST_SIM_CLOSE_CHANNEL = 10028;
-    static final int RIL_REQUEST_SIM_TRANSMIT_CHANNEL = 10029;
-    static final int RIL_REQUEST_SIM_AUTH = 10030;
-    static final int RIL_REQUEST_PS_ATTACH = 10031;
-    static final int RIL_REQUEST_PS_DETACH = 10032;
-    static final int RIL_REQUEST_ACTIVATE_DATA_CALL = 10033;
-    static final int RIL_REQUEST_CHANGE_SIM_PERSO = 10034;
-    static final int RIL_REQUEST_ENTER_SIM_PERSO = 10035;
-    static final int RIL_REQUEST_GET_TIME_INFO = 10036;
-    static final int RIL_REQUEST_OMADM_SETUP_SESSION = 10037;
-    static final int RIL_REQUEST_OMADM_SERVER_START_SESSION = 10038;
-    static final int RIL_REQUEST_OMADM_CLIENT_START_SESSION = 10039;
-    static final int RIL_REQUEST_OMADM_SEND_DATA = 10040;
-    static final int RIL_REQUEST_CDMA_GET_DATAPROFILE = 10041;
-    static final int RIL_REQUEST_CDMA_SET_DATAPROFILE = 10042;
-    static final int RIL_REQUEST_CDMA_GET_SYSTEMPROPERTIES = 10043;
-    static final int RIL_REQUEST_CDMA_SET_SYSTEMPROPERTIES = 10044;
-    static final int RIL_REQUEST_SEND_SMS_COUNT = 10045;
-    static final int RIL_REQUEST_SEND_SMS_MSG = 10046;
-    static final int RIL_REQUEST_SEND_SMS_MSG_READ_STATUS = 10047;
-    static final int RIL_REQUEST_MODEM_HANGUP = 10048;
-    static final int RIL_REQUEST_SET_SIM_POWER = 10049;
-    static final int RIL_REQUEST_SET_PREFERRED_NETWORK_LIST = 10050;
-    static final int RIL_REQUEST_GET_PREFERRED_NETWORK_LIST = 10051;
-    static final int RIL_REQUEST_HANGUP_VT = 10052;
-
-    static final int RIL_UNSOL_RELEASE_COMPLETE_MESSAGE = 11001;
-    static final int RIL_UNSOL_STK_SEND_SMS_RESULT = 11002;
-    static final int RIL_UNSOL_STK_CALL_CONTROL_RESULT = 11003;
-    static final int RIL_UNSOL_DUN_CALL_STATUS = 11004;
-
-    static final int RIL_UNSOL_O2_HOME_ZONE_INFO = 11007;
-    static final int RIL_UNSOL_DEVICE_READY_NOTI = 11008;
-    static final int RIL_UNSOL_GPS_NOTI = 11009;
-    static final int RIL_UNSOL_AM = 11010;
-    static final int RIL_UNSOL_DUN_PIN_CONTROL_SIGNAL = 11011;
-    static final int RIL_UNSOL_DATA_SUSPEND_RESUME = 11012;
-    static final int RIL_UNSOL_SAP = 11013;
-
-    static final int RIL_UNSOL_SIM_SMS_STORAGE_AVAILALE = 11015;
-    static final int RIL_UNSOL_HSDPA_STATE_CHANGED = 11016;
-    static final int RIL_UNSOL_TWO_MIC_STATE = 11018;
-    static final int RIL_UNSOL_DHA_STATE = 11019;
-    static final int RIL_UNSOL_UART = 11020;
-    static final int RIL_UNSOL_RESPONSE_HANDOVER = 11021;
-    static final int RIL_UNSOL_IPV6_ADDR = 11022;
-    static final int RIL_UNSOL_NWK_INIT_DISC_REQUEST = 11023;
-    static final int RIL_UNSOL_RTS_INDICATION = 11024;
-    static final int RIL_UNSOL_OMADM_SEND_DATA = 11025;
-    static final int RIL_UNSOL_DUN = 11026;
-    static final int RIL_UNSOL_SYSTEM_REBOOT = 11027;
-    static final int RIL_UNSOL_VOICE_PRIVACY_CHANGED = 11028;
-    static final int RIL_UNSOL_UTS_GETSMSCOUNT = 11029;
-    static final int RIL_UNSOL_UTS_GETSMSMSG = 11030;
-    static final int RIL_UNSOL_UTS_GET_UNREAD_SMS_STATUS = 11031;
-    static final int RIL_UNSOL_MIP_CONNECT_STATUS = 11032;
+public class smdk4x12QComRIL extends RIL implements CommandsInterface {
 
     private AudioManager mAudioManager;
 
     private Object mSMSLock = new Object();
     private boolean mIsSendingSMS = false;
-    private boolean isGSM = false;
+    protected boolean isGSM = false;
     public static final long SEND_SMS_TIMEOUT_IN_MS = 30000;
-    private boolean oldRilState = needsOldRilFeature("exynos4RadioState");
-    private boolean googleEditionSS = needsOldRilFeature("googleEditionSS");
-    private boolean driverCall = needsOldRilFeature("newDriverCall");
-    private boolean driverCallU = needsOldRilFeature("newDriverCallU");
-    private boolean dialCode = needsOldRilFeature("newDialCode");
-    public SamsungQualcommRIL(Context context, int networkMode,
+    private boolean samsungEmergency = needsOldRilFeature("samsungEMSReq");
+
+    private Message mPendingGetSimStatus;
+
+    public smdk4x12QComRIL(Context context, int preferredNetworkType,
+            int cdmaSubscription, Integer instanceId) {
+        this(context, preferredNetworkType, cdmaSubscription);
+    }
+
+    public smdk4x12QComRIL(Context context, int networkMode,
             int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription);
         mAudioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+        mQANElements = SystemProperties.getInt("ro.ril.telephony.mqanelements", 6);
     }
 
     @Override
@@ -199,7 +121,7 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
             p.readInt(); // - perso_unblock_retries
             cardStatus.mApplications[i] = appStatus;
         }
-        if (numApplications==1 && !isGSM && appStatus.app_type == appStatus.AppTypeFromRILInt(2)) { // usim
+        if (numApplications==1 && !isGSM && appStatus.app_type == appStatus.AppTypeFromRILInt(2)) {
             cardStatus.mApplications = new IccCardApplicationStatus[numApplications+2];
             cardStatus.mGsmUmtsSubscriptionAppIndex = 0;
             cardStatus.mApplications[cardStatus.mGsmUmtsSubscriptionAppIndex]=appStatus;
@@ -269,11 +191,8 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
 
     @Override
     protected Object responseSignalStrength(Parcel p) {
-        int numInts = 12;
+        int numInts = 13;
         int response[];
-
-        // This is a mashup of algorithms used in
-        // SamsungQualcommUiccRIL.java
 
         // Get raw data
         response = new int[numInts];
@@ -281,66 +200,14 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
             response[i] = p.readInt();
         }
         //gsm
-        response[0] &= 0xff; //gsmDbm
-
+        response[0] &= 0xff;
         //cdma
-        // Take just the least significant byte as the signal strength
         response[2] %= 256;
         response[4] %= 256;
+        response[7] &= 0xff;
 
-        // RIL_LTE_SignalStrength
-        if (googleEditionSS && !isGSM){
-            response[8] = response[2];
-        }else if ((response[7] & 0xff) == 255 || response[7] == 99) {
-            // If LTE is not enabled, clear LTE results
-            // 7-11 must be -1 for GSM signal strength to be used (see
-            // frameworks/base/telephony/java/android/telephony/SignalStrength.java)
-            // make sure lte is disabled
-            response[7] = 99;
-            response[8] = SignalStrength.INVALID;
-            response[9] = SignalStrength.INVALID;
-            response[10] = SignalStrength.INVALID;
-            response[11] = SignalStrength.INVALID;
-        }else{ // lte is gsm on samsung/qualcomm cdma stack
-            response[7] &= 0xff;
-        }
+        return new SignalStrength(response[0], response[1], response[2], response[3], response[4], response[5], response[6], response[7], response[8], response[9], response[10], response[11], (response[12] != 0));
 
-        return new SignalStrength(response[0], response[1], response[2], response[3], response[4], response[5], response[6], response[7], response[8], response[9], response[10], response[11], (p.readInt() != 0));
-
-    }
-
-    @Override
-    protected RadioState getRadioStateFromInt(int stateInt) {
-        if(!oldRilState)
-            super.getRadioStateFromInt(stateInt);
-        RadioState state;
-
-        /* RIL_RadioState ril.h */
-        switch(stateInt) {
-            case 0: state = RadioState.RADIO_OFF; break;
-            case 1:
-            case 2: state = RadioState.RADIO_UNAVAILABLE; break;
-            case 4:
-                // When SIM is PIN-unlocked, RIL doesn't respond with RIL_UNSOL_RESPONSE_SIM_STATUS_CHANGED.
-                // We notify the system here.
-                Rlog.d(RILJ_LOG_TAG, "SIM is PIN-unlocked now");
-                if (mIccStatusChangedRegistrants != null) {
-                    mIccStatusChangedRegistrants.notifyRegistrants();
-                }
-            case 3:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-            case 13: state = RadioState.RADIO_ON; break;
-
-            default:
-                throw new RuntimeException(
-                                           "Unrecognized RIL_RadioState: " + stateInt);
-        }
-        return state;
     }
 
     @Override
@@ -349,85 +216,62 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
         isGSM = (phoneType != RILConstants.CDMA_PHONE);
     }
 
-/*    @Override
-    protected Object
-    responseCallList(Parcel p) {
-        samsungDriverCall = driverCallU || (driverCall && !isGSM) || mRilVersion < 7 ? false : true;
-        return super.responseCallList(p);
-    }
-*/
-
-/*INSERTED FROM SamsungRIL*/
-
-    @Override
     protected Object
     responseCallList(Parcel p) {
         int num;
-        boolean isVideo;
+        int voiceSettings;
         ArrayList<DriverCall> response;
         DriverCall dc;
-        int dataAvail = p.dataAvail();
-        int pos = p.dataPosition();
-        int size = p.dataSize();
 
-        Rlog.d(RILJ_LOG_TAG, "Parcel size = " + size);
-        Rlog.d(RILJ_LOG_TAG, "Parcel pos = " + pos);
-        Rlog.d(RILJ_LOG_TAG, "Parcel dataAvail = " + dataAvail);
-
-        //Samsung changes
         num = p.readInt();
-
-        Rlog.d(RILJ_LOG_TAG, "num = " + num);
         response = new ArrayList<DriverCall>(num);
 
+        if (RILJ_LOGV) {
+            riljLog("responseCallList: num=" + num +
+                    " mEmergencyCallbackModeRegistrant=" + mEmergencyCallbackModeRegistrant +
+                    " mTestingEmergencyCall=" + mTestingEmergencyCall.get());
+        }
         for (int i = 0 ; i < num ; i++) {
+            dc = new DriverCall();
 
-            dc                      = new DriverCall();
-            dc.state                = DriverCall.stateFromCLCC(p.readInt());
-            dc.index                = p.readInt();
-            dc.TOA                  = p.readInt();
-            dc.isMpty               = (0 != p.readInt());
-            dc.isMT                 = (0 != p.readInt());
-            dc.als                  = p.readInt();
-            dc.isVoice              = (0 != p.readInt());
-            isVideo                 = (0 != p.readInt());
-            dc.isVoicePrivacy       = (0 != p.readInt());
-            dc.number               = p.readString();
-            int np                  = p.readInt();
-            dc.numberPresentation   = DriverCall.presentationFromCLIP(np);
-            dc.name                 = p.readString();
-            dc.namePresentation     = p.readInt();
-            int uusInfoPresent      = p.readInt();
-
-            Rlog.d(RILJ_LOG_TAG, "state = " + dc.state);
-            Rlog.d(RILJ_LOG_TAG, "index = " + dc.index);
-            Rlog.d(RILJ_LOG_TAG, "state = " + dc.TOA);
-            Rlog.d(RILJ_LOG_TAG, "isMpty = " + dc.isMpty);
-            Rlog.d(RILJ_LOG_TAG, "isMT = " + dc.isMT);
-            Rlog.d(RILJ_LOG_TAG, "als = " + dc.als);
-            Rlog.d(RILJ_LOG_TAG, "isVoice = " + dc.isVoice);
-            Rlog.d(RILJ_LOG_TAG, "isVideo = " + isVideo);
-            Rlog.d(RILJ_LOG_TAG, "number = " + dc.number);
-            Rlog.d(RILJ_LOG_TAG, "np = " + np);
-            Rlog.d(RILJ_LOG_TAG, "name = " + dc.name);
-            Rlog.d(RILJ_LOG_TAG, "namePresentation = " + dc.namePresentation);
-            Rlog.d(RILJ_LOG_TAG, "uusInfoPresent = " + uusInfoPresent);
-
+            dc.state = DriverCall.stateFromCLCC(p.readInt());
+            dc.index = p.readInt() & 0xff;
+            dc.TOA = p.readInt();
+            dc.isMpty = (0 != p.readInt());
+            dc.isMT = (0 != p.readInt());
+            dc.als = p.readInt();
+            voiceSettings = p.readInt();
+            if (isGSM){
+                p.readInt();
+            }
+            dc.isVoice = (0 == voiceSettings) ? false : true;
+            dc.isVoicePrivacy = (0 != p.readInt());
+            if (isGSM) {
+                p.readInt();
+                p.readInt();
+                p.readString();
+            }
+            dc.number = p.readString();
+            int np = p.readInt();
+            dc.numberPresentation = DriverCall.presentationFromCLIP(np);
+            dc.name = p.readString();
+            dc.namePresentation = p.readInt();
+            int uusInfoPresent = p.readInt();
             if (uusInfoPresent == 1) {
                 dc.uusInfo = new UUSInfo();
                 dc.uusInfo.setType(p.readInt());
                 dc.uusInfo.setDcs(p.readInt());
                 byte[] userData = p.createByteArray();
                 dc.uusInfo.setUserData(userData);
-                Rlog.v(RILJ_LOG_TAG, String.format("Incoming UUS : type=%d, dcs=%d, length=%d",
-                        dc.uusInfo.getType(), dc.uusInfo.getDcs(),
-                        dc.uusInfo.getUserData().length));
-                Rlog.v(RILJ_LOG_TAG, "Incoming UUS : data (string)="
+                riljLogv(String.format("Incoming UUS : type=%d, dcs=%d, length=%d",
+                                dc.uusInfo.getType(), dc.uusInfo.getDcs(),
+                                dc.uusInfo.getUserData().length));
+                riljLogv("Incoming UUS : data (string)="
                         + new String(dc.uusInfo.getUserData()));
-                Rlog.v(RILJ_LOG_TAG, "Incoming UUS : data (hex): "
+                riljLogv("Incoming UUS : data (hex): "
                         + IccUtils.bytesToHexString(dc.uusInfo.getUserData()));
             } else {
-                Rlog.v(RILJ_LOG_TAG, "Incoming UUS : NOT present!");
+                riljLogv("Incoming UUS : NOT present!");
             }
 
             // Make sure there's a leading + on addresses with a TOA of 145
@@ -437,19 +281,26 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
 
             if (dc.isVoicePrivacy) {
                 mVoicePrivacyOnRegistrants.notifyRegistrants();
-                Rlog.d(RILJ_LOG_TAG, "InCall VoicePrivacy is enabled");
+                riljLog("InCall VoicePrivacy is enabled");
             } else {
                 mVoicePrivacyOffRegistrants.notifyRegistrants();
-                Rlog.d(RILJ_LOG_TAG, "InCall VoicePrivacy is disabled");
+                riljLog("InCall VoicePrivacy is disabled");
             }
         }
 
         Collections.sort(response);
 
+        if ((num == 0) && mTestingEmergencyCall.getAndSet(false)) {
+            if (mEmergencyCallbackModeRegistrant != null) {
+                riljLog("responseCallList: call ended, testing emergency call," +
+                            " notify ECM Registrants");
+                mEmergencyCallbackModeRegistrant.notifyRegistrant();
+            }
+        }
+
         return response;
     }
 
-/*END INSERT*/
     @Override
     protected void
     processUnsolicited (Parcel p) {
@@ -458,23 +309,17 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
         int response = p.readInt();
 
         switch(response) {
-            case RIL_UNSOL_RIL_CONNECTED: // Fix for NV/RUIM setting on CDMA SIM devices
-                // skip getcdmascriptionsource as if qualcomm handles it in the ril binary
+            case RIL_UNSOL_RIL_CONNECTED:
                 ret = responseInts(p);
                 setRadioPower(false, null);
                 setPreferredNetworkType(mPreferredNetworkType, null);
-                int cdmaSubscription = Settings.Global.getInt(mContext.getContentResolver(), Settings.Global.CDMA_SUBSCRIPTION_MODE, -1);
-                if(cdmaSubscription != -1) {
-                    setCdmaSubscriptionSource(mCdmaSubscription, null);
-                }
-                setCellInfoListRate(Integer.MAX_VALUE, null);
+                setCdmaSubscriptionSource(mCdmaSubscription, null);
+                if(mRilVersion >= 8)
+                    setCellInfoListRate(Integer.MAX_VALUE, null);
                 notifyRegistrantsRilConnectionChanged(((int[])ret)[0]);
                 break;
-            case RIL_UNSOL_NITZ_TIME_RECEIVED:
-                handleNitzTimeReceived(p);
-                break;
             // SAMSUNG STATES
-            case RIL_UNSOL_AM:
+            case 11010: // RIL_UNSOL_AM:
                 ret = responseString(p);
                 String amString = (String) ret;
                 Rlog.d(RILJ_LOG_TAG, "Executing AM: " + amString);
@@ -486,19 +331,16 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
                     Rlog.e(RILJ_LOG_TAG, "am " + amString + " could not be executed.");
                 }
                 break;
-            case RIL_UNSOL_RESPONSE_HANDOVER:
+            case 11021: // RIL_UNSOL_RESPONSE_HANDOVER:
                 ret = responseVoid(p);
                 break;
             case 1036:
                 ret = responseVoid(p);
                 break;
-            case RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED: ret =  responseVoid(p); break;
-            case RIL_UNSOL_RESPONSE_NEW_BROADCAST_SMS: ret = responseString(p); break;
-            // SAMSUNG STATES FROM SamsungRIL.java
-            case RIL_UNSOL_DUN_PIN_CONTROL_SIGNAL: ret = responseVoid(p); break;
-            case RIL_UNSOL_DATA_SUSPEND_RESUME: ret = responseInts(p); break;
-            case RIL_UNSOL_STK_CALL_CONTROL_RESULT: ret = responseVoid(p); break;
-            case RIL_UNSOL_TWO_MIC_STATE: ret = responseInts(p); break;   
+            case 11017: // RIL_UNSOL_WB_AMR_STATE:
+                ret = responseInts(p);
+                setWbAmr(((int[])ret)[0]);
+                break;
             default:
                 // Rewind the Parcel
                 p.setDataPosition(dataPosition);
@@ -567,18 +409,9 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
             case RIL_REQUEST_UDUB: ret =  responseVoid(p); break;
             case RIL_REQUEST_LAST_CALL_FAIL_CAUSE: ret =  responseInts(p); break;
             case RIL_REQUEST_SIGNAL_STRENGTH: ret =  responseSignalStrength(p); break;
-                    //modification start
-                // prevent exceptions from happenimg because the null value is null or a hexadecimel. so convert if it is not null
-            case RIL_REQUEST_VOICE_REGISTRATION_STATE: ret =  responseVoiceDataRegistrationState(p); break;
-            case RIL_REQUEST_DATA_REGISTRATION_STATE: ret =  responseVoiceDataRegistrationState(p); break;
-                // this fixes bogus values the modem creates
-                // sometimes the  ril may print out
-                // (always on sprint)
-                // sprint: (empty,empty,31000)
-                // this problemaic on sprint, lte won't start, response is slow
-                //speeds up response time on eherpderpd/lte networks
+            case RIL_REQUEST_VOICE_REGISTRATION_STATE: ret = responseVoiceDataRegistrationState(p); break;
+            case RIL_REQUEST_DATA_REGISTRATION_STATE: ret = responseVoiceDataRegistrationState(p); break;
             case RIL_REQUEST_OPERATOR: ret =  operatorCheck(p); break;
-                    //end modification
             case RIL_REQUEST_RADIO_POWER: ret =  responseVoid(p); break;
             case RIL_REQUEST_DTMF: ret =  responseVoid(p); break;
             case RIL_REQUEST_SEND_SMS: ret =  responseSMS(p); break;
@@ -735,7 +568,6 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
         return rr;
     }
 
-    // CDMA FIXES, this fixes  bogus values in nv/sim on d2/jf/t0 cdma family or bogus information from sim card
     private Object
     operatorCheck(Parcel p) {
         String response[] = (String[])responseStrings(p);
@@ -746,14 +578,14 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
         }
         return response;
     }
-    // handle exceptions
+
     private Object
     responseVoiceDataRegistrationState(Parcel p) {
         String response[] = (String[])responseStrings(p);
         if (isGSM){
             return response;
         }
-        if ( response.length>=10){
+        if (response.length>=10){
             for(int i=6; i<=9; i++){
                 if (response[i]== null){
                     response[i]=Integer.toString(Integer.MAX_VALUE);
@@ -769,26 +601,11 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
 
         return response;
     }
-    // has no effect
-    // for debugging purposes , just generate out anything from response
-    public static String s(String a[]){
-        StringBuffer result = new StringBuffer();
-
-        for (int i = 0; i < a.length; i++) {
-            result.append( a[i] );
-            result.append(",");
-        }
-        return result.toString();
-    }
-    // end  of cdma fix
 
     /**
      * Set audio parameter "wb_amr" for HD-Voice (Wideband AMR).
      *
      * @param state: 0 = unsupported, 1 = supported.
-     * REQUIRED FOR JF FAMILY THIS SETS THE INFORMATION
-     * CRASHES WITHOUT THIS FUNCTION
-     * part of the new csd binary
      */
     private void setWbAmr(int state) {
         if (state == 1) {
@@ -857,42 +674,7 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
         super.notifyRegistrantsCdmaInfoRec(infoRec);
     }
 
-    private void
-    handleNitzTimeReceived(Parcel p) {
-        String nitz = (String)responseString(p);
-        //if (RILJ_LOGD) unsljLogRet(RIL_UNSOL_NITZ_TIME_RECEIVED, nitz);
 
-        // has bonus long containing milliseconds since boot that the NITZ
-        // time was received
-        long nitzReceiveTime = p.readLong();
-
-        Object[] result = new Object[2];
-
-        String fixedNitz = nitz;
-        String[] nitzParts = nitz.split(",");
-        if (nitzParts.length == 4) {
-            // 0=date, 1=time+zone, 2=dst, 3=garbage that confuses GsmServiceStateTracker (so remove it)
-            fixedNitz = nitzParts[0]+","+nitzParts[1]+","+nitzParts[2]+",";
-        }
-
-        result[0] = fixedNitz;
-        result[1] = Long.valueOf(nitzReceiveTime);
-
-        boolean ignoreNitz = SystemProperties.getBoolean(
-                        TelephonyProperties.PROPERTY_IGNORE_NITZ, false);
-
-        if (ignoreNitz) {
-            if (RILJ_LOGD) riljLog("ignoring UNSOL_NITZ_TIME_RECEIVED");
-        } else {
-            if (mNITZTimeRegistrant != null) {
-                mNITZTimeRegistrant
-                .notifyRegistrant(new AsyncResult (null, result, null));
-            } else {
-                // in case NITZ time registrant isnt registered yet
-                mLastNITZTimeInfo = result;
-            }
-        }
-    }
 
     @Override
     protected Object
@@ -909,8 +691,8 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
     @Override
     public void
     dial(String address, int clirMode, UUSInfo uusInfo, Message result) {
-        if(!dialCode){
-            super.dial(address, clirMode, uusInfo, result);
+        if (samsungEmergency && PhoneNumberUtils.isEmergencyNumber(address)) {
+            dialEmergencyCall(address, clirMode, result);
             return;
         }
         RILRequest rr = RILRequest.obtain(RIL_REQUEST_DIAL, result);
@@ -949,6 +731,7 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
                                        + strings.length + " strings, expected multiple of " + mQANElements);
         }
 
+        Rlog.v(RILJ_LOG_TAG, "responseOperatorInfos");
         ret = new ArrayList<OperatorInfo>(strings.length / mQANElements);
         Operators init = null;
         if (strings.length != 0) {
@@ -965,5 +748,48 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
         }
 
         return ret;
+    }
+
+    @Override
+    public void getImsRegistrationState(Message result) {
+        if(mRilVersion >= 8)
+            super.getImsRegistrationState(result);
+        else {
+            if (result != null) {
+                CommandException ex = new CommandException(
+                    CommandException.Error.REQUEST_NOT_SUPPORTED);
+                AsyncResult.forMessage(result, null, ex);
+                result.sendToTarget();
+            }
+        }
+    }
+
+    static final int RIL_REQUEST_DIAL_EMERGENCY = 10016;
+    public void
+    dialEmergencyCall(String address, int clirMode, Message result) {
+        RILRequest rr;
+        Rlog.v(RILJ_LOG_TAG, "Emergency dial: " + address);
+
+        rr = RILRequest.obtain(RIL_REQUEST_DIAL_EMERGENCY, result);
+        rr.mParcel.writeString(address + "/");
+        rr.mParcel.writeInt(clirMode);
+        rr.mParcel.writeInt(0);  // UUS information is absent
+
+        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+
+        send(rr);
+    }
+
+    // This call causes ril to crash the socket, stopping further communication
+    @Override
+    public void
+    getHardwareConfig (Message result) {
+        riljLog("Ignoring call to 'getHardwareConfig'");
+        if (result != null) {
+            CommandException ex = new CommandException(
+                CommandException.Error.REQUEST_NOT_SUPPORTED);
+            AsyncResult.forMessage(result, null, ex);
+            result.sendToTarget();
+        }
     }
 }
