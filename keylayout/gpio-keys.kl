@@ -27,12 +27,6 @@
 
 key 115   VOLUME_UP
 key 114   VOLUME_DOWN
-key 139   MENU
-key 158   BACK
 key 172   HOME
-key 217   SEARCH
 key 528   FOCUS
 key 766   CAMERA
-
-
-
