@@ -62,7 +62,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     com.android.ims \
     com.android.ims.internal \
-    ims-common
+    ims-common \
+    voip-common
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
