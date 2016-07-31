@@ -25,7 +25,7 @@
 
     <!-- Flag indicating whether the we should enable the automatic brightness in Settings.
          Software implementation will be used if config_hardware_auto_brightness_available is not set -->
-    <bool name="config_automatic_brightness_available">false</bool>
+    <bool name="config_automatic_brightness_available">true</bool>
 
     <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
          The N entries of this array define N  1 zones as follows:
@@ -61,7 +61,19 @@
         <item>200</item>
         <item>255</item>
     </integer-array>
-
+    
+    <string-array name="config_mobile_tcp_buffers">
+        <item>default:4096,87380,110208,4096,16384,110208</item>
+        <item>lte:2097152,4194304,8388608,1048576,3145728,4194304</item>
+        <item>umts:4094,87380,110208,4096,16384,110208</item>
+        <item>hspa:4094,87380,1220608,4096,16384,1220608</item>
+        <item>hsupa:4094,87380,1220608,4096,16384,1220608</item>
+        <item>hsdpa:4094,87380,704512,4096,16384,262144</item>
+        <item>hspap:4094,87380,1220608,4096,16384,1220608</item>
+        <item>edge:4093,26280,35040,4096,16384,35040</item>
+        <item>gprs:4092,30000,30000,4096,8760,11680</item>
+        <item>evdo:4094,87380,262144,4096,16384,262144</item>
+    </string-array>
     <!-- Array of output values for button backlight corresponding to the LUX values
          in the config_autoBrightnessLevels array.  This array should have size one greater
          than the size of the config_autoBrightnessLevels array.
@@ -74,15 +86,53 @@
     </string-array>
 
     <!-- Minimum screen brightness allowed by the power manager. -->
-    <integer name="config_screenBrightnessDim">10</integer>
+    <integer name="config_screenBrightnessDim">8</integer>
 
     <!-- Default screen brightness setting.
          Must be in the range specified by minimum and maximum. -->
-    <integer name="config_screenBrightnessSettingDefault">143</integer>
+    <integer name="config_screenBrightnessSettingDefault">120</integer>
 
     <!-- Minimum screen brightness setting allowed by the power manager.
          The user is forbidden from setting the brightness below this level. -->
-    <integer name="config_screenBrightnessSettingMinimum">10</integer>
+    <integer name="config_screenBrightnessSettingMinimum">8</integer>
+
+    <bool name="always_popup_usb_computer_connection_option">true</bool>
+
+    <!-- Set this true only if the device has separate attention and notification lights. -->
+    <bool name="config_useAttentionLight">true</bool>
+    
+    <!-- If this is true, the screen will fade off. -->
+    <bool name="config_animateScreenLights">true</bool>
+   
+       <!-- If true, the screen can be rotated via the accelerometer in all 4
+         rotations as the default behavior. -->
+    <bool name="config_allowAllRotations">true</bool>
+    
+       <!-- Don't show lock screen before unlock screen (PIN/pattern/password) --> 
+    <bool name="config_enableLockBeforeUnlockScreen">true</bool>
+    
+        <!-- Disable lockscreen rotation by default -->
+    <bool name="config_enableLockScreenRotation">false</bool>
+
+    <!-- Flag specifying whether VoLTE is available on device -->
+    <bool name="config_device_volte_available">true</bool>
+
+    <!-- Flag specifying whether VoLTE should be available for carrier: independent of
+         carrier provisioning. If false: hard disabled. If true: then depends on carrier
+         provisioning, availability etc -->
+    <bool name="config_carrier_volte_available">true</bool>
+
+    <!-- Flag specifying whether VoLTE availability is based on provisioning -->
+    <bool name="config_carrier_volte_provisioned">false</bool>
+
+    <!-- Flag specifying whether VoLTE TTY is supported -->
+    <bool name="config_carrier_volte_tty_supported">true</bool>
+
+    <!-- bool value to for enabling motion accelerometer -->
+    <bool name="use_motion_accel">false</bool>
+    
+    <!-- default device has recents property -->
+    <bool name="config_hasRecents">true</bool>
 
     <!-- If this is true, the screen will come on when you unplug usb/power/whatever. -->
     <bool name="config_unplugTurnsOnScreen">true</bool>
@@ -94,7 +144,7 @@
     <integer name="config_shutdownBatteryTemperature">680</integer>
 
     <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
-    <bool name="config_intrusiveNotificationLed">false</bool>
+    <bool name="config_intrusiveNotificationLed">true</bool>
 
     <!-- Default color for notification LED is white. -->
     <color name="config_defaultNotificationColor">#ffffffff</color>
@@ -114,6 +164,7 @@
     <string-array translatable="false" name="config_tether_usb_regexs">
         <item>usb\\d</item>
         <item>rndis\\d</item>
+        <item>ncm\\d</item>
     </string-array>
 
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
@@ -154,7 +205,7 @@
     <string-array name="networkAttributes">
         <item>wifi,1,1,1,-1,true</item>
         <item>mobile,0,0,0,-1,true</item>
-        <item>mobile_mms,2,0,2,240000,true</item>
+        <item>mobile_mms,2,0,2,180000,true</item>
         <item>mobile_supl,3,0,2,60000,true</item>
         <item>mobile_dun,4,0,2,60000,true</item>
         <item>mobile_hipri,5,0,3,60000,true</item>
@@ -281,7 +332,7 @@
     -->
     <integer name="config_longPressOnHomeBehavior">3</integer>
 
-    <!-- Control the behavior when the user long presses the app switch button.
+    <!-- Control the behavior when the user double-taps the home button.
             0 - Nothing
             1 - Menu key
             2 - Recent apps view in SystemUI
@@ -291,6 +342,31 @@
          This needs to match the constants in
          policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
     -->
-<integer name="config_longPressOnAppSwitchBehavior">1</integer>
+    <integer name="config_doubleTapOnHomeBehavior">2</integer>
 
+    <!-- Control the behavior when the user long presses the menu button.
+            0 - Nothing
+            1 - Menu key
+            2 - Recent apps view in SystemUI
+            3 - Launch assist intent
+            4 - Voice Search
+            5 - In-app Search
+         This needs to match the constants in
+         policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+    -->
+    <integer name="config_longPressOnMenuBehavior">4</integer>
+
+    <!-- Control the behavior when the user long presses the app switch button.
+            0 - Nothing
+            1 - Menu key
+            2 - Recent apps view in SystemUI
+            3 - Launch assist intent
+            4 - Voice Search
+            5 - In-app Search
+         This needs to match the constants in
+         policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+
+<integer name="config_longPressOnAppSwitchBehavior">1</integer>
+    -->
 </resources>
+
