@@ -871,6 +871,12 @@
         <ctl name="ADC1 Volume" value="4" />
     </path>
 
+    <path name="voice-rec-mic">
+        <path name="main-mic" />
+        <ctl name="DEC1 Volume" value="82" />
+        <ctl name="ADC1 Volume" value="4" />
+    </path>
+
     <path name="svoice-NS-mic">
         <path name="main-sub-mic" />
     </path>
