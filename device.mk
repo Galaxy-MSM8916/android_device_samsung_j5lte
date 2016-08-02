@@ -13,14 +13,8 @@ include $(LOCAL_PATH)/keylayout/Layouts.mk
 # Common overlay
 DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimeltecan/overlay
 
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-	LOCAL_KERNEL := device/samsung/gprimeltecan/kernel
-else
-	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
-
 PRODUCT_COPY_FILES += \
-    $(LOCAL_KERNEL):kernel
+    $(LOCAL_PATH)/dt.img:dt.img
 
 #Android EGL implementation
 PRODUCT_PACKAGES += libGLES_android
@@ -65,6 +59,13 @@ PRODUCT_PACKAGES += \
     ims-common \
     voip-common
 
+# Configuration
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/Diag.cfg:system/etc/Diag.cfg \
+    $(LOCAL_PATH)/configs/Diag_audio.cfg:system/etc/Diag_audio.cfg \
+    $(LOCAL_PATH)/configs/Diag_volte.cfg:system/etc/Diag_volte.cfg \
+    $(LOCAL_PATH)/configs/Diag_zero.cfg:system/etc/Diag_zero.cfg
+    
 # Audio configuration
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/Bluetooth_cal.acdb:system/etc/Bluetooth_cal.acdb \
@@ -182,8 +183,8 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.secure=0 \
     ro.adb.secure=0 \
     ro.debuggable=1 \
-    persist.service.adb.enable=1
-#    ro.telephony.ril_class=SamsungRIL
+    persist.service.adb.enable=1 \
+    ro.telephony.ril_class=SamsungQcomRIL
 
 # GPS
 #PRODUCT_PACKAGES += \

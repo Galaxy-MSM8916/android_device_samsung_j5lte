@@ -111,11 +111,11 @@ BOARD_KERNEL_SEPARATED_DT := true
 BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
 BOARD_RAMDISK_OFFSET     := 0x02000000
 #BOARD_SECOND_OFFSET := 0x00F00000
-TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
-#TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
-#TARGET_KERNEL_VARIANT_CONFIG := msm8916_sec_fortuna_eur_defconfig
-#TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
-#TARGET_KERNEL_SOURCE := kernel/samsung/fortuna
+#TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
+TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
+TARGET_KERNEL_VARIANT_CONFIG := msm8916_sec_fortuna_can_defconfig
+TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
+TARGET_KERNEL_SOURCE := kernel/samsung/gprimeltecan
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := false
@@ -123,7 +123,6 @@ TARGET_PROVIDES_LIBLIGHT := false
 # malloc implementation
 MALLOC_IMPL := dlmalloc
 
-# Partitions
 # Partition sizes
 TARGET_USERIMAGES_USE_EXT4          := true
 BOARD_BOOTIMAGE_PARTITION_SIZE      := 13631488
@@ -134,7 +133,6 @@ BOARD_CACHEIMAGE_PARTITION_SIZE     := 314572800
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE   := ext4
 BOARD_PERSISTIMAGE_PARTITION_SIZE   := 8388608
 BOARD_PERSISTIMAGE_FILE_SYSTEM_TYPE := ext4
-# (5731495936 - 16384)
 BOARD_USERDATAIMAGE_PARTITION_SIZE  := 4942966784
 BOARD_FLASH_BLOCK_SIZE              := 131072
 
@@ -230,7 +228,6 @@ ifeq ($(TW),)
 	TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery.fstab
 else
 	TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery/twrp.fstab
-#	TARGET_CPU_VARIANT := cortex-a7
 endif
 
 # Vold
@@ -252,8 +249,8 @@ TARGET_USES_WCNSS_CTRL := true
 WIFI_DRIVER_FW_PATH_AP := "ap"
 WIFI_DRIVER_FW_PATH_STA := "sta"
 WPA_SUPPLICANT_VERSION := VER_0_8_X
-WIFI_DRIVER_MODULE_PATH  := "/system/lib/modules/wlan.ko"
-WIFI_DRIVER_MODULE_NAME := "wlan"
+#WIFI_DRIVER_MODULE_PATH  := "/system/lib/modules/wlan.ko"
+#WIFI_DRIVER_MODULE_NAME := "wlan"
 
 # inherit from the proprietary version
 -include vendor/samsung/gprimeltecan/BoardConfigVendor.mk
