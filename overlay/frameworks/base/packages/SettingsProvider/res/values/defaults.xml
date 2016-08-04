@@ -21,9 +21,9 @@
     <bool name="def_screen_brightness_automatic_mode">true</bool>
 
     <!-- Default screen brightness, from 0 to 255. 102 is 40%. -->
-    <integer name="def_screen_brightness">102</integer>
+    <integer name="def_screen_brightness">100</integer>
 
     <!-- 600 seconds (10 minutes) for default screen timeout 
 	        Will be change when systemui will fix -->
-    <integer name="def_screen_off_timeout">600000</integer>
+    <integer name="def_screen_off_timeout">20000</integer>
 </resources>

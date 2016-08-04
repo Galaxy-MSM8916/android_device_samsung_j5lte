@@ -129,7 +129,7 @@
     <bool name="config_carrier_volte_tty_supported">true</bool>
 
     <!-- bool value to for enabling motion accelerometer -->
-    <bool name="use_motion_accel">false</bool>
+    <bool name="use_motion_accel">true</bool>
     
     <!-- default device has recents property -->
     <bool name="config_hasRecents">true</bool>
