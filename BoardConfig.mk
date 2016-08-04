@@ -1,7 +1,6 @@
 FORCE_32_BIT := true
 
 -include vendor/samsung/gprimeltecan/BoardConfigVendor.mk
-#-include vendor/qcom/msm8916/BoardConfig.mk
 
 LOCAL_PATH := device/samsung/gprimeltecan
 
@@ -15,7 +14,6 @@ BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 
 # Platform
 TARGET_ARCH := arm
-#TARGET_NO_BOOTLOADER := true
 TARGET_BOARD_PLATFORM := msm8916
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
@@ -41,9 +39,6 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
 BLUETOOTH_HCI_USE_MCT := true
-
-# Misc.
-#TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
 
 # Custom RIL class
 BOARD_RIL_CLASS    := ../../../device/samsung/gprimeltecan/ril
@@ -110,12 +105,12 @@ BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
 BOARD_RAMDISK_OFFSET     := 0x02000000
-#BOARD_SECOND_OFFSET := 0x00F00000
-#TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
 TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
 TARGET_KERNEL_VARIANT_CONFIG := msm8916_sec_fortuna_can_defconfig
 TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
+TARGET_KERNEL_SELINUX_LOG_CONFIG := selinux_log_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/gprimeltecan
+#TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := false
@@ -236,6 +231,7 @@ BOARD_VOLD_MAX_PARTITIONS := 67
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun%d/file
 
 # Wifi
+WLAN_CHIPSET := pronto
 BOARD_HAS_QCOM_WLAN := true
 BOARD_HAS_QCOM_WLAN_SDK := true
 BOARD_HAVE_SAMSUNG_WIFI := true
@@ -249,8 +245,19 @@ TARGET_USES_WCNSS_CTRL := true
 WIFI_DRIVER_FW_PATH_AP := "ap"
 WIFI_DRIVER_FW_PATH_STA := "sta"
 WPA_SUPPLICANT_VERSION := VER_0_8_X
-#WIFI_DRIVER_MODULE_PATH  := "/system/lib/modules/wlan.ko"
-#WIFI_DRIVER_MODULE_NAME := "wlan"
+WIFI_DRIVER_MODULE_PATH  := "/system/lib/modules/wlan.ko"
+WIFI_DRIVER_MODULE_NAME := "wlan"
 
 # inherit from the proprietary version
 -include vendor/samsung/gprimeltecan/BoardConfigVendor.mk
+
+#make, move, symlink and strip the wlan kernel module.
+KERNEL_EXTERNAL_MODULES:
+	make -C device/samsung/gprimeltecan/wlan/prima/ WLAN_ROOT=$(ANDROID_BUILD_TOP)/device/samsung/gprimeltecan/wlan/prima/ \
+		KERNEL_SOURCE=$(KERNEL_OUT) ARCH="arm" CROSS_COMPILE="arm-eabi-"
+	mkdir $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/ -p
+	ln -sf /system/lib/modules/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko $(TARGET_OUT)/lib/modules/wlan.ko
+	mv device/samsung/gprimeltecan/wlan/prima/wlan.ko $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
+	arm-eabi-strip --strip-debug $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
+
+TARGET_KERNEL_MODULES := KERNEL_EXTERNAL_MODULES
