@@ -296,7 +296,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.gps.agps_provider=1 \
     ro.pip.gated=0 \
     ro.product.model=SM-G530W \
-    ro.product.device=gprimeltecan
+    ro.product.device=gprimeltecan \
+    ro.telephony.ril_class=SamsungQcomRIL
 
 # Ril
 PRODUCT_PACKAGES += \
@@ -333,7 +334,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv.bin:system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
-    
+
+#WLAN
 PRODUCT_PACKAGES += \
     hostapd \
     hostapd_cli \
