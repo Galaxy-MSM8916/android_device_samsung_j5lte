@@ -164,53 +164,52 @@ limSearchAndDeleteDialogueToken(tpAniSirGlobal pMac, tANI_U8 token, tANI_U16 ass
     tpDialogueToken pCurrNode = pMac->lim.pDialogueTokenHead;
     tpDialogueToken pPrevNode = pMac->lim.pDialogueTokenHead;
 
-    //if the list is empty
+    /* if the list is empty */
     if(NULL == pCurrNode)
       return eSIR_FAILURE;
 
-    // if the matching node is the first node.
-    if(pCurrNode &&
+    /* If the matching node is the first node.*/
+    if ((token == pCurrNode->token) &&
         (assocId == pCurrNode->assocId) &&
-        (tid == pCurrNode->tid))
-    {
-        pMac->lim.pDialogueTokenHead = pCurrNode->next;        
-        //there was only one node in the list. So tail pointer also needs to be adjusted.
-        if(NULL == pMac->lim.pDialogueTokenHead)
+        (tid == pCurrNode->tid)) {
+        pMac->lim.pDialogueTokenHead = pCurrNode->next;
+        /* There was only one node in the list.
+         * So tail pointer also needs to be adjusted.
+         */
+        if (NULL == pMac->lim.pDialogueTokenHead)
             pMac->lim.pDialogueTokenTail = NULL;
         vos_mem_free(pCurrNode);
-        pMac->lim.pDialogueTokenHead = NULL;
         return eSIR_SUCCESS;
     }
 
-    //first node did not match. so move to the next one.
+    /* first node did not match. so move to the next one. */
     pCurrNode = pCurrNode->next;
-    while(NULL != pCurrNode )
-    {
-        if(token == pCurrNode->token)
-        {
-            break;
-        }
 
+    while (NULL != pCurrNode) {
+         if ((token == pCurrNode->token) &&
+           (assocId == pCurrNode->assocId) &&
+           (tid == pCurrNode->tid)) {
+           break;
+        }
         pPrevNode = pCurrNode;
         pCurrNode = pCurrNode->next;
     }
 
-    if(pCurrNode &&
-        (assocId == pCurrNode->assocId) &&
-        (tid == pCurrNode->tid))
-    {
+    if (pCurrNode) {
         pPrevNode->next = pCurrNode->next;
-        //if the node being deleted is the last one then we also need to move the tail pointer to the prevNode.
+        /* if the node being deleted is the last one
+         * then we also need to move the tail pointer
+         * to the prevNode.
+         */
         if(NULL == pCurrNode->next)
               pMac->lim.pDialogueTokenTail = pPrevNode;
         vos_mem_free(pCurrNode);
-        pMac->lim.pDialogueTokenHead = NULL;
         return eSIR_SUCCESS;
     }
 
-    PELOGW(limLog(pMac, LOGW, FL("LIM does not have matching dialogue token node"));)
+    limLog(pMac, LOGW,
+       FL("LIM does not have matching dialogue token node"));
     return eSIR_FAILURE;
-
 }
 
 
@@ -1399,9 +1398,15 @@ tANI_U8 limWriteDeferredMsgQ(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
          **/
     if (pMac->lim.gLimDeferredMsgQ.size >= MAX_DEFERRED_QUEUE_LEN)
     {
-        if(!(pMac->lim.deferredMsgCnt & 0xF))
+        if (!(pMac->lim.deferredMsgCnt & 0xF))
         {
-            PELOGE(limLog(pMac, LOGE, FL("Deferred Message Queue is full. Msg:%d Messages Failed:%d"), limMsg->type, ++pMac->lim.deferredMsgCnt);)
+            limLog(pMac, LOGE,
+             FL("Deferred Message Queue is full. Msg:%d Messages Failed:%d"),
+                                    limMsg->type, ++pMac->lim.deferredMsgCnt);
+            vos_fatal_event_logs_req(WLAN_LOG_TYPE_NON_FATAL,
+                     WLAN_LOG_INDICATOR_HOST_DRIVER,
+                     WLAN_LOG_REASON_QUEUE_FULL,
+                     FALSE, TRUE);
         }
         else
         {
@@ -3420,6 +3425,11 @@ void limSwitchPrimarySecondaryChannel(tpAniSirGlobal pMac, tpPESession psessionE
                 limSendSwitchChnlParams(pMac, newChannel, subband, psessionEntry->maxTxPower, psessionEntry->peSessionId);
 #else
                 limSendSwitchChnlParams(pMac, newChannel, subband, (tPowerdBm)localPwrConstraint, psessionEntry->peSessionId);
+#endif
+
+#ifdef FEATURE_WLAN_DIAG_SUPPORT
+       limDiagEventReport(pMac, WLAN_PE_DIAG_CHANNEL_SWITCH_ANOUNCEMENT,
+                 psessionEntry, eSIR_SUCCESS, LIM_SWITCH_CHANNEL_OPERATION);
 #endif
 
     // Store the new primary and secondary channel in session entries if different
@@ -5716,9 +5726,12 @@ limProcessAddBaInd(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
             if((eBA_DISABLE == pSta->tcCfg[tid].fUseBATx) &&
                  (pBaCandidate->baInfo[tid].fBaEnable))
             {
-                limLog(pMac, LOGE, FL("BA setup for staId = %d, TID: %d, SSN: %d"),
-                        pSta->staIndex, tid, pBaCandidate->baInfo[tid].startingSeqNum);
-                limPostMlmAddBAReq(pMac, pSta, tid, pBaCandidate->baInfo[tid].startingSeqNum,psessionEntry);  
+                limLog(pMac, LOG1,
+                        FL("BA setup for staId = %d, TID: %d, SSN: %d"),
+                        pSta->staIndex, tid,
+                        pBaCandidate->baInfo[tid].startingSeqNum);
+                limPostMlmAddBAReq(pMac, pSta, tid,
+                        pBaCandidate->baInfo[tid].startingSeqNum,psessionEntry);
             }
         }
     }
@@ -8539,4 +8552,57 @@ bool lim_is_robust_mgmt_action_frame(uint8 action_catagory)
             break;
    }
    return false;
+}
+
+/**
+ * lim_is_ext_cap_ie_present - checks if ext ie is present
+ * @ext_cap: extended IEs structure
+ *
+ * Return: true if ext IEs are present else false
+ */
+bool lim_is_ext_cap_ie_present (tDot11fIEExtCap *ext_cap)
+{
+    int i, size;
+    uint8_t *tmp_buf;
+
+    tmp_buf = (uint8_t *) ext_cap;
+    size = sizeof(*ext_cap);
+
+    for (i = 0; i < size; i++)
+        if (tmp_buf[i])
+            return true;
+
+    return false;
+}
+
+/**
+ * lim_update_caps_info_for_bss - Update capability info for this BSS
+ *
+ * @mac_ctx: mac context
+ * @caps: Pointer to capability info to be updated
+ * @bss_caps: Capability info of the BSS
+ *
+ * Update the capability info in Assoc/Reassoc request frames and reset
+ * the spectrum management, short preamble, immediate block ack bits
+ * if the BSS doesnot support it
+ *
+ * Return: None
+ */
+void lim_update_caps_info_for_bss(tpAniSirGlobal mac_ctx,
+                                  uint16_t *caps, uint16_t bss_caps)
+{
+    if (!(bss_caps & LIM_SPECTRUM_MANAGEMENT_BIT_MASK)) {
+          *caps &= (~LIM_SPECTRUM_MANAGEMENT_BIT_MASK);
+          limLog(mac_ctx, LOG1, FL("Clearing spectrum management:no AP support"));
+    }
+
+    if (!(bss_caps & LIM_SHORT_PREAMBLE_BIT_MASK)) {
+          *caps &= (~LIM_SHORT_PREAMBLE_BIT_MASK);
+          limLog(mac_ctx, LOG1, FL("Clearing short preamble:no AP support"));
+    }
+
+    if (!(bss_caps & LIM_IMMEDIATE_BLOCK_ACK_MASK)) {
+          *caps &= (~LIM_IMMEDIATE_BLOCK_ACK_MASK);
+          limLog(mac_ctx, LOG1, FL("Clearing Immed Blk Ack:no AP support"));
+    }
 }
