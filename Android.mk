@@ -82,15 +82,6 @@ $(shell mkdir -p $(TARGET_OUT)/etc/wifi; \
     ln -sf /etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
     $(TARGET_OUT)/etc/wifi/WCNSS_qcom_cfg.ini)
 
-#Create links for camera and wlan modules
-#$(shell mkdir -p $(TARGET_OUT)/lib/hw; \
-#    ln -sf /system/lib/hw/camera.vendor.msm8916.so \
-#    $(TARGET_OUT)/lib/hw/camera.msm8916.so)
-    
-$(shell mkdir -p $(TARGET_OUT)/lib/modules/pronto; \
-    ln -sf /system/lib/modules/pronto/pronto_wlan.ko \
-    $(TARGET_OUT)/lib/modules/wlan.ko)
-    
 include $(CLEAR_VARS)
 
 endif
