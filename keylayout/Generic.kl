@@ -126,7 +126,6 @@ key 103   DPAD_UP
 key 104   PAGE_UP
 key 105   DPAD_LEFT
 key 106   DPAD_RIGHT
-#key 107 (CHN FOLDER MODEL)
 key 107   MOVE_END
 key 108   DPAD_DOWN
 key 109   PAGE_DOWN
@@ -142,7 +141,7 @@ key 117   NUMPAD_EQUALS
 key 119   BREAK
 # key 120 (undefined)
 key 121   NUMPAD_COMMA
-key 122   LANG
+key 122   KANA
 key 123   EISU
 key 124   YEN
 key 125   META_LEFT
@@ -192,7 +191,6 @@ key 168   MEDIA_REWIND
 key 169   CALL
 # key 170 "KEY_ISO"
 key 171   MUSIC
-#input_fw added wake attribute for home
 key 172   HOME
 # key 173 "KEY_REFRESH"
 # key 174 "KEY_EXIT"
@@ -221,9 +219,6 @@ key 180   NUMPAD_RIGHT_PAREN
 # key 197 (undefined)
 # key 198 (undefined)
 # key 199 (undefined)
-# input_fw for voice wakeup
-key 198   VOICE_WAKEUP_LPSD
-key 199   VOICE_WAKEUP
 key 200   MEDIA_PLAY
 key 201   MEDIA_PAUSE
 # key 202 "KEY_PROG3"
@@ -251,12 +246,6 @@ key 217   SEARCH
 key 224   BRIGHTNESS_DOWN
 key 225   BRIGHTNESS_UP
 key 226   HEADSETHOOK
-
-# samsung 
-key 231   CALL #(CHN FOLDER MODEL)
-
-# samsung 
-key 252   USER
 
 # samsung
 key 254   APP_SWITCH
@@ -379,24 +368,12 @@ key 403   CHANNEL_DOWN
 # key 415 "KEY_TWEN"
 
 key 429   CONTACTS
-key 430   MESSAGE
 
 # key 448 "KEY_DEL_EOL"
 # key 449 "KEY_DEL_EOS"
 # key 450 "KEY_INS_LINE"
 # key 451 "KEY_DEL_LINE"
 
-key 452   CAM_QUICK_REAR
-key 453   CAM_QUICK_FRONT
-key 454   2ND_SCREEN_WAKEUP
-
-# key 455 used for blackscreenUI
-# key 456 KEY_BLACK_UI_QUICKAPP_ACCESS
-# key 457 KEY_BLACK_UI_DIRECT_INDICATOR
-
-# input_fw for swipe gestures from sides, used for wakeup
-key 458 SIDE_GESTURE_RIGHT
-key 459 SIDE_GESTURE_LEFT
 
 key 464   FUNCTION
 key 465   ESCAPE            FUNCTION
@@ -430,27 +407,7 @@ key 484   B                 FUNCTION
 # key 503 KEY_BRL_DOT7
 # key 504 KEY_BRL_DOT8
 
-key 522	STAR
-key 523	POUND
-
-# samsung camera
-key 528   FOCUS
-
-#key 531   TOUCHPAD_ON
-#key 532   TOUCHPAD_OFF
-
-# samsung DMB
-key 539   DMB_ANT_OPEN
-key 540   DMB_ANT_CLOSE
-
-key 548 NETWORK_SEL #(CHN FOLDER MODEL)
-key 549 3G          #(CHN FOLDER MODEL)
-key 550 WATCH       #(CHN FOLDER MODEL)
-key 551 ENDCALL     #(CHN FOLDER MODEL)
-
-#key 576 don't use (specific value used by camera project) - refer to InputReader.cpp
-
-key 580   APPSELECT
+key 580   APP_SWITCH
 key 582   VOICE_ASSIST
 
 # Keys defined by HID usages
