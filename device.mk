@@ -126,6 +126,7 @@ PRODUCT_PACKAGES += \
     init.carrier.rc \
     init.class_main.sh \
     init.mdm.sh \
+    init.qcom.audio.sh \
     init.qcom.bms.sh \
     init.qcom.class_core.sh \
     init.qcom.early_boot.sh \
@@ -141,6 +142,16 @@ PRODUCT_PACKAGES += \
     init.rilchip.rc \
     init.rilcommon.rc \
     twrp.fstab
+
+#IMS SERVICE
+#PRODUCT_COPY_FILES += \
+#	$(LOCAL_PATH)/ims/framework/imsmanager-common.jar:system/framework/imsmanager-common.jar \
+#	$(LOCAL_PATH)/ims/framework/imsmanager-internal.jar:system/framework/imsmanager-internal.jar \
+#	$(LOCAL_PATH)/ims/framework/imsmanager.jar:system/framework/imsmanager.jar \
+#	$(LOCAL_PATH)/ims/priv-app/ImsLogger+/ImsLogger+.apk:system/priv-app/ImsLogger+/ImsLogger+.apk \
+#	$(LOCAL_PATH)/ims/priv-app/imsservice/imsservice.apk:system/priv-app/imsservice/imsservice.apk \
+#	$(LOCAL_PATH)/ims/imscm.xml:system/etc/permissions/imscm.xml \
+#	$(LOCAL_PATH)/ims/imsmanager_library.xml:system/etc/permissions/imsmanager_library.xml
 
 # Keylayout
 PRODUCT_COPY_FILES += \
@@ -297,7 +308,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.pip.gated=0 \
     ro.product.model=SM-G530W \
     ro.product.device=gprimeltecan \
-    ro.telephony.ril_class=SamsungQcomRIL
+    ro.telephony.ril_class=SamsungQcomRIL \
+    cm.updater.uri=http://159.203.17.128/CyanogenModOTA/api
 
 # Ril
 PRODUCT_PACKAGES += \
