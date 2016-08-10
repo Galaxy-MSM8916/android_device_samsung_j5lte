@@ -80,9 +80,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/mixer_paths.xml:system/etc/mixer_paths.xml
 
 # Boot jars
-PRODUCT_BOOT_JARS += \
-    qcom.fmradio \
-    tcmiface
+#PRODUCT_BOOT_JARS += \
+#    qcom.fmradio \
+#    tcmiface
     
 #    qcmediaplayer   
 #    oem-services \
@@ -308,8 +308,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.pip.gated=0 \
     ro.product.model=SM-G530W \
     ro.product.device=gprimeltecan \
-    ro.telephony.ril_class=SamsungQcomRIL \
-    cm.updater.uri=http://159.203.17.128/CyanogenModOTA/api
+    cm.updater.uri=http://grandprime.ddns.net/api \
+    ro.telephony.ril_class=SamsungQcomRIL
 
 # Ril
 PRODUCT_PACKAGES += \
