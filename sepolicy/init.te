@@ -1,3 +1,4 @@
 #============= init ==============
 allow init diag_exec:file execute_no_trans;
 allow init self:process execmem;
+allow init vfat:dir search;
