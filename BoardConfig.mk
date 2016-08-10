@@ -90,6 +90,9 @@ EXTENDED_FONT_FOOTPRINT := true
 #TARGET_GPS_HAL_PATH := $(LOCAL_PATH)/gps
 #TARGET_NO_RPC := true
 
+#ART
+WITH_DEXPREOPT := true
+
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_msm
 TARGET_LIBINIT_DEFINES_FILE := $(LOCAL_PATH)/init/init_gprimeltecan.cpp
