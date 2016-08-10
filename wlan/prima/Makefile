@@ -11,6 +11,11 @@ modules_install:
 	$(MAKE) INSTALL_MOD_STRIP=1 -C $(KERNEL_SRC) M=$(shell pwd) modules_install
 
 clean::
+	find -type f -iname '*.o' | xargs rm
+	find -type f -iname '*.ko' | xargs rm
+	find -type f -iname '*.mod.o' | xargs rm
+	find -type f -iname '*.mod.c' | xargs rm
+	find -type f -iname '*.cmd' | xargs rm
 	rm -f *.o *.ko *.mod.c *.mod.o *~ .*.cmd Module.symvers
 	rm -rf .tmp_versions
 
