@@ -13,7 +13,14 @@ include $(LOCAL_PATH)/keylayout/Layouts.mk
 # Common overlay
 DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimeltecan/overlay
 
+ifeq ($(TARGET_PREBUILT_KERNEL),)
+       LOCAL_KERNEL := device/samsung/gprimeltecan/kernel
+else
+       LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
+endif
+
 PRODUCT_COPY_FILES += \
+    $(LOCAL_KERNEL):kernel \
     $(LOCAL_PATH)/dt.img:dt.img
 
 #Android EGL implementation
