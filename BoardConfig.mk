@@ -108,12 +108,12 @@ BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
 BOARD_RAMDISK_OFFSET     := 0x02000000
-#TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
-#TARGET_KERNEL_VARIANT_CONFIG := msm8916_sec_fortuna_can_defconfig
-#TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
-#TARGET_KERNEL_SELINUX_LOG_CONFIG := selinux_log_defconfig
+TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
+TARGET_KERNEL_VARIANT_CONFIG := msm8916_sec_fortuna_can_defconfig
+TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
+TARGET_KERNEL_SELINUX_LOG_CONFIG := selinux_log_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/gprimeltecan
-TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
+#TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := false
@@ -255,12 +255,14 @@ WIFI_DRIVER_MODULE_NAME := "wlan"
 -include vendor/samsung/gprimeltecan/BoardConfigVendor.mk
 
 #make, move, symlink and strip the wlan kernel module.
-#KERNEL_EXTERNAL_MODULES:
-#	make -C device/samsung/gprimeltecan/wlan/prima/ WLAN_ROOT=$(ANDROID_BUILD_TOP)/device/samsung/gprimeltecan/wlan/prima/ \
-#		KERNEL_SOURCE=$(KERNEL_OUT) ARCH="arm" CROSS_COMPILE="arm-eabi-"
-#	mkdir $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/ -p
-#	ln -sf /system/lib/modules/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko $(TARGET_OUT)/lib/modules/wlan.ko
-#	mv device/samsung/gprimeltecan/wlan/prima/wlan.ko $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
-#	arm-eabi-strip --strip-debug $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
+KERNEL_EXTERNAL_MODULES:
+	make -C device/samsung/gprimeltecan/wlan/prima/ WLAN_ROOT=$(ANDROID_BUILD_TOP)/device/samsung/gprimeltecan/wlan/prima/ \
+		KERNEL_SOURCE=$(KERNEL_OUT) ARCH="arm" \
+		CROSS_COMPILE="arm-eabi-"
+#		CROSS_COMPILE=$(ANDROID_BUILD_TOP)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-
+	mkdir $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/ -p
+	ln -sf /system/lib/modules/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko $(TARGET_OUT)/lib/modules/wlan.ko
+	mv device/samsung/gprimeltecan/wlan/prima/wlan.ko $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
+	arm-eabi-strip --strip-debug $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
 
-#TARGET_KERNEL_MODULES := KERNEL_EXTERNAL_MODULES
+TARGET_KERNEL_MODULES := KERNEL_EXTERNAL_MODULES
