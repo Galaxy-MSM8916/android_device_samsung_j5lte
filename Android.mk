@@ -77,10 +77,6 @@ $(shell mkdir -p $(TARGET_OUT)/etc/; \
     ln -sf /etc/libnfc-sec.conf \
     $(TARGET_OUT)/etc/libnfc-brcm.conf)
 
-$(shell mkdir -p $(TARGET_OUT)/lib/modules/pronto; \
-    ln -sf /system/lib/modules/pronto/pronto_wlan.ko \
-$(TARGET_OUT)/lib/modules/wlan.ko)
-
 #Create link for wifi config
 $(shell mkdir -p $(TARGET_OUT)/etc/wifi; \
     ln -sf /etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
