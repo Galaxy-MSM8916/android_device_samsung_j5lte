@@ -8,15 +8,10 @@
   <project path="frameworks/opt/telephony" name="CyanogenMod/android_frameworks_opt_telephony" groups="pdk"  revision="caf/cm-12.1"  />
 -->
 
-  
-  <remove-project name="platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8" />
-  <project path="prebuilts/gcc/linux-x86/arm/arm-eabi-4.8" name="platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7" groups="pdk,linux,arm" clone-depth="1" remote="aosp" />
-  
-
   <project path="device/samsung/gprimeltecan" name="vince2678/android_device_samsung_gprimeltecan" groups="device" remote="github" revision="cm-12.1"/>
   <project path="device/qcom-common" name="vince2678/android_device_qcom-common" remote="github" revision="cm-12.1"/>
   <project path="vendor/samsung/gprimeltecan" name="vince2678/android_vendor_samsung_gprimeltecan" remote="github" revision="cm-12.1"/>
-  <project path="kernel/samsung/gprimeltecan" name="vince2678/android_kernel_gprimeltecan" remote="github" revision="cm-12.1"/>
+  <project path="kernel/samsung/grandprime" name="vince2678/android_kernel_samsung_grandprime" remote="github" revision="cm-12.1"/>
   <project path="device/samsung/qcom-common" name="CyanogenMod/android_device_samsung_qcom-common" groups="device" />
 
 </manifest>
