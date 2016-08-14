@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, 2016 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2014 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -169,10 +169,11 @@ typedef struct sCsrNeighborRoamControlInfo
     vos_timer_t                 neighborScanTimer;
     vos_timer_t                 neighborResultsRefreshTimer;
     vos_timer_t                 emptyScanRefreshTimer;
+    tCsrTimerInfo               neighborScanTimerInfo;
     tCsrNeighborRoamChannelInfo roamChannelInfo;
     tANI_U8                     currentNeighborLookupThreshold;
     tANI_BOOLEAN                scanRspPending;
-    v_TIME_t                    scanRequestTimeStamp;
+    tANI_TIMESTAMP              scanRequestTimeStamp;
     tDblLinkList                roamableAPList;    // List of current FT candidates
     tANI_U32                    csrSessionId;
     tCsrRoamProfile             csrNeighborRoamProfile;
@@ -205,7 +206,6 @@ typedef struct sCsrNeighborRoamControlInfo
     tSirMacAddr                 cfgRoambssId;
     vos_timer_t                 forcedInitialRoamTo5GHTimer;
     tANI_U8                     isForcedInitialRoamTo5GH;
-    tANI_U8                     lastSentCmd;
 } tCsrNeighborRoamControlInfo, *tpCsrNeighborRoamControlInfo;
 
 

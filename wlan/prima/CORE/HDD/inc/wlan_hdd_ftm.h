@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013, 2016 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2013 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -64,7 +64,6 @@
 #define WE_ENABLE_DPD        12
 #define WE_SET_CB            13
 #define WE_TX_CW_RF_GEN      14
-#define WE_SET_POWER_INDEX   15
 
 /* Private ioctls and their sub-ioctls */
 #define WLAN_FTM_PRIV_SET_NONE_GET_INT    (SIOCIWFIRSTPRIV + 1)
@@ -98,7 +97,6 @@
 
 #define WLAN_FTM_PRIV_SET_VAR_INT_GET_NONE   (SIOCIWFIRSTPRIV + 7)
 #define WE_SET_TX_WF_GAIN  1
-#define WE_SET_DUMP        2
 
 #define WE_FTM_MAX_STR_LEN 1024
 #define MAX_FTM_VAR_ARGS  7
@@ -147,7 +145,6 @@ typedef enum {
     WLAN_FTM_INITIALIZED,
     WLAN_FTM_STOPPED,
     WLAN_FTM_STARTED,
-    WLAN_FTM_STARTING,
 } wlan_hdd_ftm_state;
 typedef struct wlan_hdd_ftm_status_s
 {
@@ -169,7 +166,6 @@ typedef struct wlan_hdd_ftm_status_s
     v_U8_t   *targetNVTablePointer;
     v_U32_t   processedNVTableSize;
     v_U8_t   *tempNVTableBuffer;
-    struct completion startCmpVar;
 
 } wlan_hdd_ftm_status_t;
 typedef struct ftm_msg_s

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2016 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -228,17 +228,6 @@ typedef enum
     BOTH_RF_BANDS,
     RF_SUBBAND_INVALID = 0x7FFFFFFF  /* define as 4 bytes data */
 }eRfSubBand;
-
-struct chan_to_ht_40_index_map {
-   uint16 ht_40_minus_index;
-   uint16 ht_40_plus_index;
-};
-
-typedef enum
-{
-    RF_CHAN_BOND_HT40_MINUS = 0,
-    RF_CHAN_BOND_HT40_PLUS
-}eChannnelBondingTypes;
 
 typedef enum
 {

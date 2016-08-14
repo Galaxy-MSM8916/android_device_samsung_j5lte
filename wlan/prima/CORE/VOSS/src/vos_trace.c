@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2014 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -33,6 +33,9 @@
 
    Trace, logging, and debugging definitions and APIs
 
+   Copyright 2008,2011 (c) Qualcomm, Incorporated.  All Rights Reserved.
+
+   Qualcomm Confidential and Proprietary.
 
   ========================================================================*/
 
@@ -99,8 +102,6 @@ moduleTraceInfo gVosTraceInfo[ VOS_MODULE_ID_MAX ] =
    [VOS_MODULE_ID_BAP]        = { VOS_DEFAULT_TRACE_LEVEL, "BAP" },
    [VOS_MODULE_ID_TL]         = { VOS_DEFAULT_TRACE_LEVEL, "TL " },
    [VOS_MODULE_ID_WDI]        = { VOS_DEFAULT_TRACE_LEVEL, "WDI" },
-   [VOS_MODULE_ID_SVC]        = { VOS_DEFAULT_TRACE_LEVEL, "SVC" },
-   [VOS_MODULE_ID_RSV4]       = { VOS_DEFAULT_TRACE_LEVEL, "RS4" },
    [VOS_MODULE_ID_HDD]        = { VOS_DEFAULT_TRACE_LEVEL, "HDD" },
    [VOS_MODULE_ID_SME]        = { VOS_DEFAULT_TRACE_LEVEL, "SME" },
    [VOS_MODULE_ID_PE]         = { VOS_DEFAULT_TRACE_LEVEL, "PE " },
@@ -130,8 +131,6 @@ static tvosTraceData gvosTraceData;
  */
 static tpvosTraceCb vostraceCBTable[VOS_MODULE_ID_MAX];
 static tpvosTraceCb vostraceRestoreCBTable[VOS_MODULE_ID_MAX];
-static tp_vos_state_info_cb vos_state_info_table[VOS_MODULE_ID_MAX];
-
 /*-------------------------------------------------------------------------
   Functions
   ------------------------------------------------------------------------*/
@@ -270,7 +269,8 @@ void vos_trace_msg( VOS_MODULE_ID module, VOS_TRACE_LEVEL level, char *strFormat
       va_start(val, strFormat);
 
       // print the prefix string into the string buffer...
-      n = snprintf(strBuffer, VOS_TRACE_BUFFER_SIZE, "wlan: [%2s:%3s] ",
+      n = snprintf(strBuffer, VOS_TRACE_BUFFER_SIZE, "wlan: [%d:%2s:%3s] ",
+                   in_interrupt() ? 0 : current->pid,
                    (char *) TRACE_LEVEL_STR[ level ],
                    (char *) gVosTraceInfo[ module ].moduleNameStr );
 
@@ -453,15 +453,6 @@ void vosTraceInit()
     }
 }
 
-void vos_register_debugcb_init()
-{
-    v_U8_t i;
-
-    for (i = 0; i < VOS_MODULE_ID_MAX; i++) {
-        vos_state_info_table[i] = NULL;
-    }
-}
-
 /*-----------------------------------------------------------------------------
   \brief vos_trace() - puts the messages in to ring-buffer
 
@@ -600,7 +591,7 @@ void vosTraceDumpAll(void *pMac, v_U8_t code, v_U8_t session,
         return;
     }
 
-    VOS_TRACE( VOS_MODULE_ID_SYS, VOS_TRACE_LEVEL_INFO,
+    VOS_TRACE( VOS_MODULE_ID_SYS, VOS_TRACE_LEVEL_ERROR,
                "Total Records: %d, Head: %d, Tail: %d",
                gvosTraceData.num, gvosTraceData.head, gvosTraceData.tail);
 
@@ -674,30 +665,5 @@ void vosTraceDumpAll(void *pMac, v_U8_t code, v_U8_t session,
     else
     {
         spin_unlock(&ltraceLock);
-    }
-}
-
-/**
- * vos_register_debug_callback() - stores callback handlers to print
- *                                                 state information
- */
-void vos_register_debug_callback(VOS_MODULE_ID moduleID,
-                                      tp_vos_state_info_cb vos_state_infocb)
-{
-    vos_state_info_table[moduleID] = vos_state_infocb;
-}
-
-/**
- * vos_state_info_dump_all() - it invokes callback of layer which registered
- * its callback to print its state information.
- * @cb_context: call back context to be passed
- */
-void vos_state_info_dump_all()
-{
-    v_U8_t module;
-
-    for (module = 0; module < VOS_MODULE_ID_MAX; module++) {
-         if (NULL != vos_state_info_table[module])
-             vos_state_info_table[module]();
     }
 }

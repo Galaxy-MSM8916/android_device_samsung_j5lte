@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2013 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -38,7 +38,7 @@
  */
 
 #include "aniGlobal.h"
-#include "wniCfg.h"
+#include "wniCfgSta.h"
 #include "cfgApi.h"
 
 
@@ -144,8 +144,8 @@ limDeleteStaContext(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
              if((eLIM_BT_AMP_AP_ROLE == psessionEntry->limSystemRole) ||
                      (eLIM_AP_ROLE == psessionEntry->limSystemRole))
              {
-                 limLog(pMac, LOG1, FL("SAP:lim Delete Station Context (staId: %d, assocId: %d) "),
-                             pMsg->staId, pMsg->assocId);
+                 PELOG1(limLog(pMac, LOG1, FL("SAP:lim Delete Station Context (staId: %d, assocId: %d) "),
+                             pMsg->staId, pMsg->assocId);)
                  /*
                   * Check if Deauth/Disassoc is triggered from Host.
                   * If mlmState is in some transient state then
@@ -166,12 +166,7 @@ limDeleteStaContext(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
                      return;
                  }
                  else
-                 {
-                     limSendDisassocMgmtFrame(pMac,
-                                     eSIR_MAC_DISASSOC_DUE_TO_INACTIVITY_REASON,
-                                     pStaDs->staAddr, psessionEntry, FALSE);
                      limTriggerSTAdeletion(pMac, pStaDs, psessionEntry);
-                 }
              }
              else
              {
@@ -231,14 +226,14 @@ limDeleteStaContext(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
                         eSIR_MAC_DISASSOC_DUE_TO_INACTIVITY_REASON;
                     pStaDs->mlmStaContext.cleanupTrigger = eLIM_LINK_MONITORING_DEAUTH;
 
-                    if (pStaDs->isDisassocDeauthInProgress)
-                    {
-                        limLog(pMac, LOGE, FL("No need to cleanup as already"
-                               "disassoc or deauth in progress"));
-                        return;
-                    }
-                    else
-                        pStaDs->isDisassocDeauthInProgress++;
+                   /** Set state to mlm State to eLIM_MLM_WT_DEL_STA_RSP_STATE
+                    * This is to address the issue of race condition between
+                    * disconnect request from the HDD and deauth from
+                    * Tx inactivity timer by FWR. This will make sure that we will not
+                    * process disassoc if deauth is in progress for the station
+                    * and thus mlmStaContext.cleanupTrigger will not be overwritten.
+                    */
+                    pStaDs->mlmStaContext.mlmState   = eLIM_MLM_WT_DEL_STA_RSP_STATE;
 
                     // Issue Deauth Indication to SME.
                     vos_mem_copy((tANI_U8 *) &mlmDeauthInd.peerMacAddr,
@@ -295,37 +290,81 @@ limDeleteStaContext(tpAniSirGlobal pMac, tpSirMsgQ limMsg)
 void
 limTriggerSTAdeletion(tpAniSirGlobal pMac, tpDphHashNode pStaDs, tpPESession psessionEntry)
 {
-    tLimMlmDisassocInd mlmDisassocInd;
+    tSirSmeDeauthReq    *pSmeDeauthReq;
+    tANI_U8             *pBuf;
+    tANI_U8             *pLen;
+    tANI_U16            msgLength = 0;
+
+    if (! pStaDs)
+    {
+        PELOGW(limLog(pMac, LOGW, FL("Skip STA deletion (invalid STA)"));)
+        return;
+    }
+    /**
+     * MAC based Authentication was used. Trigger
+     * Deauthentication frame to peer since it will
+     * take care of disassociation as well.
+     */
+
+    pSmeDeauthReq = vos_mem_malloc(sizeof(tSirSmeDeauthReq));
+    if (NULL == pSmeDeauthReq)
+    {
+        limLog(pMac, LOGP, FL("AllocateMemory failed for eWNI_SME_DEAUTH_REQ "));
+        return;
+    }
+
+    pBuf = (tANI_U8 *) &pSmeDeauthReq->messageType;
+
+    //messageType
+    limCopyU16((tANI_U8*)pBuf, eWNI_SME_DISASSOC_REQ);
+    pBuf += sizeof(tANI_U16);
+    msgLength += sizeof(tANI_U16);
+
+    //length
+    pLen = pBuf;
+    pBuf += sizeof(tANI_U16);
+    msgLength += sizeof(tANI_U16);
+
+    //sessionId
+    *pBuf = psessionEntry->smeSessionId;
+    pBuf++;
+    msgLength++;
+
+    //transactionId
+    limCopyU16((tANI_U8*)pBuf, psessionEntry->transactionId);
+    pBuf += sizeof(tANI_U16);
+    msgLength += sizeof(tANI_U16);
+
+    //bssId
+    vos_mem_copy(pBuf, psessionEntry->bssId, sizeof(tSirMacAddr));
+    pBuf += sizeof(tSirMacAddr);
+    msgLength += sizeof(tSirMacAddr);
+
+    //peerMacAddr
+    vos_mem_copy(pBuf, pStaDs->staAddr, sizeof(tSirMacAddr));
+    pBuf += sizeof(tSirMacAddr);
+    msgLength += sizeof(tSirMacAddr);
+
+    //reasonCode 
+    limCopyU16((tANI_U8*)pBuf, (tANI_U16)eLIM_LINK_MONITORING_DISASSOC);
+    pBuf += sizeof(tANI_U16);
+    msgLength += sizeof(tANI_U16);
+
+    //Do not send disassoc OTA
+    //pBuf[0] = 1 means do not send the disassoc frame over the air
+    //pBuf[0] = 0 means send the disassoc frame over the air
+    pBuf[0]= 0;
+    pBuf += sizeof(tANI_U8);
+    msgLength += sizeof(tANI_U8);
 
 
-     if (!pStaDs)
-     {
-         PELOGW(limLog(pMac, LOGW, FL("Skip STA deletion (invalid STA)"));)
-         return;
-     }
+  
+    //Fill in length
+    limCopyU16((tANI_U8*)pLen , msgLength);
 
-     if ((pStaDs->mlmStaContext.mlmState == eLIM_MLM_WT_DEL_STA_RSP_STATE) ||
-         (pStaDs->mlmStaContext.mlmState == eLIM_MLM_WT_DEL_BSS_RSP_STATE)) {
-         /* Already in the process of deleting context for the peer */
-         PELOGE(limLog(pMac, LOGE,
-                 FL("Deletion is in progress for peer:%pM"), pStaDs->staAddr);)
-         return;
-     }
+    limPostSmeMessage(pMac, eWNI_SME_DISASSOC_REQ, (tANI_U32 *) pSmeDeauthReq);
+    vos_mem_free(pSmeDeauthReq);
 
-     pStaDs->mlmStaContext.disassocReason =
-              eSIR_MAC_DISASSOC_DUE_TO_INACTIVITY_REASON;
-     pStaDs->mlmStaContext.cleanupTrigger = eLIM_LINK_MONITORING_DISASSOC;
-     vos_mem_copy(&mlmDisassocInd.peerMacAddr, pStaDs->staAddr,
-                  sizeof(tSirMacAddr));
-     mlmDisassocInd.reasonCode = eSIR_MAC_DISASSOC_DUE_TO_INACTIVITY_REASON;
-     mlmDisassocInd.disassocTrigger = eLIM_LINK_MONITORING_DISASSOC;
-
-     /* Update PE session Id  */
-     mlmDisassocInd.sessionId = psessionEntry->peSessionId;
-     limPostSmeMessage(pMac, LIM_MLM_DISASSOC_IND,
-                       (tANI_U32 *) &mlmDisassocInd);
-     // Issue Disassoc Indication to SME.
-     limSendSmeDisassocInd(pMac, pStaDs, psessionEntry);
 } /*** end limTriggerSTAdeletion() ***/
 
 
@@ -528,8 +567,8 @@ void limHandleHeartBeatFailure(tpAniSirGlobal pMac,tpPESession psessionEntry)
             * or in states other than link-established state.
             * Log error.
             */
-        limLog(pMac, LOG1, FL("received heartbeat timeout in state %d"),
-               psessionEntry->limMlmState);
+        PELOG1(limLog(pMac, LOG1, FL("received heartbeat timeout in state %d"),
+               psessionEntry->limMlmState);)
         limPrintMlmState(pMac, LOG1, psessionEntry->limMlmState);
         pMac->lim.gLimHBfailureCntInOtherStates++;
         limReactivateHeartBeatTimer(pMac, psessionEntry);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2013 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -39,7 +39,7 @@
  */
 #include "palTypes.h"
 #include "aniGlobal.h"
-#include "wniCfg.h"
+#include "wniCfgSta.h"
 
 #include "sirMacProtDef.h"
 #include "sirMacPropExts.h"
@@ -243,7 +243,7 @@ schSendStartScanRsp(tpAniSirGlobal pMac)
     tSirMsgQ        msgQ;
     tANI_U32        retCode;
 
-    schLog(pMac, LOG1, FL("Sending SIR_SCH_START_SCAN_RSP to LIM"));
+    PELOG1(schLog(pMac, LOG1, FL("Sending LIM message to go into scan"));)
     msgQ.type = SIR_SCH_START_SCAN_RSP;
     if ((retCode = limPostMsgApi(pMac, &msgQ)) != eSIR_SUCCESS)
         schLog(pMac, LOGE,
@@ -353,7 +353,6 @@ tSirRetStatus schSendBeaconReq( tpAniSirGlobal pMac, tANI_U8 *beaconPayload, tAN
         && (pMac->sch.schObject.fBeaconChanged)
         && ((psessionEntry->proxyProbeRspEn)
         || (IS_FEATURE_SUPPORTED_BY_FW(WPS_PRBRSP_TMPL)))
-        && vos_is_probe_rsp_offload_enabled()
       )
 
     {

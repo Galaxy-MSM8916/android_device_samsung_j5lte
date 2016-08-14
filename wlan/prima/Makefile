@@ -8,7 +8,7 @@ all::
 		SUBDIRS=$(CURDIR) CROSS_COMPILE=$(CROSS_COMPILE) modules
 
 modules_install:
-	$(MAKE) INSTALL_MOD_STRIP=1 -C $(KERNEL_SRC) M=$(shell pwd) modules_install
+	$(MAKE) INSTALL_MOD_STRIP=1 -C $(KERNEL_SRC) M=$(WLAN_ROOT) modules_install
 
 clean::
 	find -type f -iname '*.o' | xargs rm || true

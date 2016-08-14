@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013, 2016 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2013 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -44,6 +44,9 @@
   Are listed for each API below. 
   
   
+  Copyright (c) 2010 QUALCOMM Incorporated.
+  All Rights Reserved.
+  Qualcomm Confidential and Proprietary
 ===========================================================================*/
 
 /*===========================================================================
@@ -84,10 +87,8 @@
 #define SOFTAP_RSSI_WEIGHT      (20)
 #define SOFTAP_COUNT_WEIGHT     (20)
 
-#define SAP_DEFAULT_24GHZ_CHANNEL     (6)
-#define SAP_DEFAULT_LOW_5GHZ_CHANNEL      (40)
-#define SAP_DEFAULT_MID_5GHZ_CHANNEL      (100)
-#define SAP_DEFAULT_HIGH_5GHZ_CHANNEL      (149)
+#define SAP_DEFAULT_CHANNEL     (6)
+#define SAP_DEFAULT_5GHZ_CHANNEL      (40)
 #define SAP_CHANNEL_NOT_SELECTED (0)
 
 #define SOFTAP_HT20_CHANNELWIDTH 0
@@ -131,7 +132,6 @@ typedef struct {
     v_U16_t bssCount;   // bss found in scanresult for this channel
     v_S31_t rssiAgr;    // Max value of rssi among all BSS(es) from scanresult for this channel
     v_U32_t weight;     // Weightage of this channel
-    v_U32_t weight_copy; //copy of the orignal weight
     v_BOOL_t valid;     // Is this a valid center frequency for regulatory domain
 } tSapSpectChInfo;//tDfsSpectChInfo;
 

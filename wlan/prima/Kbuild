@@ -199,7 +199,6 @@ MAC_LIM_OBJS := $(MAC_SRC_DIR)/pe/lim/limAIDmgmt.o \
 		$(MAC_SRC_DIR)/pe/lim/limProcessProbeRspFrame.o \
 		$(MAC_SRC_DIR)/pe/lim/limProcessSmeReqMessages.o \
 		$(MAC_SRC_DIR)/pe/lim/limPropExtsUtils.o \
-		$(MAC_SRC_DIR)/pe/lim/limRMC.o \
 		$(MAC_SRC_DIR)/pe/lim/limRoamingAlgo.o \
 		$(MAC_SRC_DIR)/pe/lim/limScanResultUtils.o \
 		$(MAC_SRC_DIR)/pe/lim/limSecurityUtils.o \
@@ -304,7 +303,7 @@ SME_P2P_OBJS = $(SME_SRC_DIR)/p2p/p2p_Api.o
 
 SME_RRM_OBJS := $(SME_SRC_DIR)/rrm/sme_rrm.o
 
-SME_NAN_OBJS = $(SME_SRC_DIR)/nan/nan_Api.o
+#SME_NAN_OBJS = $(SME_SRC_DIR)/nan/nan_Api.o
 
 
 SME_OBJS :=	$(SME_BTC_OBJS) \

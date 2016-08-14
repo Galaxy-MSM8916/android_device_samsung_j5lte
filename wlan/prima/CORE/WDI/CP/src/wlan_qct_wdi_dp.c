@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2014, 2016 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2014 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -48,6 +48,9 @@
   Are listed for each API below.
 
 
+  Copyright (c) 2010 QUALCOMM Incorporated.
+  All Rights Reserved.
+  Qualcomm Confidential and Proprietary
 ===========================================================================*/
 
 /*===========================================================================
@@ -386,8 +389,7 @@ WDI_FillTxBd
     wpt_uint8              ucProtMgmtFrame,
     wpt_uint32             uTimeStamp,
     wpt_uint8              isEapol,
-    wpt_uint8*             staIndex,
-    wpt_uint32             txBdToken
+    wpt_uint8*             staIndex
 )
 {
     wpt_uint8              ucTid        = *pTid; 
@@ -408,7 +410,6 @@ WDI_FillTxBd
     /*------------------------------------------------------------------------
        Get type and subtype of the frame first 
     ------------------------------------------------------------------------*/
-    pBd->txBdToken = txBdToken;
     ucType = (ucTypeSubtype & WDI_FRAME_TYPE_MASK) >> WDI_FRAME_TYPE_OFFSET;
     ucSubType = (ucTypeSubtype & WDI_FRAME_SUBTYPE_MASK);
 
@@ -458,8 +459,7 @@ WDI_FillTxBd
         pBd->dpuRF = BMUWQ_BTQM_TX_MGMT; 
     }
 
-    if (ucTxFlag & WDI_USE_FW_IN_TX_PATH ||
-            (pWDICtx->sendMgmtPktViaWQ5 && (ucType == WDI_MAC_MGMT_FRAME)))
+    if (ucTxFlag & WDI_USE_FW_IN_TX_PATH)
     {
         WPAL_TRACE( eWLAN_MODULE_DAL_CTRL, eWLAN_PAL_TRACE_LEVEL_INFO,
           "iType: %d SubType %d, MAC S: %08x. MAC D: %08x., Tid=%d",
@@ -553,17 +553,9 @@ WDI_FillTxBd
         }
 #endif
 
-        if(ucTxFlag & WDI_USE_BD_RATE_1_MASK)
+        if(ucTxFlag & WDI_USE_BD_RATE_MASK)
         {
             pBd->bdRate = WDI_BDRATE_BCDATA_FRAME;
-        }
-        else if(ucTxFlag & WDI_USE_BD_RATE_2_MASK)
-        {
-            pBd->bdRate = WDI_BDRATE_BCMGMT_FRAME;
-        }
-        else if(ucTxFlag & WDI_USE_BD_RATE_3_MASK)
-        {
-            pBd->bdRate = WDI_BDRATE_CTRL_FRAME;
         }
 
         pBd->rmf    = WDI_RMF_DISABLED;     
@@ -892,13 +884,6 @@ WDI_FillTxBd
    
             WDI_STATableGetStaType(pWDICtx, ucStaId, &ucSTAType);
             if(!ucUnicastDst)
-#ifdef WLAN_FEATURE_RMC
-              /*Check for RMC enabled bit if set then
-                queue frames in QID 5 else 0*/
-              if ( ucTxFlag & WDI_RMC_REQUESTED_MASK )
-                pBd->queueId = BTQM_QID5;
-              else
-#endif
                 pBd->queueId = BTQM_QID0;
 #ifndef HAL_SELF_STA_PER_BSS
             else if( ucUnicastDst && (ucStaId == pWDICtx->ucSelfStaId))

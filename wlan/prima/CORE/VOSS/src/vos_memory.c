@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2014 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -31,6 +31,9 @@
   @brief Virtual Operating System Services Memory API
 
   
+  Copyright (c) 2008 QUALCOMM Incorporated.
+  All Rights Reserved.
+  Qualcomm Confidential and Proprietary
 ===========================================================================*/
 
 /*=========================================================================== 
@@ -55,14 +58,11 @@
  * ------------------------------------------------------------------------*/
 #include "vos_memory.h"
 #include "vos_trace.h"
-#include "vos_api.h"
-#include <vmalloc.h>
 
 #ifdef CONFIG_WCNSS_MEM_PRE_ALLOC
 #include <linux/wcnss_wlan.h>
 #define WCNSS_PRE_ALLOC_GET_THRESHOLD (4*1024)
 #endif
-#define VOS_GET_MEMORY_TIME_THRESHOLD 300
 
 #ifdef MEMORY_DEBUG
 #include "wlan_hdd_dp_utils.h"
@@ -191,17 +191,16 @@ v_VOID_t * vos_mem_malloc_debug( v_SIZE_t size, char* fileName, v_U32_t lineNum)
    v_SIZE_t new_size;
    int flags = GFP_KERNEL;
    unsigned long IrqFlags;
-   unsigned long  time_before_kmalloc;
 
 
-   if (size > (1024*1024) || size == 0)
+   if (size > (1024*1024))
    {
        VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-               "%s: called with invalid arg %u !!!", __func__, size);
+               "%s: called with arg > 1024K; passed in %d !!!", __func__,size); 
        return NULL;
    }
 
-   if (in_interrupt() || irqs_disabled() || in_atomic())
+   if (in_interrupt())
    {
       flags = GFP_ATOMIC;
    }
@@ -217,42 +216,12 @@ v_VOID_t * vos_mem_malloc_debug( v_SIZE_t size, char* fileName, v_U32_t lineNum)
                return pmem;
       }
 #endif
-      time_before_kmalloc = vos_timer_get_system_time();
-      memPtr = kmalloc(size, flags);
-
-      /* If time taken by kmalloc is greater than VOS_GET_MEMORY_TIME_THRESHOLD
-       * msec */
-      if (vos_timer_get_system_time() - time_before_kmalloc >=
-                                    VOS_GET_MEMORY_TIME_THRESHOLD)
-         VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-               "%s: kmalloc took %lu msec for size %d called from %pS at line %d",
-               __func__,
-               vos_timer_get_system_time() - time_before_kmalloc,
-               size, (void *)_RET_IP_, lineNum);
-      if ((flags != GFP_ATOMIC) && (NULL == memPtr))
-      {
-         WARN_ON(1);
-         vos_fatal_event_logs_req(WLAN_LOG_TYPE_FATAL,
-                       WLAN_LOG_INDICATOR_HOST_ONLY,
-                       WLAN_LOG_REASON_MALLOC_FAIL,
-                       false, true);
-      }
-      return memPtr;
+      return kmalloc(size, flags);
    }
 
    new_size = size + sizeof(struct s_vos_mem_struct) + 8; 
 
-   time_before_kmalloc = vos_timer_get_system_time();
    memStruct = (struct s_vos_mem_struct*)kmalloc(new_size, flags);
-   /* If time taken by kmalloc is greater than VOS_GET_MEMORY_TIME_THRESHOLD
-    * msec */
-   if (vos_timer_get_system_time() - time_before_kmalloc >=
-                              VOS_GET_MEMORY_TIME_THRESHOLD)
-      VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-           "%s: kmalloc took %lu msec for size %d called from %pS at line %d",
-            __func__,
-            vos_timer_get_system_time() - time_before_kmalloc,
-            size, (void *)_RET_IP_, lineNum);
 
    if(memStruct != NULL)
    {
@@ -275,14 +244,6 @@ v_VOID_t * vos_mem_malloc_debug( v_SIZE_t size, char* fileName, v_U32_t lineNum)
       }
 
       memPtr = (v_VOID_t*)(memStruct + 1); 
-   }
-   if ((flags != GFP_ATOMIC) && (NULL == memStruct))
-   {
-      WARN_ON(1);
-      vos_fatal_event_logs_req(WLAN_LOG_TYPE_FATAL,
-                    WLAN_LOG_INDICATOR_HOST_ONLY,
-                    WLAN_LOG_REASON_MALLOC_FAIL,
-                    false, true);
    }
    return memPtr;
 }
@@ -339,16 +300,12 @@ v_VOID_t vos_mem_free( v_VOID_t *ptr )
 v_VOID_t * vos_mem_malloc( v_SIZE_t size )
 {
    int flags = GFP_KERNEL;
-   v_VOID_t* memPtr = NULL;
 #ifdef CONFIG_WCNSS_MEM_PRE_ALLOC
     v_VOID_t* pmem;
 #endif    
-   unsigned long  time_before_kmalloc;
-
-   if (size > (1024*1024) || size == 0)
+   if (size > (1024*1024))
    {
-       VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-               "%s: called with invalid arg %u !!!", __func__, size);
+       VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR, "%s: called with arg > 1024K; passed in %d !!!", __func__,size); 
        return NULL;
    }
    if (in_interrupt() || irqs_disabled() || in_atomic())
@@ -363,28 +320,7 @@ v_VOID_t * vos_mem_malloc( v_SIZE_t size )
            return pmem;
    }
 #endif
-   time_before_kmalloc = vos_timer_get_system_time();
-   memPtr = kmalloc(size, flags);
-   /* If time taken by kmalloc is greater than VOS_GET_MEMORY_TIME_THRESHOLD
-    * msec */
-   if (vos_timer_get_system_time() - time_before_kmalloc >=
-                              VOS_GET_MEMORY_TIME_THRESHOLD)
-      VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-          "%s: kmalloc took %lu msec for size %d from %pS",
-          __func__,
-          vos_timer_get_system_time() - time_before_kmalloc,
-          size, (void *)_RET_IP_);
-
-   if ((flags != GFP_ATOMIC) && (NULL == memPtr))
-   {
-       WARN_ON(1);
-       vos_fatal_event_logs_req(WLAN_LOG_TYPE_FATAL,
-                     WLAN_LOG_INDICATOR_HOST_ONLY,
-                     WLAN_LOG_REASON_MALLOC_FAIL,
-                     false, true);
-   }
-   return memPtr;
-
+   return kmalloc(size, flags);
 }   
 
 v_VOID_t vos_mem_free( v_VOID_t *ptr )
@@ -401,45 +337,6 @@ v_VOID_t vos_mem_free( v_VOID_t *ptr )
 }
 #endif
 
-v_VOID_t * vos_mem_vmalloc(v_SIZE_t size)
-{
-    v_VOID_t* memPtr = NULL;
-    unsigned long  time_before_vmalloc;
-
-    if (size == 0 || size >= (1024*1024))
-    {
-        VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-                  "%s invalid size: %u", __func__, size);
-        return NULL;
-    }
-    time_before_vmalloc = vos_timer_get_system_time();
-    memPtr = vmalloc(size);
-    /* If time taken by vmalloc is greater than VOS_GET_MEMORY_TIME_THRESHOLD
-     * msec
-     */
-    if (vos_timer_get_system_time() - time_before_vmalloc >=
-                              VOS_GET_MEMORY_TIME_THRESHOLD)
-        VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-           "%s: vmalloc took %lu msec for size %d from %pS",
-           __func__,
-           vos_timer_get_system_time() - time_before_vmalloc,
-           size, (void *)_RET_IP_);
-    return memPtr;
-}
-
-v_VOID_t vos_mem_vfree(void *addr)
-{
-    if (addr == NULL)
-    {
-        VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-                  "%s NULL address passed to free", __func__);
-        return;
-    }
-
-    vfree(addr);
-    return;
-}
-
 v_VOID_t vos_mem_set( v_VOID_t *ptr, v_SIZE_t numBytes, v_BYTE_t value )
 {
    if (ptr == NULL)
@@ -448,20 +345,6 @@ v_VOID_t vos_mem_set( v_VOID_t *ptr, v_SIZE_t numBytes, v_BYTE_t value )
       return;
    }
    memset(ptr, value, numBytes);
-}
-
-void vos_buff_to_hl_buff (tANI_U8 *buffer, int size)
-{
-    int *val, i;
-    if (size % 4 != 0)
-        VOS_TRACE(VOS_MODULE_ID_PE,VOS_TRACE_LEVEL_ERROR,
-                  "%s: size should be multiple of 4, size %d",
-                  __func__, size);
-
-    val = (int *)buffer;
-
-    for (i=0; i<(size/4); i++)
-        *(val+i) = vos_htonl ((unsigned long)(*(val+i)));
 }
 
 v_VOID_t vos_mem_zero( v_VOID_t *ptr, v_SIZE_t numBytes )
@@ -519,18 +402,7 @@ v_VOID_t vos_mem_move( v_VOID_t *pDst, const v_VOID_t *pSrc, v_SIZE_t numBytes )
    memmove(pDst, pSrc, numBytes);
 }
 
-v_BOOL_t vos_mem_compare(
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,18,0))
-                          const v_VOID_t *pMemory1,
-#else
-                          v_VOID_t *pMemory1,
-#endif
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,18,0))
-                          const v_VOID_t *pMemory2,
-#else
-                          v_VOID_t *pMemory2,
-#endif
-                          v_U32_t numBytes )
+v_BOOL_t vos_mem_compare( v_VOID_t *pMemory1, v_VOID_t *pMemory2, v_U32_t numBytes )
 { 
    if (0 == numBytes)
    {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2013 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -44,6 +44,9 @@
 
   DEPENDENCIES:
 
+                Copyright (c) 2007 QUALCOMM Incorporated.
+                All Rights Reserved.
+                Qualcomm Confidential and Proprietary
 ============================================================================*/
 
 /*============================================================================
@@ -58,17 +61,13 @@
 #include "vos_trace.h"
 #include "vos_utils.h"
 #include "vos_memory.h"
-#include <linux/wcnss_wlan.h>
 
 #include <linux/err.h>
 #include <linux/random.h>
 #include <linux/crypto.h>
 #include <linux/scatterlist.h>
 #include <linux/completion.h>
-#include <linux/vmalloc.h>
 #include <crypto/hash.h>
-#include "vos_diag_core_event.h"
-
 
 /*----------------------------------------------------------------------------
  * Preprocessor Definitions and Constants
@@ -299,8 +298,6 @@ int hmac_sha1(v_U8_t *key, v_U8_t ksize, char *plaintext, v_U8_t psize,
     case -EBUSY:
         ret = wait_for_completion_interruptible(&tresult.completion);
         if (!ret && !tresult.err) {
-            for (i=0; i< outlen; i++)
-                output[i] = hash_result[i];
             INIT_COMPLETION(tresult.completion);
             break;
         } else {
@@ -456,10 +453,8 @@ int hmac_md5(v_U8_t *key, v_U8_t ksize, char *plaintext, v_U8_t psize,
         case -EBUSY:
              ret = wait_for_completion_interruptible(&tresult.completion);
              if (!ret && !tresult.err) {
-                 for (i=0; i< outlen; i++)
-                     output[i] = hash_result[i];
-                 INIT_COMPLETION(tresult.completion);
-                 break;
+                  INIT_COMPLETION(tresult.completion);
+                  break;
              } else {
                  VOS_TRACE(VOS_MODULE_ID_VOSS,VOS_TRACE_LEVEL_ERROR, "wait_for_completion_interruptible failed");
                  if (!ret)
@@ -727,14 +722,7 @@ v_U8_t vos_chan_to_band(v_U32_t chan)
     return VOS_BAND_5GHZ;
 }
 
-void vos_get_wlan_unsafe_channel(v_U16_t *unsafeChannelList,
-                           v_U16_t buffer_size, v_U16_t *unsafeChannelCount)
-{
-    /* Get unsafe channel list from cached location */
-    wcnss_get_wlan_unsafe_channel(unsafeChannelList, buffer_size,
-                                  unsafeChannelCount);
-}
-
+#ifdef DEBUG_ROAM_DELAY
 
 #include <linux/skbuff.h>
 #include "vos_timer.h"
@@ -747,7 +735,7 @@ void vos_get_wlan_unsafe_channel(v_U16_t *unsafeChannelList,
 
 //Define gRoamDelayMetaInfo
 tRoamDelayMetaInfo gRoamDelayMetaInfo = {0};
-tRoamDelayMetaInfo *gpRoamDelayTable = NULL;
+tRoamDelayMetaInfo gRoamDelayTable[ROAM_DELAY_TABLE_SIZE];
 v_BOOL_t gRoamDelayCurrentIndex = 0;
 
 #define VOS_ETHERTYPE_802_1_X                           ( 0x888E )
@@ -761,20 +749,6 @@ v_BOOL_t gRoamDelayCurrentIndex = 0;
 #define VOS_ETHERTYPE_802_1_X_FRAME_OFFSET_IN_802_11_PKT ( 32 )
 #define VOS_QOS_DATA_VALUE                              ( 0x88 )
 #define VOS_NON_QOS_DATA_VALUE                          ( 0x80 )
-
-//802.11 header wil have 24 byte excluding qos
-#define VOS_802_11_HEADER_SIZE ( 24 )
-#define VOS_QOS_SIZE ( 2 )
-#define VOS_LLC_HEADER_SIZE   (8)
-#define VOS_IP_HEADER_SIZE    (20)
-#define VOS_TCP_MIN_HEADER_SIZE   (20)
-#define VOS_DEF_PKT_STATS_LEN_TO_COPY \
-       (VOS_802_11_HEADER_SIZE + VOS_LLC_HEADER_SIZE \
-       + VOS_IP_HEADER_SIZE + VOS_TCP_MIN_HEADER_SIZE)
-// DHCP Port number
-#define VOS_DHCP_SOURCE_PORT 0x4400
-#define VOS_DHCP_DESTINATION_PORT 0x4300
-
 
 
 // Frame Type definitions
@@ -793,13 +767,15 @@ v_BOOL_t vos_skb_is_eapol(struct sk_buff *skb,
 {
     void       *pBuffer   = NULL;
     v_BOOL_t   fEAPOL     = VOS_FALSE;
-
+    VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO, "enter vos_skb_is_eapol");
+    //vos_trace_hex_dump( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR, &skb->data[0], skb->len);
     // Validate the skb
     if (unlikely(NULL == skb))
     {
         VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
                     "vos_skb_is_eapol [%d]: NULL skb", __LINE__);
-        return VOS_FALSE;
+        return VOS_STATUS_E_INVAL;
+        VOS_ASSERT(0);
     }
     // check for overflow
     if (unlikely((pktOffset + numBytes) > skb->len))
@@ -807,7 +783,7 @@ v_BOOL_t vos_skb_is_eapol(struct sk_buff *skb,
         VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
                   "vos_skb_is_eapol [%d]: Packet overflow, offset %d size %d len %d",
                   __LINE__, pktOffset, numBytes, skb->len);
-        return VOS_FALSE;
+        return VOS_STATUS_E_INVAL;
     }
     //check for the Qos Data, if Offset length is more 12.
     //it means it will 802.11 header skb
@@ -822,54 +798,12 @@ v_BOOL_t vos_skb_is_eapol(struct sk_buff *skb,
     {
       fEAPOL = VOS_TRUE;
     }
+    VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO, "exit vos_skb_is_eapol fEAPOL = %d", fEAPOL);
     return fEAPOL;
-}
-
-v_BOOL_t vos_roam_delay_stats_init(void)
-{
-    if (gpRoamDelayTable == NULL)
-    {
-        gpRoamDelayTable = vmalloc(sizeof(tRoamDelayMetaInfo) * ROAM_DELAY_TABLE_SIZE);
-        if (gpRoamDelayTable == NULL)
-        {
-            VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR, "Memory allocation failed");
-            return VOS_FALSE;
-        }
-    }
-    else
-    {
-        VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_INFO, "Memory is already allocated");
-        return VOS_FALSE;
-    }
-
-    return VOS_TRUE;
-}
-
-
-v_BOOL_t vos_roam_delay_stats_deinit(void)
-{
-    if (gpRoamDelayTable != NULL)
-    {
-        vfree(gpRoamDelayTable);
-        gpRoamDelayTable = NULL;
-    }
-    else
-    {
-        VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_INFO, "Memory is already freed");
-        return VOS_FALSE;
-    }
-
-    return VOS_TRUE;
 }
 
 void vos_record_roam_event(enum e_roaming_event roam_event, void *pBuff, v_ULONG_t buff_len)
 {
-    if (gpRoamDelayTable == NULL)
-    {
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
-                  "Roam delay table is not initialized\n");
-        return;
-    }
     switch(roam_event)
     {
         case e_HDD_DISABLE_TX_QUEUE:
@@ -955,14 +889,14 @@ void vos_record_roam_event(enum e_roaming_event roam_event, void *pBuff, v_ULONG
                      {
                           if(gRoamDelayMetaInfo.hdd_eapol_m2 == 0)
                           {
-                              VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,"HDD XMIT m2");
+                              VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,"HDD XMIT m2");
                               gRoamDelayMetaInfo.hdd_eapol_m2 = vos_timer_get_system_time();
                               gRoamDelayMetaInfo.dxe_monitor_tx = MONITOR_START;
                           }
                           else if((gRoamDelayMetaInfo.hdd_eapol_m2) && (gRoamDelayMetaInfo.hdd_eapol_m4 == 0))
                          {
                               gRoamDelayMetaInfo.hdd_eapol_m4 = vos_timer_get_system_time();
-                              VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,"HDD XMIT m4");
+                              VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,"HDD XMIT m4");
                               gRoamDelayMetaInfo.hdd_monitor_tx = MONITOR_EAPOL_DONE;
                               //We should return from here so can cache the time for first data pkt
                               return;
@@ -1008,13 +942,13 @@ void vos_record_roam_event(enum e_roaming_event roam_event, void *pBuff, v_ULONG
                      {
                          if(gRoamDelayMetaInfo.hdd_eapol_m1 == 0)
                          {
-                             VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,"HDD recv m1");
+                             VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,"HDD recv m1");
                              gRoamDelayMetaInfo.hdd_eapol_m1 = vos_timer_get_system_time();
                          }
                          else if((gRoamDelayMetaInfo.hdd_eapol_m1) && (gRoamDelayMetaInfo.hdd_eapol_m3 == 0))
                          {
                              gRoamDelayMetaInfo.hdd_eapol_m3 = vos_timer_get_system_time();
-                             VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,"HDD recv m3");
+                             VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,"HDD recv m3");
                              gRoamDelayMetaInfo.hdd_monitor_rx = MONITOR_EAPOL_DONE;
                          }
                      }
@@ -1059,13 +993,13 @@ void vos_record_roam_event(enum e_roaming_event roam_event, void *pBuff, v_ULONG
                          {
                              if(gRoamDelayMetaInfo.dxe_eapol_m1 == 0)
                              {
-                                 VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,"DXE recv m1");
+                                 VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,"DXE recv m1");
                                  gRoamDelayMetaInfo.dxe_eapol_m1 = vos_timer_get_system_time();
                              }
                              else if((gRoamDelayMetaInfo.dxe_eapol_m1) && (gRoamDelayMetaInfo.dxe_eapol_m3 == 0))
                              {
                                  gRoamDelayMetaInfo.dxe_eapol_m3 = vos_timer_get_system_time();
-                                 VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,"DXE recv m3");
+                                 VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,"DXE recv m3");
                                  gRoamDelayMetaInfo.dxe_monitor_rx = MONITOR_EAPOL_DONE;
                              }
                          }
@@ -1118,13 +1052,13 @@ void vos_record_roam_event(enum e_roaming_event roam_event, void *pBuff, v_ULONG
                         {
                              if(gRoamDelayMetaInfo.dxe_eapol_m2 == 0)
                              {
-                                 VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,"DXE XMIT m2");
+                                 VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,"DXE XMIT m2");
                                  gRoamDelayMetaInfo.dxe_eapol_m2 = vos_timer_get_system_time();
                              }
                              else if((gRoamDelayMetaInfo.dxe_eapol_m2) && (gRoamDelayMetaInfo.dxe_eapol_m4 == 0))
                             {
                                  gRoamDelayMetaInfo.dxe_eapol_m4 = vos_timer_get_system_time();
-                                 VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,"DXE XMIT m4");
+                                 VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_FATAL,"DXE XMIT m4");
                                  gRoamDelayMetaInfo.dxe_monitor_tx = MONITOR_EAPOL_DONE;
                                  //We should return from here so can cache the time for first data pkt
                                  return;
@@ -1167,7 +1101,7 @@ void vos_record_roam_event(enum e_roaming_event roam_event, void *pBuff, v_ULONG
              //Let us copy roam meta info
              if(gRoamDelayCurrentIndex > ROAM_DELAY_TABLE_SIZE)
                  gRoamDelayCurrentIndex = 0;
-             vos_mem_copy(&gpRoamDelayTable[gRoamDelayCurrentIndex++],
+             vos_mem_copy(&gRoamDelayTable[gRoamDelayCurrentIndex++],
                           &gRoamDelayMetaInfo, sizeof(gRoamDelayMetaInfo));
              vos_mem_set(&gRoamDelayMetaInfo, sizeof(gRoamDelayMetaInfo), 0);
              break;
@@ -1180,55 +1114,46 @@ void vos_record_roam_event(enum e_roaming_event roam_event, void *pBuff, v_ULONG
 
 void vos_reset_roam_timer_log(void)
 {
-    if (gpRoamDelayTable != NULL)
-    {
-       //Set zero to whole gpRoamDelayTable
-       vos_mem_set(gpRoamDelayTable, (sizeof(tRoamDelayMetaInfo) * ROAM_DELAY_TABLE_SIZE), 0);
-    }
+    //Set zero to whole gRoamDelayTable
+    vos_mem_set(&gRoamDelayTable, (sizeof(gRoamDelayMetaInfo) * ROAM_DELAY_TABLE_SIZE), 0);
 }
 
 void vos_dump_roam_time_log_service(void)
 {
     v_SLONG_t slA, slB, slC, slD, slE, slF, slG, slH, slI, slJ, slK, slL, slM, slRoamDelay;
     tRoamDelayMetaInfo currentRoamDelayInfo;
-    v_ULONG_t index = 0,i=0;
+    v_ULONG_t index = 0;
 
-    if (gpRoamDelayTable == NULL)
-    {
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
-                  "Roam delay table is not initialized\n");
-        return;
-    }
-    //Let us first copy the current gRoamDelayMetaInfo into gpRoamDelayTable
+    //Let us first copy the current gRoamDelayMetaInfo into gRoamDelayTable
     if(gRoamDelayCurrentIndex > ROAM_DELAY_TABLE_SIZE)
         gRoamDelayCurrentIndex = 0;
-    vos_mem_copy(&gpRoamDelayTable[gRoamDelayCurrentIndex++], &gRoamDelayMetaInfo, sizeof(gRoamDelayMetaInfo));
+    vos_mem_copy(&gRoamDelayTable[gRoamDelayCurrentIndex++], &gRoamDelayMetaInfo, sizeof(gRoamDelayMetaInfo));
 
-    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-         "** RoamDelay = ( dxe_first_tx_time - disable_tx_queues_time)\n");
+    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+         "** RoamDelay = ( B + C + D + E + ABS(F) + H + J + L + M )\n");
 
-    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
          "||========================"
          "===============|====== A ======|====== B ======|====== C ======|"
          "====== D ======|====== E ======|====== F ======|====== G ======|"
          "====== H ======|====== I ======|====== J ======|====== K ======|"
          "====== L ======|====== M ======||\n");
 
-    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
          "||Sl | Peer MAC address  |"
          " **RoamDelay** | PreAuth Timer | Disassoc Issue| Add BSS Req   |"
          " AddBssRsp to  | ReassocReq to | ReassocRsp to | Disable to    |"
          " M1-M2 DXE SW  | M1-M2 HDD SW  | M3-M4 DXE SW  | M3-M4 HDD SW  |"
          " ReassocRsp to | HDD to DXE    ||\n");
 
-    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
          "||No.|                   |"
          " ************* | to Roam Start | to Complete   | to Rsp time   |"
          " Reassoc Req   | ReassocRsp    | Enable Tx Que | Enable Tx Que |"
          "               |               |               |               |"
          " Set GTK       | 1st data frame||\n");
 
-    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
          "||========================"
          "================================================================"
          "================================================================"
@@ -1237,7 +1162,7 @@ void vos_dump_roam_time_log_service(void)
 
     for (index = 0; index < gRoamDelayCurrentIndex; index++)
     {
-        currentRoamDelayInfo = gpRoamDelayTable[index];
+        currentRoamDelayInfo = gRoamDelayTable[index];
         /* PreAuth Timer to Roam Start */
         slA = (currentRoamDelayInfo.preauth_cb_time -
                currentRoamDelayInfo.preauth_reassoc_start_time);
@@ -1291,10 +1216,10 @@ void vos_dump_roam_time_log_service(void)
                currentRoamDelayInfo.hdd_first_xmit_time);
 
         /* Calculate roam delay */
-        slRoamDelay = (currentRoamDelayInfo.dxe_first_tx_time -
-                       currentRoamDelayInfo.disable_tx_queues_time);
+        slRoamDelay= slB + slC + slD + slE + ((slF<0)?-slF:slF) +
+                     slH + slJ + slL + slM;
 
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
                 "||%2ld:|<"MAC_ADDRESS_STR">|"
                 "%14ld |%14ld |%14ld |%14ld |"
                 "%14ld |%14ld |%14ld |%14ld |"
@@ -1307,270 +1232,13 @@ void vos_dump_roam_time_log_service(void)
                 slL, slM );
     }
 
-    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
          "||========================"
          "================================================================"
          "================================================================"
          "================================================================"
          "===============================||\n");
 
-    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-         "||== More Details ====================="
-         "===============================||\n");
-
-    for (index = 0; index < gRoamDelayCurrentIndex; index++)
-    {
-
-        currentRoamDelayInfo = gpRoamDelayTable[index];
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||%2ld: Peer Mac: <"MAC_ADDRESS_STR">\n",
-                (index+1), MAC_ADDR_ARRAY(currentRoamDelayInfo.peer_mac_addr)
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||preauth_reassoc_start_time : %14ld\n",
-                currentRoamDelayInfo.preauth_reassoc_start_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||preauth_cb_time            : %14ld\n",
-                currentRoamDelayInfo.preauth_cb_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||disable_tx_queues_time     : %14ld\n",
-                currentRoamDelayInfo.disable_tx_queues_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||disassoc_issue_time        : %14ld\n",
-                currentRoamDelayInfo.disassoc_issue_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||lim_add_bss_req_time       : %14ld\n",
-                currentRoamDelayInfo.lim_add_bss_req_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||lim_add_bss_rsp_time       : %14ld\n",
-                currentRoamDelayInfo.lim_add_bss_rsp_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||disassoc_comp_time         : %14ld\n",
-                currentRoamDelayInfo.disassoc_comp_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||send_reassoc_req_time      : %14ld\n",
-                currentRoamDelayInfo.send_reassoc_req_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||hdd_sendassoc_rsp_time     : %14ld\n",
-                currentRoamDelayInfo.hdd_sendassoc_rsp_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||enable_tx_queues_time      : %14ld\n",
-                currentRoamDelayInfo.enable_tx_queues_reassoc_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||hdd_eapol_m1               : %14ld\n",
-                currentRoamDelayInfo.hdd_eapol_m1
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||hdd_eapol_m2               : %14ld\n",
-                currentRoamDelayInfo.hdd_eapol_m2
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||hdd_eapol_m3               : %14ld\n",
-                currentRoamDelayInfo.hdd_eapol_m3
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||hdd_eapol_m4               : %14ld\n",
-                currentRoamDelayInfo.hdd_eapol_m4
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||dxe_eapol_m1               : %14ld\n",
-                currentRoamDelayInfo.dxe_eapol_m1
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||dxe_eapol_m2               : %14ld\n",
-                currentRoamDelayInfo.dxe_eapol_m2
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||dxe_eapol_m3               : %14ld\n",
-                currentRoamDelayInfo.dxe_eapol_m3
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||dxe_eapol_m4               : %14ld\n",
-                currentRoamDelayInfo.dxe_eapol_m4
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||set_ptk_roam_key_time      : %14ld\n",
-                currentRoamDelayInfo.set_ptk_roam_key_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||set_gtk_roam_key_time      : %14ld\n",
-                currentRoamDelayInfo.set_gtk_roam_key_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||tl_fetch_pkt_time          : %14ld\n",
-                currentRoamDelayInfo.tl_fetch_pkt_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||hdd_first_xmit_time        : %14ld\n",
-                currentRoamDelayInfo.hdd_first_xmit_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||dxe_first_tx_time          : %14ld\n",
-                currentRoamDelayInfo.dxe_first_tx_time
-                );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||hdd_first_pkt_data         : \n"
-                );
-
-
-        for (i=0; i<currentRoamDelayInfo.hdd_first_pkt_len && i< (50-8); i+=8)
-            VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                    "||%2X, %2X, %2X, %2X, %2X, %2X, %2X, %2X, ",
-                    currentRoamDelayInfo.hdd_first_pkt_data[i],
-                    currentRoamDelayInfo.hdd_first_pkt_data[i+1],
-                    currentRoamDelayInfo.hdd_first_pkt_data[i+2],
-                    currentRoamDelayInfo.hdd_first_pkt_data[i+3],
-                    currentRoamDelayInfo.hdd_first_pkt_data[i+4],
-                    currentRoamDelayInfo.hdd_first_pkt_data[i+5],
-                    currentRoamDelayInfo.hdd_first_pkt_data[i+6],
-                    currentRoamDelayInfo.hdd_first_pkt_data[i+7]
-                    );
-
-        VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                "||dxe_first_pkt_data         : \n"
-                );
-
-        for (i=0; i<currentRoamDelayInfo.dxe_first_pkt_len && i < (75-8); i+=8)
-            VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-                    "||%2X, %2X, %2X, %2X, %2X, %2X, %2X, %2X, ",
-                    currentRoamDelayInfo.dxe_first_pkt_data[i],
-                    currentRoamDelayInfo.dxe_first_pkt_data[i+1],
-                    currentRoamDelayInfo.dxe_first_pkt_data[i+2],
-                    currentRoamDelayInfo.dxe_first_pkt_data[i+3],
-                    currentRoamDelayInfo.dxe_first_pkt_data[i+4],
-                    currentRoamDelayInfo.dxe_first_pkt_data[i+5],
-                    currentRoamDelayInfo.dxe_first_pkt_data[i+6],
-                    currentRoamDelayInfo.dxe_first_pkt_data[i+7]
-                    );
-    }
-    VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
-         "||== END ====================="
-         "===============================||\n");
 }
+#endif /* DEBUG_ROAM_DELAY */
 
-v_U32_t vos_copy_80211_data(void *pBuff, v_U8_t *dst, v_U8_t frametype)
-{
-    vos_pkt_t *vos_pkt = NULL;
-    struct sk_buff *skb = NULL;
-    v_U32_t length_to_copy;
-
-    vos_pkt = (vos_pkt_t *)pBuff;
-
-    if(!vos_pkt || !dst)
-    {
-       VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
-                 "vos_pkt/dst is null");
-       return 0;
-    }
-    skb = vos_pkt->pSkb;
-    if(!skb)
-    {
-       VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
-                   " skb is null");
-       return 0;
-    }
-    if (VOS_MAC_MGMT_FRAME == frametype)
-    {
-      length_to_copy = skb->len;
-    }
-    else
-    {
-        length_to_copy = VOS_DEF_PKT_STATS_LEN_TO_COPY;
-           if(skb->data[0] == VOS_QOS_DATA_VALUE)
-              length_to_copy += VOS_QOS_SIZE;
-
-        /* Copy whole skb data if DHCP or EAPOL pkt.Here length_to_copy
-         * will give the pointer to IP header and adding VOS_IP_HEADER_SIZE
-         * to it will give the DHCP port number.
-         */
-        if (((skb->len > (length_to_copy + VOS_IP_HEADER_SIZE)) &&
-             ((*((u16*)((u8*)skb->data + length_to_copy + VOS_IP_HEADER_SIZE))
-              == VOS_DHCP_SOURCE_PORT) ||
-             (*((u16*)((u8*)skb->data + length_to_copy + VOS_IP_HEADER_SIZE))
-              == VOS_DHCP_DESTINATION_PORT)))  ||
-             vos_skb_is_eapol(skb,
-             VOS_ETHERTYPE_802_1_X_FRAME_OFFSET_IN_802_11_PKT,
-             VOS_ETHERTYPE_802_1_X_SIZE))
-        {
-           length_to_copy = skb->len;
-        }
-    }
-
-    if (length_to_copy > skb->len)
-    {
-        length_to_copy = skb->len;
-    }
-    if (length_to_copy > MAX_PKT_STAT_DATA_LEN)
-    {
-        length_to_copy = MAX_PKT_STAT_DATA_LEN;
-    }
-
-    vos_mem_copy(dst, skb->data, length_to_copy);
-    return length_to_copy;
-}
-
-#ifdef FEATURE_WLAN_DIAG_SUPPORT
-/**
- * vos_tdls_tx_rx_mgmt_event()- send tdls mgmt rx tx event
- *
- * @event_id: event id
- * @tx_rx: tx or rx
- * @type: type of frame
- * @action_sub_type: action frame type
- * @peer_mac: peer mac
- *
- * This Function sendsend tdls mgmt rx tx diag event
- *
- * Return: void.
- */
-void vos_tdls_tx_rx_mgmt_event(uint8_t event_id, uint8_t tx_rx,
-              uint8_t type, uint8_t action_sub_type, uint8_t *peer_mac)
-{
-    WLAN_VOS_DIAG_EVENT_DEF(tdls_tx_rx_mgmt,
-                    struct vos_event_tx_rx_mgmt);
-    vos_mem_zero(&tdls_tx_rx_mgmt, sizeof(tdls_tx_rx_mgmt));
-
-    tdls_tx_rx_mgmt.event_id = event_id;
-    tdls_tx_rx_mgmt.tx_rx = tx_rx;
-    tdls_tx_rx_mgmt.type = type;
-    tdls_tx_rx_mgmt.action_sub_type = action_sub_type;
-    vos_mem_copy(tdls_tx_rx_mgmt.peer_mac,
-                     peer_mac, VOS_MAC_ADDR_SIZE);
-    WLAN_VOS_DIAG_EVENT_REPORT(&tdls_tx_rx_mgmt,
-                             EVENT_WLAN_TX_RX_MGMT);
-}
-#endif

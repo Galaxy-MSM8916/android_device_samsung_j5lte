@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2013 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -44,7 +44,7 @@
 #include "wlan_qct_pal_packet.h"
 #include "wlan_qct_wda.h"
 
-#include "wniCfg.h"
+#include "wniCfgSta.h"
 #include "cfgApi.h"
 #include "sirCommon.h"
 #include "utilsApi.h"
@@ -75,22 +75,16 @@
 #include "wmmApsd.h"
 #endif
 
-#ifdef WLAN_FEATURE_RMC
-#include "limRMC.h"
-#endif
-
 #include "vos_types.h"
 #include "vos_packet.h"
 #include "vos_memory.h"
 
 /* This value corresponds to 500 ms */
-#define MAX_PROBEREQ_TIME 50
+#define MAX_PROBEREQ_TIME 5000
 
 #ifdef WLAN_FEATURE_EXTSCAN
 #define  SIZE_OF_FIXED_PARAM 12
 #endif
-
-#define CHECK_BIT(value, mask)    ((value) & (1 << (mask)))
 
 void limLogSessionStates(tpAniSirGlobal pMac);
 
@@ -156,25 +150,7 @@ defMsgDecision(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
 #ifdef FEATURE_OEM_DATA_SUPPORT
         (limMsg->type != WDA_START_OEM_DATA_RSP) &&
 #endif
-        (limMsg->type != WDA_ADD_TS_RSP) &&
-
-        /* LIM won't process any defer queue commands if gLimAddtsSent is set to
-           TRUE. gLimAddtsSent will be set TRUE to while sending ADDTS REQ. Say,
-           when deferring is enabled, if SIR_LIM_ADDTS_RSP_TIMEOUT is posted
-           (because of not receiving ADDTS RSP) then this command will be added
-           to defer queue and as gLimAddtsSent is set TRUE LIM will never
-           process any commands from defer queue, including
-           SIR_LIM_ADDTS_RSP_TIMEOUT. Hence allowing SIR_LIM_ADDTS_RSP_TIMEOUT
-           command to be processed with deferring enabled, so that this will be
-           processed immediately and sets gLimAddtsSent to FALSE.
-         */
-        (limMsg->type != SIR_LIM_ADDTS_RSP_TIMEOUT) &&
-        (limMsg->type != WDA_LOST_LINK_PARAMS_IND) &&
-        /* Allow processing of RX frames while awaiting reception of
-           ADD TS response over the air. This logic particularly handles the
-           case when host sends ADD BA request to FW after ADD TS request
-           is sent over the air and ADD TS response received over the air */
-        !(limMsg->type == SIR_BB_XPORT_MGMT_MSG && pMac->lim.gLimAddtsSent))
+        (limMsg->type != WDA_ADD_TS_RSP))
     {
         PELOG1(limLog(pMac, LOG1, FL("Defer the current message %s , gLimProcessDefdMsgs is false and system is not in scan/learn mode"),
                limMsgStr(limMsg->type));)
@@ -382,8 +358,8 @@ static void limHandleUnknownA2IndexFrames(tpAniSirGlobal pMac, void *pRxPacketIn
 
         if (limIsGroupAddr(pMacHdr->addr2))
         {
-            limLog(pMac, LOG1, FL("Ignoring A2 Invalid Packet received for MC/BC:"));
-                    limPrintMacAddr(pMac, pMacHdr->addr2, LOG1);
+            PELOG2(limLog(pMac, LOG2, FL("Ignoring A2 Invalid Packet received for MC/BC:"));
+                    limPrintMacAddr(pMac, pMacHdr->addr2, LOG2);)
 
                 return;
         }
@@ -596,7 +572,7 @@ limProcessEXTScanRealTimeData(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo)
         if ( DOT11F_FAILED( status ) )
         {
             limLog(pMac, LOGE, FL("Failed to parse a Beacons"
-                        "(%d)"), status);
+                        "(%d):\n"), status);
             vos_mem_free(pBeacon);
             return;
         }
@@ -634,7 +610,7 @@ limProcessEXTScanRealTimeData(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo)
         if ( DOT11F_FAILED( status ) )
         {
             limLog(pMac, LOGE, FL("Failed to parse a Probe"
-                        "Response (%d"), status);
+                        "Response (%d:\n"), status);
             vos_mem_free(pProbeResponse);
             return;
         }
@@ -651,7 +627,7 @@ limProcessEXTScanRealTimeData(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo)
         tEXTScanFullScanResult.ap.capability =
                             *(((tANI_U16 *)&pProbeResponse->Capabilities));
 
-        vos_mem_free(pProbeResponse);
+        vos_mem_free(pBeacon);
     }
     else
     {
@@ -701,7 +677,6 @@ limProcessEXTScanRealTimeData(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo)
  */
 
 static void 
-
 limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
 {
     tANI_U8          *pRxPacketInfo = NULL;
@@ -741,63 +716,14 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
         if ((fc.type == SIR_MAC_MGMT_FRAME) &&
                 (fc.subType != SIR_MAC_MGMT_BEACON))
         {
-            limLog(pMac, LOG1, FL("RX MGMT - Type %hu, SubType %hu,"
-                                  "Seq.no %d, Source mac-addr "
-                                  MAC_ADDRESS_STR), fc.type, fc.subType,
-                                  ((pHdr->seqControl.seqNumHi << 4) |
-                                   (pHdr->seqControl.seqNumLo)),
-                                  MAC_ADDR_ARRAY(pHdr->sa));
+            limLog(pMac, LOG1, FL("RX MGMT - Type %hu, SubType %hu, Seq.no %d"),
+                    fc.type, fc.subType,
+                    ((pHdr->seqControl.seqNumHi << 4) | (pHdr->seqControl.seqNumLo)));
         }
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
-    if (WDA_GET_ROAMCANDIDATEIND(pRxPacketInfo))
+    if ( WDA_GET_ROAMCANDIDATEIND(pRxPacketInfo))
     {
-        limLog( pMac, LOGW, FL("Notify SME with candidate ind"));
-
-        if (WDA_IF_PER_ROAMCANDIDATEIND(pRxPacketInfo) &&
-            IS_FEATURE_SUPPORTED_BY_FW(PER_BASED_ROAMING) &&
-            pMac->roam.configParam.isPERRoamEnabled)
-        {
-            tSirPerRoamScanResult *candidateChanInfo =
-                (tSirPerRoamScanResult *)WDA_GET_RX_MPDU_DATA(pRxPacketInfo);
-            int chanInfoLen = WDA_GET_RX_PAYLOAD_LEN(pRxPacketInfo)
-                                      - sizeof(tANI_U32);
-
-            /* Translate network buffer into system buffer */
-            vos_buff_to_hl_buff((v_U8_t *)candidateChanInfo,
-                          WDA_GET_RX_PAYLOAD_LEN(pRxPacketInfo));
-
-            /* Max candidates allowed */
-            if (candidateChanInfo->candidateCount > SIR_PER_ROAM_MAX_AP_CNT)
-            {
-                limLog(pMac, LOGE,
-                       FL("Got maximum candidates as %d setting default"),
-                       candidateChanInfo->candidateCount);
-                candidateChanInfo->candidateCount = SIR_PER_ROAM_MAX_AP_CNT;
-            }
-
-            vos_mem_set(&pMac->candidateChannelInfo,
-                        sizeof(tSirCandidateChanInfo) *
-                        SIR_PER_ROAM_MAX_CANDIDATE_CNT, 0);
-
-            vos_mem_copy(&pMac->candidateChannelInfo,
-                         candidateChanInfo->channelInfo,
-                         (sizeof(tSirCandidateChanInfo) *
-                         SIR_PER_ROAM_MAX_CANDIDATE_CNT) < chanInfoLen ?
-                         (sizeof(tSirCandidateChanInfo) *
-                         SIR_PER_ROAM_MAX_CANDIDATE_CNT):
-                         chanInfoLen);
-
-            limLog(pMac, LOG1,
-                   FL("PER based Roam candidates %d"),
-                   candidateChanInfo->candidateCount);
-
-            pMac->PERroamCandidatesCnt = candidateChanInfo->candidateCount;
-        } else
-        {
-            /* Normal RSSI based roaming */
-            pMac->PERroamCandidatesCnt = 0;
-        }
-
+        limLog( pMac, LOG2, FL("Notify SME with candidate ind"));
         //send a session 0 for now - TBD
         limSendSmeCandidateFoundInd(pMac, 0);
         goto end;
@@ -853,21 +779,6 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
 
     } else
 #endif
-
-    if ((fc.type == SIR_MAC_MGMT_FRAME) &&
-        (fc.subType == SIR_MAC_MGMT_PROBE_RSP) &&
-        pMac->lim.isSpoofingEnabled)
-    {
-        limLog( pMac, LOG2, FL("Probe Rsp recieved with DA: "MAC_ADDRESS_STR
-            " and selfMac Addr:"MAC_ADDRESS_STR), MAC_ADDR_ARRAY(pHdr->da),
-                            MAC_ADDR_ARRAY(pMac->lim.gSelfMacAddr));
-        if (VOS_TRUE == vos_mem_compare((v_VOID_t*) pHdr->da,
-               (v_VOID_t*) pMac->lim.spoofMacAddr, VOS_MAC_ADDRESS_LEN))
-        {
-            vos_mem_copy(pHdr->da, pMac->lim.gSelfMacAddr, VOS_MAC_ADDRESS_LEN);
-        }
-    }
-
     /* Added For BT-AMP Support */
     if((psessionEntry = peFindSessionByBssid(pMac,pHdr->bssId,&sessionId))== NULL)
     {
@@ -881,7 +792,8 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
 #endif
             if (limProcessAuthFrameNoSession(pMac, pRxPacketInfo, limMsg->bodyptr) == eSIR_SUCCESS)
             {
-                goto end;
+                limPktFree(pMac, HAL_TXRX_FRM_802_11_MGMT, pRxPacketInfo, limMsg->bodyptr);
+                return;
             }
         }
 #endif
@@ -895,7 +807,8 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
             if((psessionEntry = peFindSessionByPeerSta(pMac,pHdr->sa,&sessionId))== NULL) 
             {
                limLog(pMac, LOG1, FL("session does not exist for given bssId"));
-               goto end;
+               limPktFree(pMac, HAL_TXRX_FRM_802_11_MGMT, pRxPacketInfo, limMsg->bodyptr);
+               return;
             }
             else
                limLog(pMac,LOG1,"SessionId:%d Session Exist for given Bssid",
@@ -914,7 +827,8 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
     if(limCheckMgmtRegisteredFrames(pMac, pRxPacketInfo, psessionEntry))
     {        
         limLog( pMac, LOG1, FL("Received frame is passed to SME"));
-        goto end;
+        limPktFree(pMac, HAL_TXRX_FRM_802_11_MGMT, pRxPacketInfo, limMsg->bodyptr);
+        return;
     }
 
 
@@ -923,10 +837,11 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
     {   // Received Frame with non-zero Protocol Version
         limLog(pMac, LOGE, FL("Unexpected frame with protVersion %d received"),
            fc.protVer);
+        limPktFree(pMac, HAL_TXRX_FRM_802_11_MGMT, pRxPacketInfo, (void *) limMsg->bodyptr);
 #ifdef WLAN_DEBUG            
         pMac->lim.numProtErr++;
 #endif
-        goto end;
+        return;
     }
 
     if (!pMac->fScanOffload)
@@ -1058,6 +973,27 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
         break;
         case SIR_MAC_DATA_FRAME:
         {
+#ifdef FEATURE_WLAN_TDLS_INTERNAL
+            /*
+             * if we reach here, following cases are possible. 
+             * Possible cases: a) if frame translation is disabled.
+             *                 b) Some frame with ADRR2 filter enabled may come
+             *                    here.
+             */ 
+            tANI_U8 *dataOffset = WDA_GET_RX_MPDU_DATA(pRxPacketInfo);
+            tANI_U8 *rfc1042Hdr = (tANI_U8 *)(dataOffset + RFC1042_HDR_LENGTH) ;
+            tANI_U16 ethType = GET_BE16(rfc1042Hdr) ;
+            VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR, 
+                                ("TDLS frame with 80211 Header")) ;
+            if(ETH_TYPE_89_0d == ethType)
+            {
+                tANI_U8 payloadType = (rfc1042Hdr + ETH_TYPE_LEN)[0] ;
+                if(PAYLOAD_TYPE_TDLS == payloadType)
+                {
+                    limProcessTdlsFrame(pMac, (tANI_U32*)pRxPacketInfo) ;
+                }
+            }     
+#endif
 #if defined(FEATURE_WLAN_ESE) && !defined(FEATURE_WLAN_ESE_UPLOAD)
              /* We accept data frame (IAPP frame) only if Session is
               * present and ese connection is established on that
@@ -1075,7 +1011,9 @@ limHandle80211Frames(tpAniSirGlobal pMac, tpSirMsgQ limMsg, tANI_U8 *pDeferMsg)
 
     } // switch (fc.type)
 
+#ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 end:
+#endif
     limPktFree(pMac, HAL_TXRX_FRM_802_11_MGMT, pRxPacketInfo, (void *) limMsg->bodyptr) ;
     return;
 } /*** end limHandle80211Frames() ***/
@@ -1148,7 +1086,7 @@ limProcessAbortScanInd(tpAniSirGlobal pMac, tANI_U8 SessionId)
      * SME should send WNI_CFG_BACKGROUND_SCAN_PERIOD indication 
      * to start the background scan again
      */
-    limLog(pMac, LOG1, FL("Processing AbortScan Ind"));
+    PELOG2(limLog(pMac, LOG2, FL("Processing AbortScan Ind"));)
 
     limAbortBackgroundScan(pMac);
 
@@ -1307,6 +1245,7 @@ static tANI_BOOLEAN limAgeOutProbeReq( tpAniSirGlobal pMac, tpSirMsgQ  limMsg,
     return match;
 }
 
+
 /**
  * limProcessMessages
  *
@@ -1356,29 +1295,8 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
       limMsgStr(limMsg->type), limSmeStateStr(pMac->lim.gLimSmeState),
       limMlmStateStr(pMac->lim.gLimMlmState));)
 
-   /*
-    * MTRACE logs not captured for events received from SME
-    * SME enums (eWNI_SME_START_REQ) starts with 0x16xx.
-    * Compare received SME events with SIR_SME_MODULE_ID
-    */
+    MTRACE(macTraceMsgRx(pMac, NO_SESSION, LIM_TRACE_MAKE_RXMSG(limMsg->type, LIM_MSG_PROCESSED));)
 
-    if (SIR_SME_MODULE_ID == (tANI_U8)MAC_TRACE_GET_MODULE_ID(limMsg->type))
-    {
-       MTRACE(macTrace(pMac, TRACE_CODE_RX_SME_MSG, NO_SESSION, limMsg->type));
-    }
-    else
-    {
-       /* Omitting below message types as these are too frequent and when crash
-        * happens we loose critical trace logs if these are also logged
-        */
-       if (limMsg->type != SIR_LIM_MAX_CHANNEL_TIMEOUT &&
-           limMsg->type != SIR_LIM_MIN_CHANNEL_TIMEOUT &&
-           limMsg->type != SIR_LIM_PERIODIC_PROBE_REQ_TIMEOUT &&
-           limMsg->type != SIR_CFG_PARAM_UPDATE_IND &&
-           limMsg->type != SIR_BB_XPORT_MGMT_MSG)
-              MTRACE(macTraceMsgRx(pMac, NO_SESSION,
-                      LIM_TRACE_MAKE_RXMSG(limMsg->type, LIM_MSG_PROCESSED));)
-    }
     switch (limMsg->type)
     {
 
@@ -1452,11 +1370,18 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
 #ifdef WLAN_DEBUG                
             pMac->lim.numBbt++;
 #endif
+            vos_spin_lock_acquire( &pMac->sys.lock );
+            pMac->sys.gSysBbtPendingMgmtCount--;
+            vos_spin_lock_release( &pMac->sys.lock );
             {
                 v_U16_t     pktLen = 0;
                 vos_pkt_t  *pVosPkt;
                 VOS_STATUS  vosStatus;
                 tSirMsgQ    limMsgNew;
+#ifdef FEATURE_WLAN_TDLS_INTERNAL
+                tANI_U32    *pBD = NULL ;
+#endif 
+
                 /* The original limMsg which we were deferring have the 
                  * bodyPointer point to 'BD' instead of 'Vos pkt'. If we don't make a copy
                  * of limMsg, then vos_pkt_peek_data will overwrite the limMsg->bodyPointer. 
@@ -1472,21 +1397,10 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
 
                 if( !VOS_IS_STATUS_SUCCESS(vosStatus) )
                 {
-                    limDecrementPendingMgmtCount(pMac);
                     vos_pkt_return_packet(pVosPkt);
                     break;
 
                 }
-
-#ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
-                if (WDA_GET_ROAMCANDIDATEIND(limMsgNew.bodyptr))
-                    limLog(pMac, LOG1, FL("roamCandidateInd %d"),
-                           WDA_GET_ROAMCANDIDATEIND(limMsgNew.bodyptr));
-
-                if (WDA_GET_OFFLOADSCANLEARN(limMsgNew.bodyptr))
-                    limLog(pMac, LOG1, FL("offloadScanLearn %d"),
-                           WDA_GET_OFFLOADSCANLEARN(limMsgNew.bodyptr));
-#endif
 
                 /*
                 * putting a check for age out probe request frames
@@ -1496,17 +1410,33 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
 
                 if( limAgeOutProbeReq ( pMac, &limMsgNew, pVosPkt ))
                 {
-                   limDecrementPendingMgmtCount(pMac);
                    break;
                 }
 
+#ifdef FEATURE_WLAN_TDLS_INTERNAL
+                /* 
+                 * TDLS frames comes as translated frames as well as
+                 * MAC 802.11 data frames..
+                 */
+                limGetBDfromRxPacket(pMac, limMsgNew.bodyptr, &pBD);
+                if(0 != WDA_GET_RX_FT_DONE(pBD))
+                {
+                    /*
+                     * TODO: check for scanning state and set deferMesg flag
+                     * accordingly..
+                     */
+                    deferMsg = false ;
+
+                    limProcessTdlsFrame(pMac, pBD) ;
+                }
+                else
+#endif
 
                 limHandle80211Frames(pMac, &limMsgNew, &deferMsg);
 
                 if ( deferMsg == true )
                 {
-                        limLog(pMac, LOG2, FL("Defer message type=%X "),
-                                                            limMsg->type);
+                    PELOG1(limLog(pMac, LOG1, FL("Defer message type=%X "), limMsg->type);)
                         if (limDeferMsg(pMac, limMsg) != TX_SUCCESS)
                         {
                             PELOGE(limLog(pMac, LOGE, FL("Unable to Defer message(0x%X) limSmeState %d (prev sme state %d) sysRole %d mlm state %d (prev mlm state %d)"),
@@ -1514,7 +1444,6 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                                 pMac->lim.gLimSystemRole,  pMac->lim.gLimMlmState,  pMac->lim.gLimPrevMlmState);)
                             limLogSessionStates(pMac);
                             limPrintMsgName(pMac, LOGE, limMsg->type);
-                            limDecrementPendingMgmtCount(pMac);
                             vos_pkt_return_packet(pVosPkt);
                         }
                 }
@@ -1524,11 +1453,11 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                      * Asumption here is when Rx mgmt frame processing is done,
                      * voss packet could be freed here.
                      */
-                    limDecrementPendingMgmtCount(pMac);
                     vos_pkt_return_packet(pVosPkt);
                 }
             }
             break;
+
         case eWNI_SME_SCAN_REQ:
         case eWNI_SME_REMAIN_ON_CHANNEL_REQ:
         case eWNI_SME_DISASSOC_REQ:
@@ -1544,6 +1473,11 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
         case eWNI_SME_TDLS_LINK_ESTABLISH_REQ:
 // tdlsoffchan
         case eWNI_SME_TDLS_CHANNEL_SWITCH_REQ:
+#endif
+#ifdef FEATURE_WLAN_TDLS_INTERNAL
+        case eWNI_SME_TDLS_DISCOVERY_START_REQ:
+        case eWNI_SME_TDLS_LINK_START_REQ:
+        case eWNI_SME_TDLS_TEARDOWN_REQ:
 #endif
         case eWNI_SME_RESET_AP_CAPS_CHANGED:
             // These messages are from HDD
@@ -1621,7 +1555,6 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
         case eWNI_SME_GET_TSM_STATS_REQ:
 #endif /* FEATURE_WLAN_ESE && FEATURE_WLAN_ESE_UPLOAD */
         case eWNI_SME_MAC_SPOOF_ADDR_IND:
-        case eWNI_SME_REGISTER_MGMT_FRAME_CB:
             // These messages are from HDD
             limProcessNormalHddMsg(pMac, limMsg, false);   //no need to response to hdd
             break;
@@ -1659,17 +1592,6 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
             vos_mem_free(limMsg->bodyptr);
             limMsg->bodyptr = NULL;
             break;
-
-#ifdef WLAN_FEATURE_RMC
-        case eWNI_SME_ENABLE_RMC_REQ:
-        case eWNI_SME_DISABLE_RMC_REQ:
-            /*
-             * These messages are from HDD
-             * No need to response to hdd
-             */
-            limProcessSmeReqMessages(pMac,limMsg);
-            break;
-#endif /* WLAN_FEATURE_RMC */
 
         case SIR_HAL_P2P_NOA_START_IND:
         {
@@ -1834,11 +1756,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
            limMsg->bodyptr = NULL;
            break;
     
-        case WDA_LOST_LINK_PARAMS_IND:
-            limProcessLostLinkParamsInd(pMac,limMsg);
-            vos_mem_free(limMsg->bodyptr);
-            limMsg->bodyptr = NULL;
-            break;
+
 
         case SIR_LIM_ADDTS_RSP_TIMEOUT:
             limProcessSmeReqMessages(pMac,limMsg);
@@ -1903,7 +1821,6 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
         case SIR_LIM_DISASSOC_ACK_TIMEOUT:
         case SIR_LIM_DEAUTH_ACK_TIMEOUT:
         case SIR_LIM_CONVERT_ACTIVE_CHANNEL_TO_PASSIVE:
-        case SIR_LIM_AUTH_RETRY_TIMEOUT:
             // These timeout messages are handled by MLM sub module
 
             limProcessMlmReqMessages(pMac,
@@ -2029,6 +1946,80 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
             limProcessWPSOverlapTimeout(pMac);
             break;
 #endif
+
+
+#ifdef FEATURE_WLAN_TDLS_INTERNAL
+        /*
+         * Here discovery timer expires, now we can go ahead and collect all
+         * the dicovery responses PE has process till now and send this
+         * responses to SME..
+         */
+        case SIR_LIM_TDLS_DISCOVERY_RSP_WAIT:
+        {
+            //fetch the sessionEntry based on the sessionId
+            tpPESession psessionEntry = peFindSessionBySessionId(pMac, 
+                         pMac->lim.limTimers.gLimTdlsDisRspWaitTimer.sessionId) ;
+            if(NULL == psessionEntry) 
+            {
+              limLog(pMac, LOGP,FL("Session Does not exist for given sessionID %d"), pMac->lim.limTimers.gLimTdlsDisRspWaitTimer.sessionId);
+              return;
+            }
+            
+            VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR, 
+                                ("Discovery Rsp timer expires ")) ;
+#if 0 // TDLS_hklee: D13 no need to open Addr2 unknown data packet 
+            /* restore RXP filters */
+            limSetLinkState(pMac, eSIR_LINK_FINISH_TDLS_DISCOVERY_STATE,
+                                            psessionEntry->bssId) ;
+#endif
+            limSendSmeTdlsDisRsp(pMac, eSIR_SUCCESS, 
+                                eWNI_SME_TDLS_DISCOVERY_START_RSP) ;
+            break ;
+        }
+
+        /*
+         * we initiated link setup and did not receive TDLS setup rsp
+         * from TDLS peer STA, send failure RSP to SME.
+         */
+        case SIR_LIM_TDLS_LINK_SETUP_RSP_TIMEOUT:
+        {
+            tANI_U8 *peerMac = (tANI_U8 *)limMsg->bodyval ;
+            tLimTdlsLinkSetupPeer *setupPeer = NULL ;
+ 
+            VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR,
+                                ("TDLS setup rsp timer expires ")) ;
+            VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
+                      ("TDLS setup rsp timer expires for peer:"
+                      MAC_ADDRESS_STR), MAC_ADDR_ARRAY(peerMac));
+
+            limTdlsFindLinkPeer(pMac, peerMac, &setupPeer) ;
+            if(NULL != setupPeer)
+            {
+                limTdlsDelLinkPeer( pMac, peerMac) ;
+            }
+
+            limSendSmeTdlsLinkStartRsp(pMac, eSIR_FAILURE, peerMac, 
+                                            eWNI_SME_TDLS_LINK_START_RSP) ;
+            break ;
+        }
+        case SIR_LIM_TDLS_LINK_SETUP_CNF_TIMEOUT:
+        {
+            tANI_U8 *peerMac = (tANI_U8 *)limMsg->bodyval ;
+            tLimTdlsLinkSetupPeer *setupPeer = NULL ;
+
+            VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_ERROR,
+                                ("TDLS setup CNF timer expires ")) ;
+            VOS_TRACE(VOS_MODULE_ID_PE, VOS_TRACE_LEVEL_INFO,
+                      ("TDLS setup CNF timer expires for peer: "
+                       MAC_ADDRESS_STR), MAC_ADDR_ARRAY(peerMac));
+            limTdlsFindLinkPeer(pMac, peerMac, &setupPeer) ;
+            if(NULL != setupPeer)
+            {
+                limTdlsDelLinkPeer( pMac, peerMac) ;
+            }
+            break ;
+        }
+#endif   /* FEATURE_WLAN_TDLS TIMER */
         case WDA_ADD_BSS_RSP:
             limProcessMlmAddBssRsp( pMac, limMsg );
             break;
@@ -2162,11 +2153,8 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
         {
 #ifdef WLAN_ACTIVEMODE_OFFLOAD_FEATURE
             tpPESession     psessionEntry;
-            tANI_U8 sessionId;
-            tSirSetActiveModeSetBncFilterReq *bcnFilterReq =
-                (tSirSetActiveModeSetBncFilterReq *)limMsg->bodyptr;
-            psessionEntry = peFindSessionByBssid(pMac, bcnFilterReq->bssid,
-                                                 &sessionId);
+            tANI_U8 sessionId = (tANI_U8)limMsg->bodyval ;
+            psessionEntry = &pMac->lim.gpSession[sessionId];
             if(psessionEntry != NULL && IS_ACTIVEMODE_OFFLOAD_FEATURE_ENABLE)
             {
                // sending beacon filtering information down to HAL
@@ -2222,38 +2210,23 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
     case eWNI_SME_HT40_STOP_OBSS_SCAN_IND:
         {
            tpPESession     psessionEntry = NULL;
-           tANI_U8 sessionId;
-           tSirSmeHT40OBSSStopScanInd *ht40StopScanInd =
-               (tSirSmeHT40OBSSStopScanInd *)limMsg->bodyptr;
+           tANI_U8 sessionId = (tANI_U8)limMsg->bodyval ;
 
-           psessionEntry = peFindSessionByBssid(pMac,
-                   ht40StopScanInd->bssid, &sessionId);;
+           psessionEntry = &pMac->lim.gpSession[sessionId];
            /* Sending LIM STOP OBSS SCAN Indication
                      Stop command support is only for debugging purpose */
-           if (psessionEntry && IS_HT40_OBSS_SCAN_FEATURE_ENABLE)
+           if ( IS_HT40_OBSS_SCAN_FEATURE_ENABLE )
               limSendHT40OBSSStopScanInd(pMac, psessionEntry);
            else
               VOS_TRACE(VOS_MODULE_ID_PE,VOS_TRACE_LEVEL_ERROR,
                    "OBSS Scan Stop not started ");
         }
-        vos_mem_free(limMsg->bodyptr);
-        limMsg->bodyptr = NULL;
         break;
-#ifdef WLAN_FEATURE_AP_HT40_24G
-    case eWNI_SME_SET_HT_2040_MODE:
-        limProcessSmeReqMessages(pMac, limMsg);
-        vos_mem_free((v_VOID_t*)limMsg->bodyptr);
-        limMsg->bodyptr = NULL;
-        break;
-#endif
-
 #ifdef FEATURE_WLAN_TDLS
         case WDA_SET_TDLS_LINK_ESTABLISH_REQ_RSP:
         {
             tpPESession     psessionEntry;
             tANI_U8         sessionId;
-            tDphHashNode   *pStaDs = NULL;
-            int i, aid;
             tTdlsLinkEstablishParams *pTdlsLinkEstablishParams;
             pTdlsLinkEstablishParams = (tTdlsLinkEstablishParams*) limMsg->bodyptr;
 
@@ -2261,7 +2234,7 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
                                                      pTdlsLinkEstablishParams->staIdx,
                                                      &sessionId))== NULL)
             {
-                limLog(pMac, LOGE, FL("session %u  does not exist"), sessionId);
+                limLog(pMac, LOGE, FL("session %u  does not exist.\n"), sessionId);
                 /* Still send the eWNI_SME_TDLS_LINK_ESTABLISH_RSP message to SME
                    with session id as zero and status as FAILURE so, that message
                    queued in SME queue can be freed to prevent the SME cmd buffer leak */
@@ -2273,32 +2246,10 @@ limProcessMessages(tpAniSirGlobal pMac, tpSirMsgQ  limMsg)
             }
             else
             {
-                for (i = 0;
-                     i < sizeof(psessionEntry->peerAIDBitmap)/sizeof(tANI_U32);
-                                                                i++) {
-                    for (aid = 0; aid < (sizeof(tANI_U32) << 3); aid++) {
-                        if (CHECK_BIT(psessionEntry->peerAIDBitmap[i], aid)) {
-                            pStaDs = dphGetHashEntry(pMac,
-                                           (aid + i*(sizeof(tANI_U32) << 3)),
-                                            &psessionEntry->dph.dphHashTable);
-                              if ((NULL != pStaDs) &&
-                                   (pTdlsLinkEstablishParams->staIdx ==
-                                                       pStaDs->staIndex))
-                                  goto send_link_resp;
-                        }
-                    }
-                }
-send_link_resp:
-                if (pStaDs)
-                   limSendSmeTdlsLinkEstablishReqRsp(pMac,
+                limSendSmeTdlsLinkEstablishReqRsp(pMac,
                                                   psessionEntry->smeSessionId,
-                                                  pStaDs->staAddr,
-                                                  pStaDs,
-                                                  pTdlsLinkEstablishParams->status) ;
-                else
-                   limSendSmeTdlsLinkEstablishReqRsp(pMac,
-                                                  psessionEntry->smeSessionId,
-                                                  NULL, NULL,
+                                                  NULL,
+                                                  NULL,
                                                   pTdlsLinkEstablishParams->status) ;
             }
             vos_mem_free((v_VOID_t *)(limMsg->bodyptr));
@@ -2310,8 +2261,6 @@ send_link_resp:
         {
             tpPESession     psessionEntry;
             tANI_U8         sessionId;
-            tDphHashNode   *pStaDs = NULL;
-            int i, aid;
             tTdlsChanSwitchParams *pTdlsChanSwitchParams;
             pTdlsChanSwitchParams = (tTdlsChanSwitchParams*) limMsg->bodyptr;
 
@@ -2319,7 +2268,7 @@ send_link_resp:
                                                      pTdlsChanSwitchParams->staIdx,
                                                      &sessionId))== NULL)
             {
-                limLog(pMac, LOGE, FL("session %u  does not exist"), sessionId);
+                limLog(pMac, LOGE, FL("session %u  does not exist.\n"), sessionId);
                 /* Still send the eWNI_SME_TDLS_LINK_ESTABLISH_RSP message to SME
                    with session id as zero and status as FAILURE so, that message
                    queued in SME queue can be freed to prevent the SME cmd buffer leak */
@@ -2331,33 +2280,11 @@ send_link_resp:
             }
             else
             {
-                for (i = 0;
-                     i < sizeof(psessionEntry->peerAIDBitmap)/sizeof(tANI_U32);
-                                                                i++) {
-                    for (aid = 0; aid < (sizeof(tANI_U32) << 3); aid++) {
-                        if (CHECK_BIT(psessionEntry->peerAIDBitmap[i], aid)) {
-                            pStaDs = dphGetHashEntry(pMac,
-                                           (aid + i*(sizeof(tANI_U32) << 3)),
-                                            &psessionEntry->dph.dphHashTable);
-                              if ((NULL != pStaDs) &&
-                                   (pTdlsChanSwitchParams->staIdx ==
-                                                       pStaDs->staIndex))
-                                  goto send_chan_switch_resp;
-                        }
-                    }
-                }
-send_chan_switch_resp:
-                if (pStaDs)
-                    limSendSmeTdlsChanSwitchReqRsp(pMac,
+                limSendSmeTdlsChanSwitchReqRsp(pMac,
                                                   psessionEntry->smeSessionId,
-                                                  pStaDs->staAddr,
-                                                  pStaDs,
-                                                  pTdlsChanSwitchParams->status);
-               else
-                    limSendSmeTdlsChanSwitchReqRsp(pMac,
-                                                  psessionEntry->smeSessionId,
-                                                  NULL, NULL,
-                                                  pTdlsChanSwitchParams->status);
+                                                  NULL,
+                                                  NULL,
+                                                  pTdlsChanSwitchParams->status) ;
             }
             vos_mem_free((v_VOID_t *)(limMsg->bodyptr));
             limMsg->bodyptr = NULL;
@@ -2376,44 +2303,6 @@ send_chan_switch_resp:
        limMsg->bodyptr = NULL;
        break;
     }
-#ifdef WLAN_FEATURE_RMC
-    case WDA_RMC_BECOME_RULER:
-        limProcessRMCMessages(pMac, eLIM_RMC_BECOME_RULER_RESP,
-                          (void *)limMsg->bodyptr);
-        vos_mem_free((v_VOID_t*)limMsg->bodyptr);
-        limMsg->bodyptr = NULL;
-        break ;
-
-    case WDA_RMC_RULER_SELECT_RESP:
-        limProcessRMCMessages(pMac, eLIM_RMC_RULER_SELECT_RESP,
-                          (void *)limMsg->bodyptr);
-        vos_mem_free((v_VOID_t*)limMsg->bodyptr);
-        limMsg->bodyptr = NULL;
-        break ;
-
-    case WDA_RMC_UPDATE_IND:
-        limProcessRMCMessages(pMac, eLIM_RMC_RULER_PICK_NEW,
-                          (void *)limMsg->bodyptr);
-        vos_mem_free((v_VOID_t*)limMsg->bodyptr);
-        limMsg->bodyptr = NULL;
-        break ;
-#endif /* WLAN_FEATURE_RMC */
-
-    case WDA_SPOOF_MAC_ADDR_RSP:
-       limProcessMlmSpoofMacAddrRsp(pMac, (tSirRetStatus)limMsg->bodyval);
-       break;
-
-    case eWNI_SME_SET_TDLS_2040_BSSCOEX_REQ:
-         limProcessSmeSetTdls2040BSSCoexReq(pMac, limMsg->bodyptr);
-         vos_mem_free((v_VOID_t*)limMsg->bodyptr);
-         limMsg->bodyptr = NULL;
-        break;
-
-    case eWNI_SME_DEL_ALL_TDLS_PEERS:
-         limProcessSmeDelAllTdlsPeers(pMac, limMsg->bodyptr);
-         vos_mem_free((v_VOID_t*)limMsg->bodyptr);
-         limMsg->bodyptr = NULL;
-         break;
 
     default:
         vos_mem_free((v_VOID_t*)limMsg->bodyptr);
@@ -2478,7 +2367,7 @@ limProcessDeferredMessageQueue(tpAniSirGlobal pMac)
             limProcessMessages(pMac, &limMsg);
 
             if((limIsSystemInScanState(pMac)) || (true != GET_LIM_PROCESS_DEFD_MESGS(pMac)) ||
-                 (pMac->lim.gLimSystemInScanLearnMode) || pMac->lim.gLimAddtsSent)
+                 (pMac->lim.gLimSystemInScanLearnMode))
                 break;
         }
     }
@@ -2663,13 +2552,10 @@ void limLogSessionStates(tpAniSirGlobal pMac)
     {
         if(pMac->lim.gpSession[i].valid)
         {
-            limLog(pMac, LOG1, FL("Session[%d] sysRole(%d) limSmeState %d "
-                    "(prev sme state %d) mlm state %d (prev mlm state %d)"),
-                   i, pMac->lim.gpSession[i].limSystemRole,
-                   pMac->lim.gpSession[i].limSmeState,
-                   pMac->lim.gpSession[i].limPrevSmeState,
-                   pMac->lim.gpSession[i].limMlmState,
-                   pMac->lim.gpSession[i].limPrevMlmState);
+            PELOG1(limLog(pMac, LOG1, FL("Session[%d] sysRole(%d) limSmeState %d (prev sme state %d) mlm state %d (prev mlm state %d)"),
+                   i, pMac->lim.gpSession[i].limSystemRole,  pMac->lim.gpSession[i].limSmeState,  
+                   pMac->lim.gpSession[i].limPrevSmeState,   pMac->lim.gpSession[i].limMlmState,  
+                   pMac->lim.gpSession[i].limPrevMlmState);)
         }
     }
 #endif //ifdef WLAN_DEBUG
