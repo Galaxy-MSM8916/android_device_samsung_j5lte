@@ -1,5 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
+ifeq ($(TARGET_DEVICE),gprimeltecan)
 ## Build and run dtbtool
 INSTALLED_DTIMAGE_TARGET := $(LOCAL_PATH)/dt.img
 
@@ -28,4 +29,5 @@ $(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_DTIMAGE_TARGET) \
 	$(hide) $(call assert-max-image-size,$@,$(BOARD_RECOVERYIMAGE_PARTITION_SIZE),raw)
 	@echo -e ${CL_CYN}"Made recovery image: $@"${CL_RST}
 
+endif
 	
