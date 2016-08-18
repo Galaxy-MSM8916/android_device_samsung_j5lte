@@ -85,10 +85,11 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/mixer_paths.xml:system/etc/mixer_paths.xml
 
 # Boot jars
-PRODUCT_BOOT_JARS += \
-    qcom.fmradio \
-    tcmiface \
-    qcmediaplayer
+#PRODUCT_BOOT_JARS += \
+#    qcom.fmradio \
+#    tcmiface
+    
+#    qcmediaplayer   
 #    oem-services \
 
 # Connectivity Engine support
@@ -120,8 +121,8 @@ PRODUCT_PACKAGES += \
 
 # FM
 PRODUCT_PACKAGES += \
-    FM2 \
-    FMRecord \
+#    FM2 \
+#    FMRecord \
     libqcomfm_jni \
     qcom.fmradio
 
