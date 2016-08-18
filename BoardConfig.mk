@@ -271,5 +271,5 @@ KERNEL_EXTERNAL_MODULES:
 	ln -sf /system/lib/modules/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko $(TARGET_OUT)/lib/modules/wlan.ko
 	mv device/samsung/gprimeltecan/wlan/prima/wlan.ko $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
 	arm-eabi-strip --strip-debug $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
-	make -C device/samsung/gprimeltecan/wlan/prima/ clean
+
 TARGET_KERNEL_MODULES := KERNEL_EXTERNAL_MODULES
