@@ -150,6 +150,7 @@ PRODUCT_PACKAGES += \
 
 #IMS SERVICE
 PRODUCT_COPY_FILES += \
+	$(LOCAL_PATH)/ims/framework/imsmanager-common.jar:system/framework/imsmanager-common.jar \
 	$(LOCAL_PATH)/ims/framework/imsmanager-internal.jar:system/framework/imsmanager-internal.jar \
 	$(LOCAL_PATH)/ims/framework/imsmanager.jar:system/framework/imsmanager.jar \
 	$(LOCAL_PATH)/ims/priv-app/ImsLogger+/ImsLogger+.apk:system/priv-app/ImsLogger+/ImsLogger+.apk \
