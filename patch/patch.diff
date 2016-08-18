@@ -1,0 +1,113 @@
+diff -ur a/packages/services/Telecomm/src/com/android/server/telecom/CallAudioManager.java b/packages/services/Telecomm/src/com/android/server/telecom/CallAudioManager.java
+--- a/packages/services/Telecomm/src/com/android/server/telecom/CallAudioManager.java	Wed Apr 20 08:50:20 2016
++++ b/packages/services/Telecomm/src/com/android/server/telecom/CallAudioManager.java	Thu May 12 01:31:40 2016
+@@ -481,8 +481,18 @@
+ 
+         Call call = CallsManager.getInstance().getForegroundCall();
+         boolean setMsimAudioParams = SystemProperties.getBoolean("ro.multisim.set_audio_params", false);
++		boolean setSamsungRealcallParams = SystemProperties.getBoolean("ro.telephony.samsung.realcall", false);
+ 
+         Log.v(this, "Request to change audio mode from %d to %d", oldMode, newMode);
++		
++		if(setSamsungRealcallParams) {
++            if(newMode == 0) {
++                mAudioManager.setParameters("realcall=off");
++            } else if(newMode == AudioManager.MODE_IN_COMMUNICATION || newMode == AudioManager.MODE_RINGTONE
++                || newMode == AudioManager.MODE_IN_CALL) {
++                    mAudioManager.setParameters("realcall=on");
++            }
++        }
+ 
+         if (oldMode != newMode) {
+             if (oldMode == AudioManager.MODE_IN_CALL && newMode == AudioManager.MODE_RINGTONE) {
+
+diff -ur a/hardware/qcom/fm/fmapp2/src/com/caf/fmradio/FMRadioService.java b/hardware/qcom/fm/fmapp2/src/com/caf/fmradio/FMRadioService.java
+--- a/hardware/qcom/fm/fmapp2/src/com/caf/fmradio/FMRadioService.java	Mon Jun 20 17:28:46 2016
++++ b/hardware/qcom/fm/fmapp2/src/com/caf/fmradio/FMRadioService.java	Mon Jun 27 10:45:01 2016
+@@ -926,9 +926,19 @@
+                mSpeakerPhoneOn = true;
+                Log.d(LOGTAG, "Audio source set it as speaker");
+                AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_SPEAKER);
++			   mAudioManager.setParameters("fm_mode=on");
++		       mAudioManager.setParameters("fm_radio_volume=on");
++		       mAudioManager.setParameters("FMRadioVol=0.1496235728");
++		       mAudioManager.setMode(AudioManager.MODE_IN_CALL);
++               mAudioManager.setSpeakerphoneOn(true);
+            } else {
+                Log.d(LOGTAG, "Audio source set it as headset");
+                AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_NONE);
++			   mAudioManager.setParameters("fm_mode=on");
++		       mAudioManager.setParameters("fm_radio_volume=on");
++		       mAudioManager.setParameters("FMRadioVol=0.1496235728");
++		       mAudioManager.setMode(AudioManager.MODE_IN_CALL);
++               mAudioManager.setSpeakerphoneOn(false);
+            }
+            AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
+                                AudioSystem.DEVICE_STATE_AVAILABLE, "");
+@@ -947,6 +957,8 @@
+            stopA2dpPlayback();
+        }else{
+            Log.d(LOGTAG, "FMRadio: Requesting to stop FM");
++		   mAudioManager.setParameters("fm_mode=off");
++		   mAudioManager.setParameters("fm_radio_mute=1");
+            AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
+                                      AudioSystem.DEVICE_STATE_UNAVAILABLE, "");
+        }
+@@ -960,6 +972,8 @@
+            resetA2dpPlayback();
+        }else{
+            Log.d(LOGTAG, "FMRadio: Requesting to stop FM");
++		   mAudioManager.setParameters("fm_mode=off");
++		   mAudioManager.setParameters("fm_radio_mute=1");
+            AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
+                                      AudioSystem.DEVICE_STATE_UNAVAILABLE, "");
+            sendRecordServiceIntent(RECORD_STOP);
+@@ -1168,6 +1182,7 @@
+                if (audioManager != null) {
+                    Log.d(LOGTAG, "Mute");
+                    mMuted = true;
++				   audioManager.setParameters("fm_radio_mute=1");
+                    audioManager.setStreamMute(AudioManager.STREAM_MUSIC,true);
+                }
+            }
+@@ -2095,6 +2110,7 @@
+                     stopRecording();
+                 stopFM();
+                AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_NONE);
++			   mAudioManager.setSpeakerphoneOn(false);
+                if (mMuted) {
+                    setAudioPath(true);
+                } else {
+@@ -2104,6 +2120,7 @@
+                }
+            } else {
+                AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_NONE);
++			   mAudioManager.setSpeakerphoneOn(false);
+            }
+            if (analogmode)
+                 startFM();
+@@ -2131,6 +2148,7 @@
+                  }
+            }
+            AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_SPEAKER);
++		   mAudioManager.setSpeakerphoneOn(true);
+            if (analogmode)
+                 startFM();
+        }
+@@ -2231,6 +2249,7 @@
+       if (audioManager != null)
+       {
+          mMuted = true;
++		 audioManager.setParameters("fm_radio_mute=1");
+          audioManager.setStreamMute(AudioManager.STREAM_MUSIC,true);
+       }
+       return bCommandSent;
+@@ -2251,6 +2270,7 @@
+       if (audioManager != null)
+       {
+          mMuted = false;
++		 audioManager.setParameters("fm_radio_mute=0");
+          audioManager.setStreamMute(AudioManager.STREAM_MUSIC,false);
+          if (mResumeAfterCall)
+          {
+
