@@ -53,8 +53,12 @@ TARGET_PROVIDES_CAMERA_HAL := true
 USE_DEVICE_SPECIFIC_CAMERA := true
 
 # Charger
-# BOARD_CHARGER_ENABLE_SUSPEND := true
+BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_SHOW_PERCENTAGE := true
+BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_lp_charging
+
+# Enable QCOM FM feature
+#AUDIO_FEATURE_ENABLED_FM := true
 
 #sec_s3fwrn5 <- NFC HAL
 
@@ -138,6 +142,11 @@ BOARD_FLASH_BLOCK_SIZE              := 131072
 
 # Power
 TARGET_POWERHAL_VARIANT := qcom
+#CM_POWERHAL_EXTENSION := qcom
+
+# Media
+TARGET_QCOM_MEDIA_VARIANT           := caf
+TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
 
 # Qualcomm support
 TARGET_USES_QCOM_BSP := true
