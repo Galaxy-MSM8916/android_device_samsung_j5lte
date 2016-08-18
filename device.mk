@@ -43,8 +43,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
     audio.primary.msm8916 \
-    audio.primary.default \
-    audio_policy.msm8916 \
     audio.r_submix.default \
     audio.usb.default \
     audiod \
@@ -52,11 +50,8 @@ PRODUCT_PACKAGES += \
     libqcompostprocbundle \
     libqcomvisualizer \
     libqcomvoiceprocessing \
-    tinymix \
-    tinyplay \
-    tinycap \
-	tinypcminfo
-
+    tinymix
+    
 #VoLTE calling support
 PRODUCT_PACKAGES += \
     com.android.ims \
@@ -98,7 +93,6 @@ PRODUCT_PACKAGES += \
 
 #Camera
 PRODUCT_PACKAGES += \
-	libmm-qcamera \
 	camera.msm8916
 	
 #SAMSUNG RIL
