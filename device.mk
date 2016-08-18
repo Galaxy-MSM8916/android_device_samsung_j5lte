@@ -43,6 +43,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
     audio.primary.msm8916 \
+    audio.primary.default \
+    audio_policy.msm8916 \
     audio.r_submix.default \
     audio.usb.default \
     audiod \
@@ -50,8 +52,11 @@ PRODUCT_PACKAGES += \
     libqcompostprocbundle \
     libqcomvisualizer \
     libqcomvoiceprocessing \
-    tinymix
-    
+    tinymix \
+    tinyplay \
+    tinycap \
+	tinypcminfo
+
 #VoLTE calling support
 PRODUCT_PACKAGES += \
     com.android.ims \
@@ -80,11 +85,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/mixer_paths.xml:system/etc/mixer_paths.xml
 
 # Boot jars
-#PRODUCT_BOOT_JARS += \
+PRODUCT_BOOT_JARS += \
+    tcmiface \
+    qcmediaplayer
 #    qcom.fmradio \
-#    tcmiface
-    
-#    qcmediaplayer   
 #    oem-services \
 
 # Connectivity Engine support
@@ -93,6 +97,7 @@ PRODUCT_PACKAGES += \
 
 #Camera
 PRODUCT_PACKAGES += \
+	libmm-qcamera \
 	camera.msm8916
 	
 #SAMSUNG RIL
@@ -119,6 +124,7 @@ PRODUCT_PACKAGES += \
 #    FMRecord \
     libqcomfm_jni \
     qcom.fmradio
+#these are likely not building
 
 # INIT
 PRODUCT_PACKAGES += \
@@ -142,10 +148,10 @@ PRODUCT_PACKAGES += \
     init.rilchip.rc \
     init.rilcommon.rc \
     twrp.fstab
+#    init.qcom.fm.sh \
 
 #IMS SERVICE
 PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/ims/framework/imsmanager-common.jar:system/framework/imsmanager-common.jar \
 	$(LOCAL_PATH)/ims/framework/imsmanager-internal.jar:system/framework/imsmanager-internal.jar \
 	$(LOCAL_PATH)/ims/framework/imsmanager.jar:system/framework/imsmanager.jar \
 	$(LOCAL_PATH)/ims/priv-app/ImsLogger+/ImsLogger+.apk:system/priv-app/ImsLogger+/ImsLogger+.apk \
