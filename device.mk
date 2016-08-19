@@ -87,8 +87,8 @@ PRODUCT_COPY_FILES += \
 # Boot jars
 PRODUCT_BOOT_JARS += \
     tcmiface \
+    qcom.fmradio \
     qcmediaplayer
-#    qcom.fmradio \
 #    oem-services \
 
 # Connectivity Engine support
@@ -120,8 +120,8 @@ PRODUCT_PACKAGES += \
 
 # FM
 PRODUCT_PACKAGES += \
-#    FM2 \
-#    FMRecord \
+    FM2 \
+    FMRecord \
     libqcomfm_jni \
     qcom.fmradio
 #these are likely not building
@@ -141,6 +141,7 @@ PRODUCT_PACKAGES += \
     init.qcom.usb.rc \
     init.qcom.usb.sh \
     init.qcom.rc \
+    init.qcom.fm.sh \
     init.qcom.sh \
     init.target.rc \
     ueventd.qcom.rc \
@@ -148,7 +149,6 @@ PRODUCT_PACKAGES += \
     init.rilchip.rc \
     init.rilcommon.rc \
     twrp.fstab
-#    init.qcom.fm.sh \
 
 #IMS SERVICE
 PRODUCT_COPY_FILES += \
