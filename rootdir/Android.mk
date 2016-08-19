@@ -71,7 +71,7 @@ LOCAL_MODULE       := init.qcom.audio.sh
 LOCAL_MODULE_TAGS  := optional eng
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc/
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
 include $(BUILD_PREBUILT)
 
 ######################
@@ -95,26 +95,6 @@ LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
 include $(BUILD_PREBUILT)
 
 ######################
-### init.qcom.post_boot.sh
-include $(CLEAR_VARS)
-LOCAL_MODULE       := init.qcom.post_boot.sh
-LOCAL_MODULE_TAGS  := optional eng
-LOCAL_MODULE_CLASS := ETC
-LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc/
-include $(BUILD_PREBUILT)
-
-######################
-### init.qcom.sdio.sh
-include $(CLEAR_VARS)
-LOCAL_MODULE       := init.qcom.sdio.sh
-LOCAL_MODULE_TAGS  := optional eng
-LOCAL_MODULE_CLASS := ETC
-LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc/
-include $(BUILD_PREBUILT)
-
-######################
 ### init.qcom.factory.sh
 include $(CLEAR_VARS)
 LOCAL_MODULE       := init.qcom.factory.sh
@@ -122,46 +102,6 @@ LOCAL_MODULE_TAGS  := optional eng
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
 LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
-include $(BUILD_PREBUILT)
-
-######################
-### init.qcom.modem_links.sh
-include $(CLEAR_VARS)
-LOCAL_MODULE       := init.qcom.modem_links.sh
-LOCAL_MODULE_TAGS  := optional eng
-LOCAL_MODULE_CLASS := ETC
-LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc/
-include $(BUILD_PREBUILT)
-
-######################
-### init.qcom.efs.sync.sh
-include $(CLEAR_VARS)
-LOCAL_MODULE       := init.qcom.efs.sync.sh
-LOCAL_MODULE_TAGS  := optional eng
-LOCAL_MODULE_CLASS := ETC
-LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc/
-include $(BUILD_PREBUILT)
-
-######################
-### init.qcom.wifi.sh
-include $(CLEAR_VARS)
-LOCAL_MODULE       := init.qcom.wifi.sh
-LOCAL_MODULE_TAGS  := optional eng
-LOCAL_MODULE_CLASS := ETC
-LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc/
-include $(BUILD_PREBUILT)
-
-######################
-### init.qcom.bt.sh
-include $(CLEAR_VARS)
-LOCAL_MODULE       := init.qcom.bt.sh
-LOCAL_MODULE_TAGS  := optional eng
-LOCAL_MODULE_CLASS := ETC
-LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc/
 include $(BUILD_PREBUILT)
 
 ######################
@@ -201,7 +141,7 @@ LOCAL_MODULE       := init.qcom.zram.sh
 LOCAL_MODULE_TAGS  := optional eng
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc/
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
 include $(BUILD_PREBUILT)
 
 ######################
