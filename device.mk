@@ -128,7 +128,6 @@ PRODUCT_PACKAGES += \
     FMRecord \
     libqcomfm_jni \
     qcom.fmradio
-#these are likely not building
 
 # INIT
 PRODUCT_PACKAGES += \
