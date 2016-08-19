@@ -58,7 +58,8 @@ BOARD_CHARGER_SHOW_PERCENTAGE := true
 BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_lp_charging
 
 # Enable QCOM FM feature
-#AUDIO_FEATURE_ENABLED_FM := true
+AUDIO_FEATURE_ENABLED_FM := true
+BOARD_HAVE_QCOM_FM := true
 
 #sec_s3fwrn5 <- NFC HAL
 
