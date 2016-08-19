@@ -1,3 +1,4 @@
 #============= mediaserver ==============
 allow mediaserver sysfs_wake_lock:file { open read write };
 allow mediaserver system_data_file:sock_file write;
+allow mediaserver camera_prop:property_service set;
