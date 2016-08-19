@@ -141,7 +141,7 @@ LOCAL_MODULE       := init.qcom.zram.sh
 LOCAL_MODULE_TAGS  := optional eng
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc
 include $(BUILD_PREBUILT)
 
 ######################
@@ -211,7 +211,17 @@ LOCAL_MODULE       := init.qcom.fm.sh
 LOCAL_MODULE_TAGS  := optional eng
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := ../recovery/$(LOCAL_MODULE)
-LOCAL_MODULE_PATH  := $(TARGET_RECOVERY_ROOT_OUT)/etc
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc
+include $(BUILD_PREBUILT)
+
+######################
+### init.qcom.bt.sh
+include $(CLEAR_VARS)
+LOCAL_MODULE       := init.qcom.bt.sh
+LOCAL_MODULE_TAGS  := optional eng
+LOCAL_MODULE_CLASS := ETC
+LOCAL_SRC_FILES    := etc/$(LOCAL_MODULE)
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)/etc
 include $(BUILD_PREBUILT)
 
 ######################
