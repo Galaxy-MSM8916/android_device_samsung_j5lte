@@ -32,7 +32,7 @@ AUDIO_FEATURE_LOW_LATENCY_PRIMARY := true
 BOARD_USES_ALSA_AUDIO := true
 
 # Asserts
-TARGET_OTA_ASSERT_DEVICE := gprimeltecan,samsung_sm_g530w,g530w
+TARGET_OTA_ASSERT_DEVICE := gprimeltecan,gprimeltevl,samsung_sm_g530w,g530w
 
 # Bluetooth
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
