@@ -264,12 +264,12 @@ WIFI_DRIVER_MODULE_NAME := "wlan"
 
 #make, move, symlink and strip the wlan kernel module.
 KERNEL_EXTERNAL_MODULES:
-	make -C device/samsung/gprimeltecan/wlan/prima/ WLAN_ROOT=$(ANDROID_BUILD_TOP)/device/samsung/gprimeltecan/wlan/prima/ \
+	+$(MAKE) -C device/samsung/$(TARGET_DEVICE)/wlan/prima/ WLAN_ROOT=$(ANDROID_BUILD_TOP)/device/samsung/$(TARGET_DEVICE)/wlan/prima/ \
 		KERNEL_SOURCE=$(KERNEL_OUT) ARCH="arm" \
 		CROSS_COMPILE="arm-eabi-"
 	mkdir $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/ -p
 	ln -sf /system/lib/modules/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko $(TARGET_OUT)/lib/modules/wlan.ko
-	mv device/samsung/gprimeltecan/wlan/prima/wlan.ko $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
+	mv device/samsung/$(TARGET_DEVICE)/wlan/prima/wlan.ko $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
 	arm-eabi-strip --strip-debug $(KERNEL_MODULES_OUT)/$(WLAN_CHIPSET)/$(WLAN_CHIPSET)_wlan.ko
-	make -C device/samsung/gprimeltecan/wlan/prima/ clean
+	+$(MAKE) -C device/samsung/$(TARGET_DEVICE)/wlan/prima/ clean
 TARGET_KERNEL_MODULES := KERNEL_EXTERNAL_MODULES
