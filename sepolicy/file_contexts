@@ -26,3 +26,6 @@
 
 # CMHW
 /sys/devices/virtual/timed_output/vibrator(/.*)?              u:object_r:sysfs_vibeamp:s0
+
+# data files
+/data/snd(/.*)?                                     u:object_r:snd_data_file:s0

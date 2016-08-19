@@ -8,3 +8,5 @@ type sensors_efs_file, file_type;
 type sysfs_camera, fs_type, sysfs_type;
 type sysfs_input, fs_type, sysfs_type;
 type sysfs_vibeamp, fs_type, sysfs_type;
+type snd_data_file, file_type, data_file_type;
+
