@@ -47,12 +47,6 @@ fi
 
 log -t BOOT -p i "MSM target '$1', SoC '$soc_hwplatform', HwID '$soc_hwid', SoC ver '$soc_hwver'"
 
-#load modules
-    insmod /system/lib/modules/radio-iris-transport.ko
-    insmod /system/lib/modules/pronto/pronto_wlan.ko
-    modprobe wlan
-    modprobe radio-iris-transport
-
 case "$1" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
         case "$soc_hwplatform" in

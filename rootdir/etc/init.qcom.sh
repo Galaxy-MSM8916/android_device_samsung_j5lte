@@ -33,12 +33,6 @@ else
     platformid=`cat /sys/devices/system/soc/soc0/id`
 fi
 
-#load modules
-    insmod /system/lib/modules/radio-iris-transport.ko
-    insmod /system/lib/modules/pronto/pronto_wlan.ko
-    modprobe wlan
-    modprobe radio-iris-transport
-
 #
 # Function to start sensors for DSPS enabled platforms
 #
