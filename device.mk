@@ -138,7 +138,6 @@ PRODUCT_PACKAGES += \
     init.mdm.sh \
     init.qcom.audio.sh \
     init.qcom.bms.sh \
-    init.qcom.bt.sh \
     init.qcom.class_core.sh \
     init.qcom.early_boot.sh \
     init.qcom.factory.sh \
