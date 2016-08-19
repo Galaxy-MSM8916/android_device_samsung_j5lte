@@ -100,9 +100,13 @@ PRODUCT_PACKAGES += \
 	libmm-qcamera \
 	camera.msm8916
 	
-#SAMSUNG RIL
-#PRODUCT_PACKAGES += \
-#	libsecril-client
+# Doze
+PRODUCT_PACKAGES += \
+    SamsungDoze
+	
+# Touch issue workaround
+PRODUCT_PACKAGES += \
+    InputDisabler
 	
 # Display
 PRODUCT_PACKAGES += \
