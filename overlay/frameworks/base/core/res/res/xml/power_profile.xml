@@ -22,7 +22,6 @@
         <value>1094400</value>
         <value>998400</value>
         <value>800000</value>
-        <value>700000</value>
         <value>600000</value>
         <value>500000</value>
         <value>400000</value>
@@ -34,11 +33,10 @@
         <value>141</value>
         <value>129</value>
         <value>94</value>
-        <value>82</value>
         <value>70</value>
         <value>58</value>
         <value>46</value>
-</array>
+    </array>
     <item name="battery.capacity">2600</item>
     <array name="wifi.batchedscan">
         <value>.0002</value>
