@@ -330,14 +330,6 @@ PRODUCT_AAPT_PREF_CONFIG := xhdpi
 # security config
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config
-    
-# ril switch script files
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/scripts/rilswitch.sh:system/bin/rilswitch.sh \
-	$(LOCAL_PATH)/scripts/rilswitch/caf/lib/libreference-ril.so:system/rilswitch/caf/lib/libreference-ril.so \
-	$(LOCAL_PATH)/scripts/rilswitch/caf/bin/rild:system/rilswitch/caf/bin/rild \
-	$(LOCAL_PATH)/scripts/rilswitch/caf/lib/libril.so:system/rilswitch/caf/lib/libril.so \
-	$(LOCAL_PATH)/scripts/rilswitch/caf/lib/librilutils.so:system/rilswitch/caf/lib/librilutils.so
 
 # Terminal
 PRODUCT_PACKAGES += Terminal
