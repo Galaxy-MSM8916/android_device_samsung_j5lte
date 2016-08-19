@@ -19,6 +19,7 @@
 # Camera
 /sys/devices/virtual/camera(/.*)?       u:object_r:sysfs_camera:s0
 /data/cam_socket.*                      u:object_r:camera_socket:s0
+/sys/class/camera/rear(/.*)?                u:object_r:sysfs_class_camera_rear:s0
 
 # Workaround for input
 /sys/devices/soc.0/i2c.78/i2c-11/11-0020/input/input1/enabled		u:object_r:sysfs_input:s0
