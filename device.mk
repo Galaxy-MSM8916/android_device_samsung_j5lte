@@ -197,7 +197,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	telephony.lteOnCdmaDevice=0 \
 	persist.eons.enabled=true \
 	persist.radio.apm_sim_not_pwdn=1 \
-	persist.radio.rilversion=8 \
 	rild.libpath=/system/lib/libsec-ril.so \
 	persist.cne.feature=0 \
 	persist.radio.lte_vrte_ltd=1 \
