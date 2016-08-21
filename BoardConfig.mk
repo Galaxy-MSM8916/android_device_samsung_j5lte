@@ -210,22 +210,6 @@ BOARD_SEPOLICY_UNION += \
 	perfd.te \
 	mediaserver.te \
 	vold.te \
-	smdexe.te \
-	sec-ril.te \
-	radio.te \
-	qmuxd.te \
-	qmiproxy.te \
-	mtp.te \
-	otp_server.te \
-	mediaserver.te \
-	cs.te \
-	ddexe.te \
-	insthk.te \
-	at_distributor.te \
-	connfwexe.te \
-	ftm_ptt.te \
-	ss_conn_daemon.te \
-	wlandutservice.te \
 	property_contexts
 
 # Time services

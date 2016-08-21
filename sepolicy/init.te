@@ -2,22 +2,3 @@
 allow init diag_exec:file execute_no_trans;
 allow init self:process execmem;
 allow init vfat:dir search;
-#new#
-allow init at_distributor:process { siginh transition rlimitinh };
-allow init at_distributor_exec:file { read getattr open execute };
-allow init connfwexe:process { siginh transition rlimitinh };
-allow init connfwexe_exec:file { read getattr open execute };
-allow init cs:process { siginh transition rlimitinh };
-allow init cs_exec:file { read getattr open execute };
-allow init ddexe:process { siginh transition rlimitinh };
-allow init ddexe_exec:file { read getattr open execute };
-allow init ftm_ptt:process { siginh transition rlimitinh };
-allow init ftm_ptt_exec:file { read getattr open execute };
-allow init qmiproxy:process { siginh transition rlimitinh };
-allow init qmiproxy_exec:file { read getattr open execute };
-allow init rild:process { siginh transition rlimitinh };
-allow init smdexe:process { siginh transition rlimitinh };
-allow init smdexe_exec:file { read getattr open execute };
-allow init ss_conn_daemon:process { siginh transition rlimitinh };
-allow init ss_conn_daemon_exec:file { read getattr open execute };
-allow init tee:process { siginh transition rlimitinh };
