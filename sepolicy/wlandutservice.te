@@ -1,0 +1,43 @@
+#===========wlandutservice=====================
+type wlandutservice, domain;
+type wlandutservice_exec, exec_type, file_type;
+init_daemon_domain(wlandutservice)
+net_domain(wlandutservice)
+
+# To make VT call
+binder_use(wlandutservice)
+
+allow wlandutservice init:process sigchld;
+allow wlandutservice init:unix_stream_socket connectto;
+allow wlandutservice servicemanager:binder { transfer call };
+allow wlandutservice shell_exec:file { execute read lock getattr execute_no_trans ioctl open };
+allow wlandutservice system_data_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow wlandutservice system_data_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow wlandutservice system_file:file { execute read lock getattr execute_no_trans ioctl open };
+allow wlandutservice wlandutservice:appletalk_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow wlandutservice wlandutservice:capability { net_admin sys_nice };
+allow wlandutservice wlandutservice:dir { read search ioctl open getattr };
+allow wlandutservice wlandutservice:fd use;
+allow wlandutservice wlandutservice:fifo_file { read lock getattr write ioctl open append };
+allow wlandutservice wlandutservice:file { read lock getattr write ioctl open append };
+allow wlandutservice wlandutservice:ipc { unix_read setattr associate read create write getattr unix_write destroy };
+allow wlandutservice wlandutservice:key { search setattr read create write link view };
+allow wlandutservice wlandutservice:key_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow wlandutservice wlandutservice:lnk_file { read lock ioctl open getattr };
+allow wlandutservice wlandutservice:msg { receive send };
+allow wlandutservice wlandutservice:msgq { unix_read setattr associate read create write enqueue getattr unix_write destroy };
+allow wlandutservice wlandutservice:netlink_route_socket { nlmsg_write lock accept connect shutdown append create nlmsg_read write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow wlandutservice wlandutservice:netlink_selinux_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow wlandutservice wlandutservice:packet_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow wlandutservice wlandutservice:process { sigkill share getpgid signull setkeycreate siginh getattr setcurrent setrlimit rlimitinh fork getsession setexec setpgid setsched sigstop ptrace noatsecure setsockcreate setfscreate execheap sigchld execstack signal transition setcap execmem getcap getsched dyntransition };
+allow wlandutservice wlandutservice:rawip_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow wlandutservice wlandutservice:sem { unix_read setattr associate read create write getattr unix_write destroy };
+allow wlandutservice wlandutservice:shm { unix_read setattr associate read lock create write getattr unix_write destroy };
+allow wlandutservice wlandutservice:socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow wlandutservice wlandutservice:tcp_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind name_connect send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow wlandutservice wlandutservice:tun_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read attach_queue ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow wlandutservice wlandutservice:udp_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow wlandutservice wlandutservice:unix_dgram_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow wlandutservice wlandutservice:unix_stream_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow wlandutservice wlandutservice_exec:file { read open getattr entrypoint execute };
+#allow wlandutservice wlandutservice_service:service_manager add;

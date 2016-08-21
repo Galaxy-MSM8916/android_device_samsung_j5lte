@@ -1,0 +1,44 @@
+#============smdexe============
+type smdexe, domain;
+type smdexe_exec, exec_type, file_type;
+init_daemon_domain(smdexe)
+net_domain(smdexe)
+
+# To make VT call
+binder_use(smdexe)
+
+allow smdexe ddexe:unix_stream_socket connectto;
+allow smdexe dun_device:chr_file { read lock getattr write ioctl open append };
+allow smdexe init:process sigchld;
+allow smdexe rild:unix_stream_socket connectto;
+allow smdexe smd_device:chr_file { read lock getattr write ioctl open append };
+allow smdexe smdexe:appletalk_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow smdexe smdexe:capability { setuid sys_nice dac_override };
+allow smdexe smdexe:dir { read search ioctl open getattr };
+allow smdexe smdexe:fd use;
+allow smdexe smdexe:fifo_file { read lock getattr write ioctl open append };
+allow smdexe smdexe:file { read lock getattr write ioctl open append };
+allow smdexe smdexe:ipc { unix_read setattr associate read create write getattr unix_write destroy };
+allow smdexe smdexe:key { search setattr read create write link view };
+allow smdexe smdexe:key_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow smdexe smdexe:lnk_file { read lock ioctl open getattr };
+allow smdexe smdexe:msg { receive send };
+allow smdexe smdexe:msgq { unix_read setattr associate read create write enqueue getattr unix_write destroy };
+allow smdexe smdexe:netlink_route_socket { nlmsg_write lock accept connect shutdown append create nlmsg_read write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow smdexe smdexe:netlink_selinux_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow smdexe smdexe:packet_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow smdexe smdexe:process { sigkill share getpgid signull setkeycreate siginh getattr setcurrent setrlimit rlimitinh fork getsession setexec setpgid setsched sigstop ptrace noatsecure setsockcreate setfscreate execheap sigchld execstack signal transition setcap execmem getcap getsched dyntransition };
+allow smdexe smdexe:rawip_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow smdexe smdexe:sem { unix_read setattr associate read create write getattr unix_write destroy };
+allow smdexe smdexe:shm { unix_read setattr associate read lock create write getattr unix_write destroy };
+allow smdexe smdexe:socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow smdexe smdexe:tcp_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind name_connect send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow smdexe smdexe:tun_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read attach_queue ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow smdexe smdexe:udp_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow smdexe smdexe:unix_dgram_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow smdexe smdexe:unix_stream_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow smdexe smdexe_exec:file { read open getattr entrypoint execute };
+allow smdexe smdexe_tmpfs:file { read write };
+allow smdexe sysfs:file { read lock getattr write ioctl open append };
+allow smdexe sysfs_ss_writable:file { read lock getattr write ioctl open append };
+allow smdexe system_data_file:sock_file { read lock getattr write ioctl open append };

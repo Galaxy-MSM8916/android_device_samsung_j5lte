@@ -1,0 +1,41 @@
+#=========ddexe================
+type ddexe, domain;
+type ddexe_exec, exec_type, file_type;
+init_daemon_domain(ddexe)
+net_domain(ddexe)
+
+# To make VT call
+binder_use(ddexe)
+
+allow ddexe ddexe:appletalk_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow ddexe ddexe:capability { setuid sys_nice dac_override };
+allow ddexe ddexe:dir { read search ioctl open getattr };
+allow ddexe ddexe:fd use;
+allow ddexe ddexe:fifo_file { read lock getattr write ioctl open append };
+allow ddexe ddexe:file { read lock getattr write ioctl open append };
+allow ddexe ddexe:ipc { unix_read setattr associate read create write getattr unix_write destroy };
+allow ddexe ddexe:key { search setattr read create write link view };
+allow ddexe ddexe:key_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow ddexe ddexe:lnk_file { read lock ioctl open getattr };
+allow ddexe ddexe:msg { receive send };
+allow ddexe ddexe:msgq { unix_read setattr associate read create write enqueue getattr unix_write destroy };
+allow ddexe ddexe:netlink_route_socket { nlmsg_write lock accept connect shutdown append create nlmsg_read write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow ddexe ddexe:netlink_selinux_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow ddexe ddexe:packet_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow ddexe ddexe:process { sigkill share getpgid signull setkeycreate siginh getattr setcurrent setrlimit rlimitinh fork getsession setexec setpgid setsched sigstop ptrace noatsecure setsockcreate setfscreate execheap sigchld execstack signal transition setcap execmem getcap getsched dyntransition };
+allow ddexe ddexe:rawip_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow ddexe ddexe:sem { unix_read setattr associate read create write getattr unix_write destroy };
+allow ddexe ddexe:shm { unix_read setattr associate read lock create write getattr unix_write destroy };
+allow ddexe ddexe:socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow ddexe ddexe:tcp_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind name_connect send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow ddexe ddexe:tun_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read attach_queue ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow ddexe ddexe:udp_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow ddexe ddexe:unix_dgram_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow ddexe ddexe:unix_stream_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow ddexe ddexe_exec:file { read open getattr entrypoint execute };
+allow ddexe ddexe_tmpfs:file { read write };
+allow ddexe device:file { read lock ioctl open getattr };
+allow ddexe gadget_serial_device:chr_file { read lock getattr write ioctl open append };
+allow ddexe init:process sigchld;
+allow ddexe system_data_file:dir { search read getattr write ioctl remove_name open add_name };
+allow ddexe system_data_file:sock_file { rename setattr read lock create getattr write ioctl link unlink open append };

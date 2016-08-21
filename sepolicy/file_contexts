@@ -13,8 +13,6 @@
 /firmware/image/keymaste.*	u:object_r:keymaster_firmware_file:s0
 /firmware/image/sshdcpap.mdt	u:object_r:sshdcpap_firmware_file:s0
 
-/efs/wifi(/.*)?			u:object_r:wifi_efs_file:s0
-/dev/sec-nfc		  	u:object_r:nfc_device:s0
 /dev/i2c-1  			u:object_r:audio_device:s0
 
 # Camera
@@ -34,3 +32,220 @@
 
 # data files
 /data/snd(/.*)?                                     u:object_r:snd_data_file:s0
+
+############################# 
+# DATA file of qcom_common
+#
+/data/misc/gpsone_d(/.*)?	u:object_r:gps_data_file:s0
+
+############################# 
+# EFS file of sec_common
+#
+/cpefs(/.*)?                                     u:object_r:sec_efs_file:s0
+/efs/carrier(/.*)?	u:object_r:carrier_efs_file:s0
+/efs/cpk(/.*)?	                                 u:object_r:cpk_efs_file:s0
+/efs/drx(/.*)?                                   u:object_r:sec_efs_file:s0
+/efs/FactoryApp(/.*)?	u:object_r:app_efs_file:s0
+/efs/imei(/.*)?	u:object_r:imei_efs_file:s0
+/efs/ims_setting(/.*)?                           u:object_r:sec_efs_file:s0
+/efs/iss(/.*)?	                                 u:object_r:iss_efs_file:s0
+/efs/logguard(/.*)?	                         u:object_r:iss_efs_file:s0
+/efs/maxim(/.*)?	                         u:object_r:sec_efs_file:s0
+/efs/mc(/.*)?	                                 u:object_r:prov_efs_file:s0
+/efs/\.nv_core\.bak(.*)                            u:object_r:nv_core_efs_file:s0
+/efs/otadm(/.*)?	                         u:object_r:otadm_efs_file:s0
+/efs/otadm_sw_version                            u:object_r:otadm_efs_file:s0
+/efs/pfw_data(/.*)?	                         u:object_r:pfw_efs_file:s0
+/efs/prov(/.*)?	                                 u:object_r:prov_efs_file:s0
+/efs/prov_data(/.*)?	                         u:object_r:prov_efs_file:s0
+/efs/recovery(/.*)?	                         u:object_r:sec_efs_file:s0
+/efs/root(/.*)?	                                 u:object_r:app_efs_file:s0
+/efs/sec_efs(/.*)?                               u:object_r:sec_efs_file:s0
+/efs/security(/.*)?                              u:object_r:prov_efs_file:s0
+/efs/sktdm_mem(/.*)?                             u:object_r:sec_efs_file:s0
+/efs/SMS(/.*)?                                   u:object_r:sec_efs_file:s0
+/efs/SlideCount                                  u:object_r:app_efs_file:s0
+/efs/TEE(/.*)?                                   u:object_r:prov_efs_file:s0
+/efs/wifi(/.*)?	u:object_r:wifi_efs_file:s0
+/efs_gsm(/.*)?            u:object_r:efs_gsm_file:s0
+
+############################# 
+# EFS file of qcom_common
+#
+/efs/drm(/.*)?	u:object_r:drm_efs_file:s0
+/efs/.drm(/.*)?         u:object_r:drm_efs_file:s0
+
+############################# 
+# EFS file of slsi_common
+#
+/efs/gyro_cal_data	u:object_r:sensor_efs_file:s0
+/efs/nv_data.bin(.*)	u:object_r:bin_nv_data_efs_file:s0
+
+
+############################# 
+# MNT of bcom_common
+#
+/mnt/modemfsro(/.*)?	u:object_r:modem_firmware:s0
+/mnt/modemfsro_fix(/.*)?	u:object_r:modem_firmware:s0
+/mnt/modemfsrw(/.*)?	u:object_r:modem_firmware:s0
+/mnt/modemfw(/.*)?	u:object_r:modem_firmware:s0
+/mnt/modemlog(/.*)?	u:object_r:modem_firmware:s0
+
+############################# 
+# Carrier file of sec_common
+# carrier folder for Sprint(Qualcomm and SLSI)
+/carrier(/.*)?	u:object_r:carrier_file:s0
+
+############################# 
+# DATA file of sec_common
+#
+/data/app-lib(/.*)? 	u:object_r:app_library_file:s0
+/data/bcmnfc(/.*)?	u:object_r:nfc_data_file:s0
+/data/data/.*		u:object_r:app_data_file:s0
+#/data/data/.drm(/.*)?	u:object_r:drm_data_file:s0
+#/data/data/com.android.providers.downloads/cache u:object_r:download_file:s0
+/data/data/com.android.settings/files/wallpaper	u:object_r:wallpaper_file:s0
+/data/data/com.android.shell(/.*)?		u:object_r:shell_data_file:s0
+/data/data/imsqmisocket	u:object_r:system_data_file:s0
+/data/KEqvTaYEYkuJr1Mn+t-SwFvbgYo_(/.*)?  u:object_r:tima_keystore_file:s0
+/data/log(/.*)?	u:object_r:dumplog_data_file:s0
+/data/media.tmp(/.*)?	u:object_r:media_rw_data_file:s0
+/data/media/obb(/.*)?	u:object_r:obb_apk_file:s0
+#from nsa
+/data/misc/jack(/.*)?		u:object_r:jack_data_file:s0
+/data/misc/tima(/.*)?		u:object_r:tima_log:s0
+
+/data/system/users(/.*)?                u:object_r:users_system_data_file:s0
+/data/system/users(/.*)/wallpaper	u:object_r:wallpaper_file:s0
+/data/tee(/.*)?	                        u:object_r:tee_data_file:s0
+
+############################# 
+# System files of qcom_common
+#/system/bin/mfgloader	u:object_r:mfgloader_exec:s0
+/system/bin/qmiproxy	u:object_r:qmiproxy_exec:s0
+/system/bin/wlandutservice	u:object_r:wlandutservice_exec:s0
+
+############################# 
+# System files of sec_common
+# 
+/system/bin/app_process	u:object_r:zygote_exec:s0
+/system/bin/at_distributor      u:object_r:at_distributor_exec:s0
+/system/bin/mksh	u:object_r:shell_exec:s0
+/system/bin/bugreport	u:object_r:bugreport_exec:s0
+/system/bin/connfwexe	u:object_r:connfwexe_exec:s0
+/system/bin/cs				u:object_r:cs_exec:s0
+/system/bin/ddexe	u:object_r:ddexe_exec:s0
+/system/bin/dumpsys	u:object_r:dumpsys_exec:s0
+/system/bin/icd	u:object_r:icd_exec:s0
+/system/bin/insthk	u:object_r:insthk_exec:s0
+/system/bin/jackservice		u:object_r:jackservice_exec:s0
+/system/bin/olsrd	u:object_r:olsrd_exec:s0
+/system/bin/sec-ril	u:object_r:sec-ril_exec:s0
+/system/bin/sensorhubservice	u:object_r:sensorhubservice_exec:s0
+/system/bin/ss_conn_daemon	u:object_r:ss_conn_daemon_exec:s0
+/system/bin/smdexe	u:object_r:smdexe_exec:s0
+/system/bin/otp_server	u:object_r:otp_server_exec:s0
+# conflict with Qcom BSP, /system/bin/wcnss_service	u:object_r:wcnss_service_exec:s0
+/system/bin/wpa_supplicant_real u:object_r:wpa_exec:s0
+# to run resopt on system_server
+/system/bin/resopt	u:object_r:system_file:s0
+# to run zip on resopt, on system_server
+/system/bin/zip 	u:object_r:system_file:s0
+
+
+############################# 
+# DATA file
+#
+/data/data/.drm(/.*)?	u:object_r:drm_playready_file:s0
+#/data/data/.drm/.playready(/.*)?	u:object_r:drm_playready_file:s0
+#/data/data/.drm/.playready/aeskey.dat	u:object_r:drm_data_file:s0
+/data/nfc/(/.*)?		u:object_r:nfc_data_file:s0
+############################# 
+# efs file
+#
+# com.sec.android.preloadinstaller write currentlyFactoryReset
+# path was changed /efs/recovery/currentlyFactoryReset" by recovery team.
+#/efs/.currentlyFactoryReset            u:object_r:app_efs_file:s0
+# com.sec.imsservice write silent_redial
+/efs/silent_redial                     u:object_r:app_efs_file:s0
+# HDCP and Widevine key. support r/w for radio and system app
+/efs/h2k.dat                           u:object_r:cpk_efs_file:s0
+/efs/redata.bin                        u:object_r:cpk_efs_file:s0
+/efs/wv.keys                           u:object_r:cpk_efs_file:s0
+/efs/total_call_time                   u:object_r:app_efs_file:s0
+
+
+############################# 
+# System files of sec_common
+#
+/system/bin/ftm_ptt             u:object_r:ftm_ptt_exec:s0
+/system/bin/lpm                 u:object_r:lpm_exec:s0
+
+############################# 
+# Device node of sec_common
+#
+/dev/block/mmcblk[0-9].*	   u:object_r:emmcblk_device:s0
+/dev/block/zram[0-9]		u:object_r:ram_device:s0
+
+/sys/class/net/wlan0/queues/rx-[0-9]/rps_cpus             u:object_r:sysfs_ss_writable:s0
+/sys/class/kgsl/kgsl-3d0/dispatch(/.*)?     --            u:object_r:sysfs_ss_writable:s0
+/sys/class/power_supply/battery/camera                    u:object_r:sysfs_app_writable:s0
+
+############################# 
+# Device node of sec_common
+#
+/dev/.secure_storage(/.*)?		u:object_r:secure_storage_device:s0
+/dev/__kmsg	u:object_r:klog_device:s0
+/dev/alps_io	u:object_r:input_device:s0
+/dev/android_ssusbcon(/.*)?		u:object_r:usb_device:s0
+/dev/bcm2079x	u:object_r:nfc_device:s0
+/dev/block/mmcblk0p[0-9]*    u:object_r:emmcblk_device:s0
+/dev/block/mmcblk[0-9]*	   u:object_r:emmcblk_device:s0
+/dev/block/mmcblk1p.*   u:object_r:emmcblk_device:s0
+/dev/block/mmcblk1p1    u:object_r:emmcblk_device:s0
+# remove this label because of selabel_lookup_best_match /dev/block/platform/dw_mmc.*    u:object_r:dw_mmc_device:s0
+/dev/block/platform/msm_sdcc.1/by-name/param		u:object_r:emmcblk_device:s0
+/dev/block/sd[a-z][0-9]*    u:object_r:emmcblk_device:s0
+/dev/block/vnswap0		u:object_r:swap_device:s0
+/dev/bus/usb(/.*)?      u:object_r:usb_bus_device:s0
+/dev/cdma_.*		u:object_r:radio_device:s0
+# conflict with Qcom BSP, /dev/diag	u:object_r:diag_device:s0
+/dev/i2c.*		u:object_r:i2c_device:s0
+/dev/icd                u:object_r:icd_device:s0
+/dev/icdr               u:object_r:icd_device:s0
+/dev/pipes(/.*)?    u:object_r:system_fifo:s0
+/dev/p3		u:object_r:sem_device:s0
+/dev/p61		u:object_r:sem_device:s0
+/dev/pn547		u:object_r:nfc_device:s0
+/dev/sec-nfc		u:object_r:nfc_device:s0
+/dev/sec-nfc-fn		u:object_r:nfc_device:s0
+/dev/socket/bluetooth	u:object_r:bluetooth_socket:s0
+/dev/socket/cs_socket	u:object_r:cs_socket:s0
+/dev/socket/dir_enc_report	u:object_r:vold_socket:s0
+/dev/socket/drsd        u:object_r:drsd_socket:s0
+/dev/socket/frigate		u:object_r:frigate_socket:s0
+/dev/socket/jack(/.*)?          u:object_r:jack_socket:s0
+/dev/socket/mtp(/.*)?           u:object_r:mtp_socket:s0
+/dev/socket/ppm     u:object_r:epm_socket:s0
+/dev/socket/rild[0-9]*	u:object_r:rild_socket:s0
+/dev/socket/rild-debug[0-9]* u:object_r:rild_debug_socket:s0
+/dev/socket/ss_conn_daemon      u:object_r:ss_conn_daemon_socket:s0
+/dev/socket/tz                  u:object_r:tz_socket:s0
+/dev/sound_trigger_boost        u:object_r:audio_device:s0
+/dev/ssp_sensorhub	u:object_r:input_device:s0
+/dev/timerirq	u:object_r:timerirq_device:s0
+/dev/ttyGS[0-9]*	u:object_r:usb_serial_device:s0
+/dev/ttyUSB[0-9]*	u:object_r:usb_device:s0
+/dev/usb(/.*)?	u:object_r:usb_device:s0
+/dev/usb.*	u:object_r:usb_device:s0
+/dev/usb/tty.*	u:object_r:usb_device:s0
+/dev/usb_mtp_gadget.*	u:object_r:mtp_device:s0
+/dev/video4[0-9]        u:object_r:camera_device:s0
+
+/dev/efs_bridge	u:object_r:efsbridgehsic_device:s0
+/dev/ks_bridge	u:object_r:ksbridgehsic_device:s0
+/dev/rmnet_mux_ctrl	u:object_r:rmnet_device:s0
+
+/dev/ttyHSL[0-9]*	u:object_r:serial_device:s0
+#line 1 "vendor/samsung/common/sepolicy/model/ctsv4/file_contexts"
+

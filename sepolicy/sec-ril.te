@@ -1,0 +1,83 @@
+#============sec-ril===========================
+type sec-ril, domain;
+type sec-ril_exec, exec_type, file_type;
+init_daemon_domain(sec-ril)
+net_domain(sec-ril)
+
+# To make VT call
+binder_use(sec-ril)
+
+allow sec-ril alarm_device:chr_file write;
+allow sec-ril anr_data_file:dir { read search ioctl open getattr };
+allow sec-ril anr_data_file:file { read lock getattr write ioctl open append };
+allow sec-ril app_data_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow sec-ril app_data_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril app_efs_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow sec-ril app_efs_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril ashmem_device:chr_file { execute read lock getattr execute_no_trans ioctl open };
+allow sec-ril carrier_efs_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow sec-ril carrier_efs_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril dumplog_data_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow sec-ril dumplog_data_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril dumplog_data_file:sock_file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril dumpstate_exec:file { execute execute_no_trans };
+allow sec-ril dumpsys_exec:file { execute execute_no_trans };
+allow sec-ril efs_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow sec-ril efs_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril imei_efs_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow sec-ril imei_efs_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril init:process sigchld;
+allow sec-ril init:unix_stream_socket connectto;
+allow sec-ril kernel:system { module_request syslog_read };
+allow sec-ril property_socket:sock_file write;
+allow sec-ril qmuxd:unix_stream_socket connectto;
+allow sec-ril qmuxd_socket:dir { write add_name };
+allow sec-ril qmuxd_socket:sock_file { write create setattr };
+allow sec-ril radio_data_file:dir { search read getattr write ioctl remove_name open add_name };
+allow sec-ril radio_data_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril radio_device:chr_file { read lock getattr write ioctl open append };
+allow sec-ril radio_prop:property_service set;
+allow sec-ril rild:unix_stream_socket connectto;
+allow sec-ril rootfs:file execute;
+allow sec-ril sec-ril:appletalk_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow sec-ril sec-ril:capability { setuid sys_module sys_nice dac_override net_raw chown net_admin };
+allow sec-ril sec-ril:dir { read search ioctl open getattr };
+allow sec-ril sec-ril:fd use;
+allow sec-ril sec-ril:fifo_file { read lock getattr write ioctl open append };
+allow sec-ril sec-ril:file { read lock getattr write ioctl open append };
+allow sec-ril sec-ril:ipc { unix_read setattr associate read create write getattr unix_write destroy };
+allow sec-ril sec-ril:key { search setattr read create write link view };
+allow sec-ril sec-ril:key_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow sec-ril sec-ril:lnk_file { read lock ioctl open getattr };
+allow sec-ril sec-ril:msg { receive send };
+allow sec-ril sec-ril:msgq { unix_read setattr associate read create write enqueue getattr unix_write destroy };
+allow sec-ril sec-ril:netlink_route_socket { nlmsg_write lock accept connect shutdown append create nlmsg_read write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow sec-ril sec-ril:netlink_selinux_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow sec-ril sec-ril:packet_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow sec-ril sec-ril:process { sigkill share getpgid signull setkeycreate siginh getattr setcurrent setrlimit rlimitinh fork getsession setexec setpgid setsched sigstop ptrace noatsecure setsockcreate setfscreate execheap sigchld execstack signal transition setcap execmem getcap getsched dyntransition };
+allow sec-ril sec-ril:rawip_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow sec-ril sec-ril:sem { unix_read setattr associate read create write getattr unix_write destroy };
+allow sec-ril sec-ril:shm { unix_read setattr associate read lock create write getattr unix_write destroy };
+allow sec-ril sec-ril:socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow sec-ril sec-ril:tcp_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind name_connect send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow sec-ril sec-ril:tun_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read attach_queue ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow sec-ril sec-ril:udp_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow sec-ril sec-ril:unix_dgram_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow sec-ril sec-ril:unix_stream_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow sec-ril sec-ril_exec:file { read open getattr entrypoint execute };
+allow sec-ril sec-ril_tmpfs:file { read write };
+allow sec-ril sec_efs_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow sec-ril sec_efs_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril servicemanager:binder { transfer call };
+allow sec-ril servicemanager:fd use;
+allow sec-ril shell_exec:file { execute read lock getattr execute_no_trans ioctl open };
+allow sec-ril sysfs:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril sysfs_ss_writable:file { read lock getattr write ioctl open append };
+allow sec-ril sysfs_wake_lock:file { read write open };
+allow sec-ril system_data_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow sec-ril system_data_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow sec-ril system_file:file { getattr execute execute_no_trans };
+allow sec-ril system_prop:property_service set;
+allow sec-ril system_server:binder { transfer call };
+allow sec-ril system_server:fd use;
+allow sec-ril zygote_exec:file { execute read lock getattr execute_no_trans ioctl open };

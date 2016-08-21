@@ -1,2 +1,4 @@
 #============= qmuxd ==============
 allow qmuxd devpts:chr_file { read write };
+allow qmuxd bugreport_exec:file { execute execute_no_trans };
+allow qmuxd cgroup:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };

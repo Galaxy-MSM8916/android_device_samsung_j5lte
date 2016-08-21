@@ -3,12 +3,86 @@ type display_misc_file, file_type, data_file_type;
 
 type touchpanel_sysfs, fs_type, sysfs_type;
 
+type bugreport, domain;
+type bugreport_exec, exec_type, file_type;
+
+type icd, domain;
+type icd_exec, exec_type, file_type;
+
+type lpm, domain;
+type lpm_exec, exec_type, file_type;
+
+type dumpsys, domain;
+type dumpsys_exec, exec_type, file_type;
+
+type olsrd, domain;
+type olsrd_exec, exec_type, file_type;
+
+type jackservice, domain;
+type jackservice_exec, exec_type, file_type;
+
+type sensorhubservice, domain;
+type sensorhubservice_exec, exec_type, file_type;
+
+type cpk_efs_file, file_type;
+type carrier_efs_file, file_type;
+type iss_efs_file, file_type;
+type drm_efs_file, file_type;
+type modem_firmware, file_type;
+type otadm_efs_file, file_type;
+type pfw_efs_file, file_type;
+type prov_efs_file, file_type;
+type sensor_efs_file, file_type;
 type wifi_efs_file, file_type;
 type sensors_efs_file, file_type;
 type sysfs_camera, fs_type, sysfs_type;
 type sysfs_class_camera_rear, fs_type, sysfs_type;
+type sysfs_sensor_writable, fs_type, sysfs_type;
+type sysfs_sec, fs_type, sysfs_type;
+type sysfs_app_writable, fs_type, sysfs_type;
 type sysfs_input, fs_type, sysfs_type;
+type sysfs_ss_writable, fs_type, sysfs_type;
 type sysfs_vibeamp, fs_type, sysfs_type;
+type jack_data_file, file_type, data_file_type;
+type audit_log, file_type, data_file_type;
+type tima_log, file_type, data_file_type;
+type drm_playready_file, file_type, data_file_type;
+#type drm_data_file, file_type, data_file_type;
 type snd_data_file, file_type, data_file_type;
-type keymaster_firmware_file, file_type, data_file_type;
-type sshdcpap_firmware_file, file_type, data_file_type;
+type users_system_data_file, file_type, data_file_type;
+type keymaster_firmware_file, file_type;
+type sshdcpap_firmware_file, file_type;
+type tima_keystore_file, file_type, data_file_type;
+type app_library_file, file_type, data_file_type;
+type obb_apk_file, file_type, data_file_type;
+type app_efs_file, file_type;
+type bin_nv_data_efs_file, file_type;
+type dumplog_data_file, file_type, data_file_type;
+type efs_gsm_file, file_type;
+type emmcblk_device, file_type;
+type smd_cxm_qmi_device, file_type;
+type imei_efs_file, file_type;
+type mbin_device, file_type;
+type nv_core_efs_file, file_type;
+type sec_efs_file, file_type;
+type carrier_file, file_type;
+type uart_device, file_type;
+type cs_socket, file_type;
+type system_fifo, file_type;
+type genlock_device, file_type;
+type ss_conn_daemon_socket, file_type;
+type timerirq_device, file_type;
+type jack_socket, file_type;
+type usb_serial_device, file_type;
+type drsd_socket, file_type;
+type epm_socket, file_type;
+type mtp_socket, file_type;
+type dun_device, file_type;
+type frigate_socket, file_type;
+type tz_socket, file_type;
+type sem_device, file_type;
+type i2c_device, file_type;
+type icd_device, file_type;
+type usb_bus_device, file_type;
+type swap_device, file_type;
+type secure_storage_device, file_type;
