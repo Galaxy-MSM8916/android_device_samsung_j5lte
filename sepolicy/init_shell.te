@@ -1,23 +1,2 @@
 #============= init_shell ==============
 allow init_shell bluetooth_loader_exec:file execute_no_trans;
-allow init_shell at_distributor:dir getattr;
-allow init_shell at_distributor:file { read getattr open };
-allow init_shell connfwexe:dir getattr;
-allow init_shell ddexe:dir { read search open };
-allow init_shell ddexe:file getattr;
-allow init_shell firmware_file:dir { read search ioctl open getattr };
-allow init_shell firmware_file:file { read lock ioctl open getattr };
-allow init_shell fm_radio_device:chr_file { read lock getattr write ioctl open append };
-allow init_shell imei_efs_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
-allow init_shell imei_efs_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
-allow init_shell nfc:file { read getattr open };
-allow init_shell qmuxd:dir getattr;
-allow init_shell qmuxd:file { read getattr open };
-allow init_shell qseecom_device:chr_file { read lock getattr write ioctl open append };
-allow init_shell radio:dir getattr;
-allow init_shell radio:file { read getattr open };
-allow init_shell radio_device:chr_file { read lock getattr write ioctl open append };
-allow init_shell rild:dir { read open };
-allow init_shell rild:file { read open };
-allow init_shell sec-ril:dir getattr;
-allow init_shell tee:dir { read getattr open search };
