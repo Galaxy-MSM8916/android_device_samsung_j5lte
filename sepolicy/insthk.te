@@ -1,0 +1,42 @@
+#===============insthk====================
+type insthk, domain;
+type insthk_exec, exec_type, file_type;
+init_daemon_domain(insthk)
+net_domain(insthk)
+
+# To make VT call
+binder_use(insthk)
+
+allow insthk drm_efs_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow insthk drm_efs_file:file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow insthk drm_efs_file:lnk_file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow insthk firmware_file:file { read lock ioctl open getattr };
+allow insthk init:process sigchld;
+allow insthk insthk:appletalk_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow insthk insthk:capability { sys_nice chown ipc_lock dac_override };
+allow insthk insthk:dir { read search ioctl open getattr };
+allow insthk insthk:fd use;
+allow insthk insthk:fifo_file { read lock getattr write ioctl open append };
+allow insthk insthk:file { read lock getattr write ioctl open append };
+allow insthk insthk:ipc { unix_read setattr associate read create write getattr unix_write destroy };
+allow insthk insthk:key { search setattr read create write link view };
+allow insthk insthk:key_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow insthk insthk:lnk_file { read lock ioctl open getattr };
+allow insthk insthk:msg { receive send };
+allow insthk insthk:msgq { unix_read setattr associate read create write enqueue getattr unix_write destroy };
+allow insthk insthk:netlink_route_socket { nlmsg_write lock accept connect shutdown append create nlmsg_read write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow insthk insthk:netlink_selinux_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow insthk insthk:packet_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow insthk insthk:process { sigkill share getpgid signull setkeycreate siginh getattr setcurrent setrlimit rlimitinh fork getsession setexec setpgid setsched sigstop ptrace noatsecure setsockcreate setfscreate execheap sigchld execstack signal transition setcap execmem getcap getsched dyntransition };
+allow insthk insthk:rawip_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow insthk insthk:sem { unix_read setattr associate read create write getattr unix_write destroy };
+allow insthk insthk:shm { unix_read setattr associate read lock create write getattr unix_write destroy };
+allow insthk insthk:socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow insthk insthk:tcp_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind name_connect send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow insthk insthk:tun_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read attach_queue ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow insthk insthk:udp_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow insthk insthk:unix_dgram_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow insthk insthk:unix_stream_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow insthk insthk_exec:file { read open getattr entrypoint execute };
+allow insthk insthk_tmpfs:file { read write };
+allow insthk qseecom_device:chr_file { read lock getattr write ioctl open append };

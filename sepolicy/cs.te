@@ -1,0 +1,47 @@
+#===================cs========================
+type cs, domain;
+type cs_exec, exec_type, file_type;
+init_daemon_domain(cs)
+net_domain(cs)
+
+# To make VT call
+binder_use(cs)
+
+allow cs cs:appletalk_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow cs cs:capability sys_nice;
+allow cs cs:dir { read search ioctl open getattr };
+allow cs cs:fd use;
+allow cs cs:fifo_file { read lock getattr write ioctl open append };
+allow cs cs:file { read lock getattr write ioctl open append };
+allow cs cs:ipc { unix_read setattr associate read create write getattr unix_write destroy };
+allow cs cs:key { search setattr read create write link view };
+allow cs cs:key_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow cs cs:lnk_file { read lock ioctl open getattr };
+allow cs cs:msg { receive send };
+allow cs cs:msgq { unix_read setattr associate read create write enqueue getattr unix_write destroy };
+allow cs cs:netlink_route_socket { nlmsg_write lock accept connect shutdown append create nlmsg_read write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow cs cs:netlink_selinux_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow cs cs:packet_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow cs cs:process { sigkill share getpgid signull setkeycreate siginh getattr setcurrent setrlimit rlimitinh fork getsession setexec setpgid setsched sigstop ptrace noatsecure setsockcreate setfscreate execheap sigchld execstack signal transition setcap execmem getcap getsched dyntransition };
+allow cs cs:rawip_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow cs cs:sem { unix_read setattr associate read create write getattr unix_write destroy };
+allow cs cs:shm { unix_read setattr associate read lock create write getattr unix_write destroy };
+allow cs cs:socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow cs cs:tcp_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind name_connect send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow cs cs:tun_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read attach_queue ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow cs cs:udp_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow cs cs:unix_dgram_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow cs cs:unix_stream_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow cs cs_exec:file { read open getattr entrypoint execute };
+allow cs cs_socket:dir { write remove_name search open add_name };
+allow cs cs_socket:sock_file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow cs cs_tmpfs:file { read write };
+allow cs efs_file:dir { read search ioctl open getattr };
+allow cs efs_file:file { read lock ioctl open getattr };
+allow cs firmware_file:dir { read search ioctl open getattr };
+allow cs firmware_file:file { read lock ioctl open getattr };
+allow cs firmware_file:lnk_file { read lock ioctl open getattr };
+allow cs init:process sigchld;
+allow cs qseecom_device:chr_file { read lock getattr write ioctl open append };
+allow cs system_data_file:dir { rename search setattr read create reparent getattr write ioctl link rmdir remove_name unlink open add_name };
+allow cs system_data_file:file { rename setattr read lock create getattr write ioctl link unlink open append };

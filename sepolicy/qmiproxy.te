@@ -1,0 +1,42 @@
+#==========================qmiproxy===================================
+type qmiproxy, domain;
+type qmiproxy_exec, exec_type, file_type;
+init_daemon_domain(qmiproxy)
+net_domain(qmiproxy)
+
+# To make VT call
+binder_use(qmiproxy)
+
+allow qmiproxy diag_device:chr_file { read lock getattr write ioctl open append };
+allow qmiproxy init:process sigchld;
+allow qmiproxy init:unix_stream_socket connectto;
+allow qmiproxy property_socket:sock_file { write open append };
+allow qmiproxy qmiproxy:appletalk_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow qmiproxy qmiproxy:dir { read search ioctl open getattr };
+allow qmiproxy qmiproxy:fd use;
+allow qmiproxy qmiproxy:fifo_file { read lock getattr write ioctl open append };
+allow qmiproxy qmiproxy:file { read lock getattr write ioctl open append };
+allow qmiproxy qmiproxy:ipc { unix_read setattr associate read create write getattr unix_write destroy };
+allow qmiproxy qmiproxy:key { search setattr read create write link view };
+allow qmiproxy qmiproxy:key_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow qmiproxy qmiproxy:lnk_file { read lock ioctl open getattr };
+allow qmiproxy qmiproxy:msg { receive send };
+allow qmiproxy qmiproxy:msgq { unix_read setattr associate read create write enqueue getattr unix_write destroy };
+allow qmiproxy qmiproxy:netlink_route_socket { nlmsg_write lock accept connect shutdown append create nlmsg_read write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow qmiproxy qmiproxy:netlink_selinux_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow qmiproxy qmiproxy:packet_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow qmiproxy qmiproxy:process { sigkill share getpgid signull setkeycreate siginh getattr setcurrent setrlimit rlimitinh fork getsession setexec setpgid setsched sigstop ptrace noatsecure setsockcreate setfscreate execheap sigchld execstack signal transition setcap execmem getcap getsched dyntransition };
+allow qmiproxy qmiproxy:rawip_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow qmiproxy qmiproxy:sem { unix_read setattr associate read create write getattr unix_write destroy };
+allow qmiproxy qmiproxy:shm { unix_read setattr associate read lock create write getattr unix_write destroy };
+allow qmiproxy qmiproxy:socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow qmiproxy qmiproxy:tcp_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind name_connect send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow qmiproxy qmiproxy:tun_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read attach_queue ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow qmiproxy qmiproxy:udp_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto node_bind };
+allow qmiproxy qmiproxy:unix_dgram_socket { lock accept connect shutdown append create write relabelfrom getattr getopt listen setopt read ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow qmiproxy qmiproxy:unix_stream_socket { lock accept connect shutdown append connectto create write relabelfrom getattr getopt listen acceptfrom setopt read newconn ioctl recv_msg name_bind send_msg setattr bind recvfrom sendto relabelto };
+allow qmiproxy qmiproxy_exec:file { read open getattr entrypoint execute };
+allow qmiproxy qmiproxy_tmpfs:file { read write };
+allow qmiproxy qmuxd_socket:dir { write remove_name search open add_name };
+allow qmiproxy qmuxd_socket:sock_file { rename setattr read lock create getattr write ioctl link unlink open append };
+allow qmiproxy radio_prop:property_service set;
