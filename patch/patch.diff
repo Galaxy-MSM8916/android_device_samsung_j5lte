@@ -1,15 +1,17 @@
-diff -ur a/frameworks/base/media/jni/android_mtp_MtpServer.cpp b/frameworks/base/media/jni/android_mtp_MtpServer.cpp
---- a/frameworks/base/media/jni/android_mtp_MtpServer.cpp	2016-08-25 00:31:48.620239171 -0400
-+++ b/frameworks/base/media/jni/android_mtp_MtpServer.cpp	2016-08-25 00:31:16.613558876 -0400
-@@ -59,7 +59,7 @@
- static void
- android_mtp_MtpServer_setup(JNIEnv *env, jobject thiz, jobject javaDatabase, jboolean usePtp)
- {
--    int fd = open("/dev/mtp_usb", O_RDWR);
-+    int fd = open("/dev/usb_mtp_gadget", O_RDWR);
-     if (fd >= 0) {
-         MtpServer* server = new MtpServer(fd, getMtpDatabase(env, javaDatabase),
-                 usePtp, AID_MEDIA_RW, 0664, 0775);
+diff --git a/frameworks/base/data/keyboards/Generic.kl b/frameworks/base/data/keyboards/Generic.kl
+index f10ba96..ae84296 100644
+--- a/frameworks/base/data/keyboards/Generic.kl
++++ b/frameworks/base/data/keyboards/Generic.kl
+@@ -247,6 +247,9 @@ key 224   BRIGHTNESS_DOWN
+ key 225   BRIGHTNESS_UP
+ key 226   HEADSETHOOK
+ 
++# samsung
++key 254   APP_SWITCH
++
+ key 256   BUTTON_1
+ key 257   BUTTON_2
+ key 258   BUTTON_3
 diff -ur a/packages/services/Telecomm/src/com/android/server/telecom/CallAudioManager.java b/packages/services/Telecomm/src/com/android/server/telecom/CallAudioManager.java
 --- a/packages/services/Telecomm/src/com/android/server/telecom/CallAudioManager.java	Wed Apr 20 08:50:20 2016
 +++ b/packages/services/Telecomm/src/com/android/server/telecom/CallAudioManager.java	Thu May 12 01:31:40 2016
