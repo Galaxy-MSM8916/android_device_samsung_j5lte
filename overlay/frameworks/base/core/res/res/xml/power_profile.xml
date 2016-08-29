@@ -18,24 +18,28 @@
         <value>4</value>
     </array>
     <array name="cpu.speeds">
+        <value>1209600</value>
         <value>1190400</value>
+        <value>1152000</value>
         <value>1094400</value>
         <value>998400</value>
         <value>800000</value>
-        <value>600000</value>
-        <value>500000</value>
+        <value>533330</value>
         <value>400000</value>
+        <value>200000</value>
     </array>
     <item name="cpu.idle">2.3</item>
     <item name="wakeup.power">0.15</item>
     <array name="cpu.active">
         <value>169</value>
+        <value>165</value>
+        <value>150</value>
         <value>141</value>
         <value>129</value>
         <value>94</value>
         <value>70</value>
         <value>58</value>
-        <value>46</value>
+        <value>40</value>
     </array>
     <item name="battery.capacity">2600</item>
     <array name="wifi.batchedscan">
