@@ -198,7 +198,6 @@ BOARD_SEPOLICY_UNION += \
 	system_server.te \
 	time_daemon.te \
 	sysinit.te \
-	system_app.te \
 	mm-qcamerad.te \
 	file_contexts \
 	init_shell.te \
