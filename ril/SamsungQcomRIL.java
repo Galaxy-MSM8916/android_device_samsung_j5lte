@@ -30,6 +30,7 @@ import com.android.internal.telephony.uicc.IccCardApplicationStatus;
 import com.android.internal.telephony.uicc.IccCardStatus;
 import java.util.ArrayList;
 import java.util.Collections;
+import android.media.AudioManager;
 
 /**
  * Qualcomm RIL for Samsung MSM8916 (3G) devices
@@ -40,14 +41,18 @@ public class SamsungQcomRIL extends RIL {
     private static final int RIL_REQUEST_DIAL_EMERGENCY = 10001;
     private static final int RIL_UNSOL_ON_SS_LL = 11055;
 
+    private AudioManager mAudioManager;
+
     public SamsungQcomRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription, null);
+        mAudioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
         mQANElements = 6;
     }
 
     public SamsungQcomRIL(Context context, int preferredNetworkType,
             int cdmaSubscription, Integer instanceId) {
         super(context, preferredNetworkType, cdmaSubscription, instanceId);
+        mAudioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
         mQANElements = 6;
     }
 
@@ -369,5 +374,15 @@ public class SamsungQcomRIL extends RIL {
             response[3] = "2";
         }
         return response;
+    }
+    
+    private void setWbAmr(int state) {
+        if (state == 1) {
+            Rlog.d(RILJ_LOG_TAG, "setWbAmr(): setting audio parameter - wb_amr=on");
+            mAudioManager.setParameters("wb_amr=on");
+        }else if (state == 0) {
+            Rlog.d(RILJ_LOG_TAG, "setWbAmr(): setting audio parameter - wb_amr=off");
+            mAudioManager.setParameters("wb_amr=off");
+        }
     }
 }
