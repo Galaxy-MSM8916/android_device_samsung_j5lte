@@ -74,12 +74,12 @@ public class ScreenStateReceiver extends BroadcastReceiver implements SensorEven
             if(DEBUG){
                 Log.d(TAG, "Proximity: screen off");
             }
-            //enableDevices(false);
+            enableDevices(false);
         } else {
             if(DEBUG){
                 Log.d(TAG, "Proximity: screen on");
             }
-            ///enableDevices(true);
+            enableDevices(true);
         }
     }
 
@@ -91,13 +91,13 @@ public class ScreenStateReceiver extends BroadcastReceiver implements SensorEven
             // Turn on touch input
             ret = write_sysfs(Constants.TS_PATH, true);
             if(DEBUG){
-               Log.d(TAG, "Enabled touchscreen, success? " + ret);
+               Log.d(TAG, "Enabled touchscreen successfully? :" + ret);
             }   
         } else {
             // Turn off touch input
             ret = write_sysfs(Constants.TS_PATH, false);
             if(DEBUG){
-                Log.d(TAG, "Disabled touchscreen, success? " + ret);
+                Log.d(TAG, "Disabled touchscreen successfully? :" + ret);
             }   
         }
     }
@@ -112,7 +112,7 @@ public class ScreenStateReceiver extends BroadcastReceiver implements SensorEven
             fos.write(bytes);
             fos.close();
         } catch (Exception e) {
-            Log.e(TAG, "Fail: " + e.getLocalizedMessage());
+            Log.e(TAG, "Failure: " + e.getLocalizedMessage());
             return false;
         }
         
