@@ -252,6 +252,8 @@ on post-fs-data
     mkdir /data/misc/qsee 0770 system system
     mkdir /data/tee 0770 system system
     
+    mkdir /data/radio 0770 radio radio
+    
     # we will remap this as /mnt/sdcard with the sdcard fuse tool
     mkdir /data/misc/camera 0770 camera camera
 
