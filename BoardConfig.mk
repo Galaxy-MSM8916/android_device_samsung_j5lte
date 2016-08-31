@@ -64,6 +64,7 @@ BOARD_HAVE_QCOM_FM := true
 #sec_s3fwrn5 <- NFC HAL
 
 # CMHW
+BOARD_USES_CYANOGEN_HARDWARE := true
 BOARD_HARDWARE_CLASS += $(LOCAL_PATH)/cmhw
 
 # Crypto
