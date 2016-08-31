@@ -298,7 +298,7 @@ PRODUCT_COPY_FILES += \
 
 # Power HAL
 PRODUCT_PACKAGES += \
-	power.msm8916
+	power.qcom
 
 # Prebuilt
 PRODUCT_COPY_FILES += \
