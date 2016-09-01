@@ -1,3 +1,0 @@
-type qseecom_device, dev_type;
-allow tee system_prop:property_service set;
-allow tee vfat:file r_file_perms;
