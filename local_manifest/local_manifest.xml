@@ -15,5 +15,6 @@
   <project path="android/external/iwconfig" name="vince2678/android_external_iwconfig" remote="github" revision="cm-12.1"/>
   <project path="kernel/samsung/grandprime" name="vince2678/android_kernel_samsung_grandprime" remote="github" revision="cm-12.1"/>
   <project path="device/samsung/qcom-common" name="CyanogenMod/android_device_samsung_qcom-common" groups="device" />
-
+  <project path="hardware/samsung" name="CyanogenMod/android_hardware_samsung-common" />
+  
 </manifest>
