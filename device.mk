@@ -7,7 +7,7 @@ $(call inherit-product, device/samsung/gprimelte-common/device-common.mk)
 LOCAL_PATH := device/samsung/gprimeltecan
 
 # Common overlay
-DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimeltecan/overlay
+#DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimeltecan/overlay
 
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/dt.img:dt.img
