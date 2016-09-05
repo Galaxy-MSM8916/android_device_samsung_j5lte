@@ -23,3 +23,4 @@ Check the [`local_manifest`](./local_manifest) directory
 ## Credits:
 - [x] Grand Prime SM-G530FZ (codename:fortuna) contributors (https://github.com/GrandPrime)
 - [x] Grand Prime SM-G530H (codename:fortuna3g) contributors (https://github.com/ZIM555)
+- [x] ViperFX EQ [ by `ViPER520` ] (http://vipersaudio.com)
