@@ -19,6 +19,3 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE  := 4942966784
 
 # Misc.
 TARGET_SYSTEM_PROP                              := $(LOCAL_PATH)/system.prop
-
-# Releasetools
-TARGET_RELEASETOOLS_EXTENSIONS                  := $(LOCAL_PATH)
