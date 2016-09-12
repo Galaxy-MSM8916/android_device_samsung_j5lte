@@ -17,7 +17,7 @@ $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := gprimeltecan
 PRODUCT_NAME := cm_gprimeltecan
-PRODUCT_BRAND := samsung
+PRODUCT_BRAND := Samsung
 PRODUCT_MODEL := SM-G530W
 PRODUCT_MANUFACTURER := Samsung
 PRODUCT_CHARACTERISTICS := phone
