@@ -25,5 +25,5 @@ PRODUCT_DEVICE := gprimeltecan
 PRODUCT_NAME := full_gprimeltecan
 PRODUCT_BRAND := samsung
 PRODUCT_MODEL := SM-G530W
-PRODUCT_MANUFACTURER := Samsung
+PRODUCT_MANUFACTURER := samsung
 
