@@ -1,6 +1,10 @@
 # system.prop for msm8916
 #
 
+# KSM and ZRAM
+ro.config.ksm=false
+ro.config.zram=false
+
 # Evolution RIL (8xxx)
 rild.libpath=/system/lib/libsec-ril.so
 rild.libargs=-d /dev/smd0
