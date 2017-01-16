@@ -1,18 +1,8 @@
 
-# Release name
-PRODUCT_RELEASE_NAME := Samsung Galaxy Grand Prime
-
-# Boot animation
-TARGET_SCREEN_WIDTH := 540
-TARGET_SCREEN_HEIGHT := 960
+# Inherit from common
+$(call inherit-product, device/samsung/gprimelte-common/cm.mk)
 
 $(call inherit-product, device/samsung/gprimeltecan/full_gprimeltecan.mk)
-
-# Enhanced NFC
-$(call inherit-product, vendor/cm/config/nfc_enhanced.mk)
-
-# Inherit some common CM stuff.
-$(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := gprimeltecan
