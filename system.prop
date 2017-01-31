@@ -117,3 +117,4 @@ persist.timed.enable=true
 # Data modules (For evolution RIL model)
 ro.use_data_netmgrd=false
 persist.data.netmgrd.qos.enable=false
+ro.vendor.extension_library=libqti-perfd-client.so
