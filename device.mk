@@ -9,9 +9,6 @@ LOCAL_PATH := device/samsung/gprimeltecan
 # Common overlay
 DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimeltecan/overlay
 
-PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/dt.img:dt.img
-
 # Audio configuration
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/audio/Bluetooth_cal.acdb:system/etc/Bluetooth_cal.acdb \
