@@ -1,13 +1,13 @@
 #Inherit from vendor
-$(call inherit-product-if-exists, vendor/samsung/gprimeltecan/gprimeltecan-vendor.mk)
+$(call inherit-product-if-exists, vendor/samsung/gprimelte/gprimelte-vendor.mk)
 
 # Inherit from common
 $(call inherit-product, device/samsung/gprimelte-common/device-common.mk)
 
-LOCAL_PATH := device/samsung/gprimeltecan
+LOCAL_PATH := device/samsung/gprimelte
 
 # Common overlay
-DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimeltecan/overlay
+DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimelte/overlay
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
@@ -35,9 +35,3 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/nfc/libnfc-sec-hal.conf:system/etc/libnfc-sec-hal.conf \
 	$(LOCAL_PATH)/nfc/libnfc-sec.conf:system/etc/libnfc-brcm.conf
-
-# Properties
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.product.model=SM-G530W \
-	ro.product.device=gprimeltecan
-

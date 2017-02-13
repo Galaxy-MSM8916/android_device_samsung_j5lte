@@ -1,13 +1,15 @@
 # Inherit from common
 include device/samsung/gprimelte-common/BoardConfigCommon.mk
 
-LOCAL_PATH := device/samsung/gprimeltecan
+LOCAL_PATH := device/samsung/gprimelte
 
 # Asserts
-TARGET_OTA_ASSERT_DEVICE := gprimeltecan,gprimeltevl,samsung_sm_g530w,g530w
+TARGET_OTA_ASSERT_DEVICE := gprimelte,gprimeltecan,gprimeltetmo,gprimeltemtr
 
 # Init
-TARGET_LIBINIT_DEFINES_FILE := $(LOCAL_PATH)/init/init_gprimeltecan.cpp
+TARGET_UNIFIED_DEVICE := true
+TARGET_INIT_VENDOR_LIB := libinit_gprimelte
+TARGET_LIBINIT_DEFINES_FILE := $(LOCAL_PATH)/init/init_gprimelte.cpp
 
 # Kernel
 TARGET_KERNEL_VARIANT_CONFIG := msm8916_sec_fortuna_can_defconfig
