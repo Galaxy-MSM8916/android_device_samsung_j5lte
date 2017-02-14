@@ -36,46 +36,43 @@
 #include "log.h"
 #include "util.h"
 
-void vendor_load_properties(void)
+void init_target_properties(void)
 {
-    char bootloader[PROP_VALUE_MAX];
-    int rc;
+    std::string bootloader = property_get("ro.bootloader");
 
-    rc = property_get("ro.bootloader", bootloader);
-    if (!rc) {
-	property_set("ro.product.model", "SM-XXXX");
-	property_set("ro.product.device", "unknown");
-        property_set("ro.build.description", "lineage_unknown-userdebug 6.0.1 MOB31K 4dae919457 test-keys");
-        property_set("ro.build.display.id", "lineage_unknown-userdebug 6.0.1 MOB31K 4dae919457 test-keys");
-        property_set("ro.build.fingerprint", "samsung/lineage_unknown/unknown:6.0.1/MOB31K/4dae919457:userdebug/test-keys");
-	}
-    else if (bootloader[4] == 'W') {
+    if (bootloader.find("G530W") == 0) {
         property_set("ro.build.product", "gprimeltecan");
         property_set("ro.product.device", "gprimeltecan");
         property_set("ro.cm.device", "gprimeltecan");
         property_set("ro.product.model", "SM-G530W");
-        property_set("ro.build.description", "lineage_gprimeltecan-userdebug 6.0.1 MOB31K 4dae919457 test-keys");
-        property_set("ro.build.display.id", "lineage_gprimeltecan-userdebug 6.0.1 MOB31K 4dae919457 test-keys");
-        property_set("ro.build.fingerprint", "samsung/lineage_gprimeltecan/gprimeltecan:6.0.1/MOB31K/4dae919457:userdebug/test-keys");
-	}
-    else if (bootloader[4] == 'T') {
-		if (bootloader[5] == '1') {
-			property_set("ro.build.product", "gprimeltemtr");
-			property_set("ro.product.device", "gprimeltemtr");
-			property_set("ro.cm.device", "gprimeltemtr");
-			property_set("ro.product.model", "SM-G530T1");
-			property_set("ro.build.description", "lineage_gprimeltemtr-userdebug 6.0.1 MOB31K 4dae919457 test-keys");
-			property_set("ro.build.display.id", "lineage_gprimeltemtr-userdebug 6.0.1 MOB31K 4dae919457 test-keys");
-			property_set("ro.build.fingerprint", "samsung/lineage_gprimeltemtr/gprimeltemtr:6.0.1/MOB31K/4dae919457:userdebug/test-keys");
-		}
-		else {
-			property_set("ro.build.product", "gprimeltetmo");
-			property_set("ro.product.device", "gprimeltetmo");
-			property_set("ro.cm.device", "gprimeltetmo");
-			property_set("ro.product.model", "SM-G530T");
-			property_set("ro.build.description", "lineage_gprimeltetmo-userdebug 6.0.1 MOB31K 4dae919457 test-keys");
-			property_set("ro.build.display.id", "lineage_gprimeltetmo-userdebug 6.0.1 MOB31K 4dae919457 test-keys");
-			property_set("ro.build.fingerprint", "samsung/lineage_gprimeltetmo/gprimeltetmo:6.0.1/MOB31K/4dae919457:userdebug/test-keys");
-		}
-	}
+        property_set("ro.build.description", "lineage_gprimeltecan-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
+        property_set("ro.build.display.id", "lineage_gprimeltecan-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
+        property_set("ro.build.fingerprint", "samsung/lineage_gprimeltecan/gprimeltecan:7.1.1/NMF26V/4dae919457:userdebug/test-keys");
+    }
+    else if (bootloader.find("G530T1") == 0) {
+        property_set("ro.build.product", "gprimeltemtr");
+        property_set("ro.product.device", "gprimeltemtr");
+        property_set("ro.cm.device", "gprimeltemtr");
+        property_set("ro.product.model", "SM-G530T1");
+        property_set("ro.build.description", "lineage_gprimeltemtr-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
+        property_set("ro.build.display.id", "lineage_gprimeltemtr-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
+        property_set("ro.build.fingerprint", "samsung/lineage_gprimeltemtr/gprimeltemtr:7.1.1/NMF26V/4dae919457:userdebug/test-keys");
+    }
+    else if (bootloader.find("G530T") == 0) {
+        property_set("ro.build.product", "gprimeltetmo");
+        property_set("ro.product.device", "gprimeltetmo");
+        property_set("ro.cm.device", "gprimeltetmo");
+        property_set("ro.product.model", "SM-G530T");
+        property_set("ro.build.description", "lineage_gprimeltetmo-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
+        property_set("ro.build.display.id", "lineage_gprimeltetmo-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
+        property_set("ro.build.fingerprint", "samsung/lineage_gprimeltetmo/gprimeltetmo:7.1.1/NMF26V/4dae919457:userdebug/test-keys");
+    }
+    std::string device = property_get("ro.product.device");
+    INFO("Found bootloader id %s setting build properties for %s device\n", bootloader.c_str(), device.c_str());
+}
+
+void vendor_load_properties(void)
+{
+    /* set the device properties */
+    init_target_properties();
 }
