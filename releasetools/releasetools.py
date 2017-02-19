@@ -16,6 +16,16 @@
 import common
 import re
 
+"""Custom OTA commands for gprimelte devices"""
+
+def FullOTA_InstallEnd(info):
+    info.script.Print("Detecting device variant and updating build.prop ...")
+    info.script.AppendExtra('ifelse(is_substring("G530W", getprop("ro.bootloader")), run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltecan/g /system/build.prop"));')
+    info.script.AppendExtra('ifelse(is_substring("G530T1", getprop("ro.bootloader")), run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltemtr/g /system/build.prop"));')
+    info.script.AppendExtra('ifelse(is_substring("G530T", getprop("ro.bootloader")), run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltetmo/g /system/build.prop"));')
+#    info.script.AppendExtra('ifelse(is_substring("P605S", getprop("ro.bootloader")), run_program("/sbin/sh", "-c", "busybox cp /system/lib/gsm/* /system/lib/"));')
+#    info.script.AppendExtra('delete_recursive("/system/lib/gsm/");')
+
 def FullOTA_PostValidate(info):
     # run e2fsck
     info.script.Print("Checking the file system on /system...")
