@@ -43,28 +43,22 @@ void init_target_properties(void)
     if (bootloader.find("G530W") == 0) {
         property_set("ro.build.product", "gprimeltecan");
         property_set("ro.product.device", "gprimeltecan");
-        property_set("ro.cm.device", "gprimeltecan");
         property_set("ro.product.model", "SM-G530W");
         property_set("ro.build.description", "lineage_gprimeltecan-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
-        property_set("ro.build.display.id", "lineage_gprimeltecan-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
         property_set("ro.build.fingerprint", "samsung/lineage_gprimeltecan/gprimeltecan:7.1.1/NMF26V/4dae919457:userdebug/test-keys");
     }
     else if (bootloader.find("G530T1") == 0) {
         property_set("ro.build.product", "gprimeltemtr");
         property_set("ro.product.device", "gprimeltemtr");
-        property_set("ro.cm.device", "gprimeltemtr");
         property_set("ro.product.model", "SM-G530T1");
         property_set("ro.build.description", "lineage_gprimeltemtr-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
-        property_set("ro.build.display.id", "lineage_gprimeltemtr-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
         property_set("ro.build.fingerprint", "samsung/lineage_gprimeltemtr/gprimeltemtr:7.1.1/NMF26V/4dae919457:userdebug/test-keys");
     }
     else if (bootloader.find("G530T") == 0) {
         property_set("ro.build.product", "gprimeltetmo");
         property_set("ro.product.device", "gprimeltetmo");
-        property_set("ro.cm.device", "gprimeltetmo");
         property_set("ro.product.model", "SM-G530T");
         property_set("ro.build.description", "lineage_gprimeltetmo-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
-        property_set("ro.build.display.id", "lineage_gprimeltetmo-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
         property_set("ro.build.fingerprint", "samsung/lineage_gprimeltetmo/gprimeltetmo:7.1.1/NMF26V/4dae919457:userdebug/test-keys");
     }
     std::string device = property_get("ro.product.device");
