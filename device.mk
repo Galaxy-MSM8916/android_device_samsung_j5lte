@@ -36,5 +36,8 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/nfc/libnfc-sec-hal.conf:system/etc/libnfc-sec-hal.conf \
 	$(LOCAL_PATH)/nfc/libnfc-sec.conf:system/etc/libnfc-brcm.conf
 
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.telephony.default_network=9
+
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	persist.eons.enabled=true
