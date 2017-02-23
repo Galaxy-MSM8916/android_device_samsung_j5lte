@@ -24,15 +24,21 @@ def FullOTA_InstallEnd(info):
     info.script.AppendExtra('ifelse(is_mounted("/system"), ui_print("/system is mounted."), mount("ext4", "MTD", "system", "/system"));')
 
     info.script.Print("Detecting device variant ...")
-    if is_substring("G530W", getprop("ro.bootloader")):
-        info.script.Print("Device is SM-G530W. Updating build.prop ...");
-        info.script.AppendExtra('run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltecan/g /system/build.prop");')
-    elif is_substring("G530T1", getprop("ro.bootloader")):
-        info.script.Print("Device is SM-G530T1. Updating build.prop ...");
-        info.script.AppendExtra('run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltemtr/g /system/build.prop");')
-    else:
-        info.script.Print("Device is SM-G530T. Updating build.prop ...");
-        info.script.AppendExtra('run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltetmo/g /system/build.prop");')
+
+    # SM-G530W
+    info.script.AppendExtra('ifelse(is_substring("G530W", getprop("ro.bootloader")), ui_print("Device is SM-G530W. Updating build.prop ..."));')
+    info.script.AppendExtra('ifelse(is_substring("G530W", getprop("ro.bootloader")), run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltecan/g", "/system/build.prop"));')
+
+    # SM-G530T1
+    info.script.AppendExtra('ifelse(is_substring("G530T1", getprop("ro.bootloader")), ui_print("Device is SM-G530T1. Updating build.prop ..."));')
+    info.script.AppendExtra('ifelse(is_substring("G530T1", getprop("ro.bootloader")), run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltemtr/g", "/system/build.prop"));')
+
+    # SM-G530T
+    info.script.AppendExtra('ifelse(is_substring("G530TU", getprop("ro.bootloader")), ui_print("Device is SM-G530T. Updating build.prop ..."));')
+    info.script.AppendExtra('ifelse(is_substring("G530TU", getprop("ro.bootloader")), run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltetmo/g", "/system/build.prop"));')
+
+    info.script.AppendExtra('ifelse(is_substring("G530TT", getprop("ro.bootloader")), ui_print("Device is SM-G530T. Updating build.prop ..."));')
+    info.script.AppendExtra('ifelse(is_substring("G530TT", getprop("ro.bootloader")), run_program("/sbin/sed", "-i", "s/gprimelte/gprimeltetmo/g", "/system/build.prop"));')
 
 def FullOTA_PostValidate(info):
     # run e2fsck
