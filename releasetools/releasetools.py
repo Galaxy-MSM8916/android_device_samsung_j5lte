@@ -21,7 +21,7 @@ import re
 def FullOTA_InstallEnd(info):
 
     info.script.Print("Mounting /system...")
-    info.script.AppendExtra('ifelse(is_mounted("/system"), ui_print("/system is mounted."), mount("ext4", "MTD", "system", "/system"));')
+    info.script.AppendExtra('ifelse(is_mounted("/system"), ui_print("/system is mounted."), run_program("/sbin/mount", "/system"));')
 
     info.script.Print("Detecting device variant ...")
 
