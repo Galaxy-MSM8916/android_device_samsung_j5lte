@@ -20,9 +20,8 @@ import re
 
 def FullOTA_InstallEnd(info):
 
-    if ~ is_mounted("/system"):
-        info.script.Print("Mounting /system...")
-        mount("ext4", "MTD", "system", "/system")
+    info.script.Print("Mounting /system...")
+    info.script.AppendExtra('ifelse(is_mounted("/system"), ui_print("/system is mounted."), mount("ext4", "MTD", "system", "/system"));')
 
     info.script.Print("Detecting device variant ...")
     if is_substring("G530W", getprop("ro.bootloader")):
