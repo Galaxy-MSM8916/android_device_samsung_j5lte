@@ -27,6 +27,10 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/media/media_codecs.xml:system/etc/media_codecs.xml \
 	$(LOCAL_PATH)/media/media_profiles.xml:system/etc/media_profiles.xml
 
+# Variant blobs script
+ PRODUCT_COPY_FILES += \
+	$(LOCAL_PATH)/releasetools/copy_variant_blobs.sh:install/bin/copy_variant_blobs.sh
+
 #NFC
 PRODUCT_PACKAGES += \
 	NfcNci
