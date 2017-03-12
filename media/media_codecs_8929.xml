@@ -320,6 +320,42 @@ ___________________________________________________
             <Limit name="bitrate" range="1-20000000" />
             <Feature name="adaptive-playback" />
         </MediaCodec>
+        <!-- Video Software  -->
+        <MediaCodec name="OMX.SEC.h263.sw.dec" type="video/3gpp" >
+            <Quirk name="decoder-ignores-streamcorrupt-error" />
+        </MediaCodec>
+        <MediaCodec name="OMX.SEC.avc.sw.dec" type="video/avc" >
+            <Quirk name="decoder-ignores-streamcorrupt-error" />
+            <Limit name="size" min="64x64" max="2048x2048" />
+            <Feature name="adaptive-playback" />
+        </MediaCodec>
+        <MediaCodec name="OMX.SEC.mpeg4.sw.dec" type="video/mp4v-es" >
+            <Quirk name="decoder-ignores-streamcorrupt-error" />
+        </MediaCodec>
+        <MediaCodec name="OMX.SEC.vc1.sw.dec" >
+            <Type name="video/x-ms-wmv"/>
+            <Type name="video/wvc1"/>
+            <Quirk name="decoder-ignores-streamcorrupt-error" />
+        </MediaCodec>
+        <MediaCodec name="OMX.SEC.wmv7.dec" type="video/x-ms-wmv7" >
+            <Quirk name="decoder-ignores-streamcorrupt-error" />
+        </MediaCodec>
+        <MediaCodec name="OMX.SEC.wmv8.dec" type="video/x-ms-wmv8" >
+            <Quirk name="decoder-ignores-streamcorrupt-error" />
+        </MediaCodec>
+        <MediaCodec name="OMX.SEC.mp43.dec" type="video/mp43" >
+        <Quirk name="decoder-ignores-streamcorrupt-error" />
+        </MediaCodec>
+        <MediaCodec name="OMX.SEC.hevc.sw.dec" type="video/hevc" >
+            <Quirk name="decoder-ignores-streamcorrupt-error" />
+            <Limit name="size" min="64x64" max="2048x2048" />
+            <Feature name="adaptive-playback" />
+        </MediaCodec>
+        <MediaCodec name="OMX.SEC.vp8.dec" type="video/x-vnd.on2.vp8" >
+            <Quirk name="decoder-ignores-streamcorrupt-error" />
+            <Limit name="size" min="64x64" max="2048x2048" />
+            <Feature name="adaptive-playback" />
+        </MediaCodec>        
     </Decoders>
     <Include href="media_codecs_google_video.xml" />
 </MediaCodecs>

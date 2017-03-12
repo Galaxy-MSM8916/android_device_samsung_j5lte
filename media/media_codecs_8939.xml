@@ -362,9 +362,6 @@ _________________________________________________________________
             <Limit name="size" min="64x64" max="2048x2048" />
             <Feature name="adaptive-playback" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.h263sr.dec" type="video/sorenson" >
-            <Quirk name="decoder-ignores-streamcorrupt-error" />
-        </MediaCodec>
         <MediaCodec name="OMX.SEC.vp8.dec" type="video/x-vnd.on2.vp8" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
             <Limit name="size" min="64x64" max="2048x2048" />

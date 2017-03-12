@@ -11,7 +11,8 @@ DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimelte/overlay
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/audio/mixer_paths.xml:system/etc/mixer_paths.xml
+	$(LOCAL_PATH)/audio/base/mixer_paths.xml:system/etc/mixer_paths.xml \
+	$(LOCAL_PATH)/audio/spr/mixer_paths.xml:system/blobs/spr/etc/mixer_paths.xml
 
 # Media configurations
 PRODUCT_COPY_FILES += \
