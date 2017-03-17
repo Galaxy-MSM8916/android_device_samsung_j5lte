@@ -25,10 +25,6 @@ PRODUCT_COPY_FILES += \
  PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/releasetools/copy_variant_blobs.sh:install/bin/copy_variant_blobs.sh
 
-#NFC
-PRODUCT_PACKAGES += \
-	NfcNci
-
 # NFC prebuilt files
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/nfc/libnfc-sec-hal.conf:system/etc/libnfc-sec-hal.conf \
