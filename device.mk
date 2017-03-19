@@ -21,9 +21,10 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/media/media_codecs.xml:system/etc/media_codecs.xml \
 	$(LOCAL_PATH)/media/media_profiles.xml:system/etc/media_profiles.xml
 
-# Variant blobs script
+# OTA scripts
  PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/releasetools/copy_variant_blobs.sh:install/bin/copy_variant_blobs.sh
+	$(LOCAL_PATH)/releasetools/copy_variant_blobs.sh:install/bin/copy_variant_blobs.sh \
+	$(LOCAL_PATH)/releasetools/update_baseband.sh:install/bin/update_baseband.sh
 
 # NFC prebuilt files
 PRODUCT_COPY_FILES += \
@@ -35,3 +36,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	persist.eons.enabled=true
+
+# Copy baseband firmware
+$(call inherit-product-if-exists, vendor/samsung/radio/G530T1UVS2AQA2/baseband.mk)
+$(call inherit-product-if-exists, vendor/samsung/radio/G530TUVS2AQA2/baseband.mk)
+$(call inherit-product-if-exists, vendor/samsung/radio/G530WVLS2AQB2/baseband.mk)
