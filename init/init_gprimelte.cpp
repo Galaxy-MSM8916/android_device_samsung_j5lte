@@ -36,6 +36,24 @@
 #include "log.h"
 #include "util.h"
 
+void cdma_properties(char const *operator_alpha,
+        char const *operator_numeric,
+        char const *default_network)
+{
+    /* Dynamic CDMA Properties */
+    property_set("ro.cdma.home.operator.alpha", operator_alpha);
+    property_set("ro.cdma.home.operator.numeric", operator_numeric);
+    property_set("ro.telephony.default_network", default_network);
+
+    /* Static CDMA Properties */
+    property_set("ril.subscription.types", "NV,RUIM");
+    property_set("ro.telephony.default_cdma_sub", "0");
+    property_set("ro.telephony.get_imsi_from_sim", "true");
+    property_set("ro.telephony.ril.config", "newDriverCallU,newDialCode");
+    property_set("telephony.lteOnCdmaDevice", "1");
+}
+
+
 void init_target_properties(void)
 {
     std::string bootloader = property_get("ro.bootloader");
@@ -66,14 +84,12 @@ void init_target_properties(void)
         property_set("ro.product.device", "gprimeltespr");
         property_set("ro.product.model", "SM-G530P");
 	/* radio properties */
-        property_set("telephony.lteOnCdmaDevice", "1");
+	cdma_properties("Chameleon", "310000", "10");
         property_set("persist.radio.snapshot_enabled", "1");
         property_set("persist.radio.snapshot_timer", "22");
         property_set("persist.radio.sib16_support", "1");
         property_set("ro.config.combined_signal", "true");
         property_set("ro.ril.ecclist", "911,#911,*911");
-        property_set("ro.cdma.default_numeric", "310000");
-        property_set("ro.cdma.default_alpha", "Chameleon");
 	/* end radio properties */
         property_set("ro.build.description", "lineage_gprimeltespr-userdebug 7.1.1 NMF26V 4dae919457 test-keys");
         property_set("ro.build.fingerprint", "samsung/lineage_gprimeltespr/gprimeltespr:7.1.1/NMF26V/4dae919457:userdebug/test-keys");
