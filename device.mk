@@ -21,11 +21,6 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/media/media_codecs.xml:system/etc/media_codecs.xml \
 	$(LOCAL_PATH)/media/media_profiles.xml:system/etc/media_profiles.xml
 
-# NFC prebuilt files
-PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/nfc/libnfc-sec-hal.conf:system/etc/libnfc-sec-hal.conf \
-	$(LOCAL_PATH)/nfc/libnfc-sec.conf:system/etc/libnfc-brcm.conf
-
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.telephony.default_network=10
 
