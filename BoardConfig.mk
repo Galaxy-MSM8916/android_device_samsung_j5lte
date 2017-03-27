@@ -11,9 +11,6 @@ TARGET_UNIFIED_DEVICE := true
 TARGET_INIT_VENDOR_LIB := libinit_gprimelte
 TARGET_LIBINIT_DEFINES_FILE := $(LOCAL_PATH)/init/init_gprimelte.cpp
 
-# Release Tools
-TARGET_RELEASETOOLS_EXTENSIONS := $(LOCAL_PATH)/releasetools
-
 # Kernel
 TARGET_KERNEL_VARIANT_CONFIG := msm8916_sec_fortuna_can_defconfig
 
