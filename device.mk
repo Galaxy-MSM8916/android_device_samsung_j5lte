@@ -6,6 +6,9 @@ $(call inherit-product, device/samsung/gprimelte-common/device-common.mk)
 
 LOCAL_PATH := device/samsung/gprimelte
 
+# System properties
+-include $(LOCAL_PATH)/system_prop.mk
+
 # Common overlay
 DEVICE_PACKAGE_OVERLAYS += device/samsung/gprimelte/overlay
 
@@ -20,12 +23,6 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/media/media_codecs_8939.xml:system/etc/media_codecs_8939.xml \
 	$(LOCAL_PATH)/media/media_codecs.xml:system/etc/media_codecs.xml \
 	$(LOCAL_PATH)/media/media_profiles.xml:system/etc/media_profiles.xml
-
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.telephony.default_network=10
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	persist.eons.enabled=true
 
 # Copy baseband firmware
 $(call inherit-product-if-exists, vendor/samsung/radio/G530T1UVS2AQA2/baseband.mk)
