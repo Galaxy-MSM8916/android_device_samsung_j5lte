@@ -1,6 +1,6 @@
 # CABL
 PRODUCT_PROPERTY_OVERRIDES += \
-	ro.qualcomm.cabl=0
+	ro.qualcomm.cabl=2
 
 # RAM
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -13,4 +13,4 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 
 # Screen
 PRODUCT_PROPERTY_OVERRIDES += \
-	ro.sf.lcd_density=240
+	ro.sf.lcd_density=320
