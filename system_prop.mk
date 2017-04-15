@@ -9,7 +9,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # RIL
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	telephony.lteOnCdmaDevice=0 \
 	ro.multisim.simslotcount=2 \
+	ro.telephony.ril.config=simactivation \
+	telephony.lteOnCdmaDevice=0 \
 	persist.radio.multisim.config=dsds \
 	rild.libpath2=/system/lib/libsec-ril-dsds.so
