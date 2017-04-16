@@ -1,6 +1,6 @@
-# android_device_samsung_j53gxx
+# android_device_samsung_j5ltexx
 
-## Device tree for Samsung Galaxy J5 3G
+## Device tree for Samsung Galaxy J5 LTE
 
 Basic   | Spec Sheet
 -------:|:-------------------------
