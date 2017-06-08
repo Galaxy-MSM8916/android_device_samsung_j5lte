@@ -1,5 +1,5 @@
 #Inherit from vendor
-$(call inherit-product, vendor/samsung/j5ltexx/j5ltexx-vendor.mk)
+$(call inherit-product-if-exists, vendor/samsung/j5ltexx/j5ltexx-vendor.mk)
 
 # Inherit from common
 $(call inherit-product, device/samsung/j5-common/device-common.mk)
