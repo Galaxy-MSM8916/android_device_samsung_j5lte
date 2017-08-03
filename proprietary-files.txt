@@ -1,6 +1,6 @@
 # Samsung Package Version J500FXXS1BQE1_J500FPLS1BPI1_J500FXXU1BPF2_HOME (unless otherwise specified and/or tagged)
 
-#ACDBs
+# ACDBs
 etc/Bluetooth_cal.acdb
 etc/General_cal.acdb
 etc/Global_cal.acdb
