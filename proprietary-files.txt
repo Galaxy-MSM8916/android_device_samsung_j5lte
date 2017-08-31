@@ -30,6 +30,5 @@ lib/librilutils.so
 lib/libsec-ril.so
 lib/libsec-ril-dsds.so
 
-# Sensors
-lib/hw/sensors.msm8916.so
-vendor/lib/libcalmodule_gyroscope.so
+# Sensors - J500HXXU1APE5_J500HOXE1APE5_J500HXXU1APC2
+lib/hw/sensors.msm8916.so|fb5fbe6b832c242e18ab0a5cb53ad91c
