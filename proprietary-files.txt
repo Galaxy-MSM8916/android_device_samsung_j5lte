@@ -1,28 +1,5 @@
 # Samsung Package Version J500FXXS1BQE1_J500FPLS1BPI1_J500FXXU1BPF2_HOME (unless otherwise specified and/or tagged)
 
-# ACDBs
-etc/Bluetooth_cal.acdb
-etc/General_cal.acdb
-etc/Global_cal.acdb
-etc/Handset_cal.acdb
-etc/Hdmi_cal.acdb
-etc/Headset_cal.acdb
-etc/Speaker_cal.acdb
-
-# Qualcomm framework
-vendor/lib/libdiag.so
-vendor/lib/libdsutils.so
-vendor/lib/libidl.so
-vendor/lib/libqcci_legacy.so
-vendor/lib/libqmi_cci.so
-vendor/lib/libqmi_client_helper.so
-vendor/lib/libqmi_client_qmux.so
-vendor/lib/libqmi_common_so.so
-vendor/lib/libqmi_csi.so
-vendor/lib/libqmi_encdec.so
-vendor/lib/libqmiservices.so
-vendor/lib/libqmi.so
-
 # RIL
 lib/libsec-ril.so|80102da062dbc18ef0ab54ed09e95d89
 lib/libsec-ril-dsds.so|c0f5b5285b95858e4db9d8ed73509704
