@@ -1,3 +1,9 @@
+#
+# Copyright (C) 2017-2021 The LineageOS Project
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
 #Inherit from vendor
 $(call inherit-product-if-exists, vendor/samsung/j5lte/j5lte-vendor.mk)
 
